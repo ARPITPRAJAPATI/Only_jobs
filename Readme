@@ -1,1 +1,95 @@
-about to start from nov till april
+# KIET Campus Talent & Career Development Platform
+> **Mission:** Shifting campus hiring from self-claimed resumes to **verifiable proof of work**, continuous peer motivation, and automated placement operations for **KIET Group of Institutions** (~7,000 students).
+
+---
+
+## 📌 Executive Overview
+
+Most campus talent systems fail because they either act as passive application repositories (e.g., Superset) or generic social networks (e.g., LinkedIn) with zero institutional verification. 
+
+This platform bridges that gap by providing an end-to-end institutional talent ecosystem:
+* **For Students:** 1st-year to 4th-year growth ladders, automated GitHub/LeetCode sync, peer benchmark feeds, and verified credentials.
+* **For Faculty:** Low-overhead project rooms with zero conversational clutter and 1-click lab evaluations.
+* **For Placement Cell (TPO):** Policy-enforced hiring drives (1-student 1-job rules), anti-fraud mark verification, and instant talent extraction for recruiters.
+* **For Deans & Leadership:** Real-time visibility into department skill distributions, verified coding metrics, and startup recruiter talent pipelines.
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Backend Core** | Node.js • Express | High-performance modular monolith architecture |
+| **Database & ORM** | PostgreSQL • Prisma | Strongly-typed relational data models & relational integrity |
+| **In-Memory Cache & Queues**| Redis • BullMQ | Atomic rate limiting, nightly coding sync, and delayed auto-submit exam workers |
+| **Storage & Media** | AWS S3 / Cloudflare R2 | Direct browser presigned uploads for marksheet PDFs and project media |
+| **AI Microservice** | Python • FastAPI | AST code inspection, project plagiarism analysis, and skill scoring *(Phase 5)* |
+| **DevOps & Infra** | Docker • AWS • GitHub Actions | Containerized services, CI/CD pipeline, and staged deployment |
+
+---
+
+## 🏗️ Core Architectural Modules
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│                      KIET CAMPUS PLATFORM ARCHITECTURE                 │
+├────────────────────────────────────────────────────────────────────────┤
+│  [ Campus Feed ]     [ Student Profile ]     [ Class Project Rooms ]   │
+│  • 3 Posts/Day       • Nightly Sync          • Zero-Text Guard         │
+│  • Cursor Paginated  • Academics Audit       • 1-Click Faculty Review  │
+├────────────────────────────────────────────────────────────────────────┤
+│  [ Learning Engine ] [ Exams & Mock Tests ]  [ Alumni Directory ]      │
+│  • 3-Phase Gatekeep  • Server Timers         • Package Privacy         │
+│  • Auto-Certificates • Anti-Cheating Telemetry• Multi-Filter Search     │
+├────────────────────────────────────────────────────────────────────────┤
+│  [ Superset ATS ]    [ Helper Support ]      [ Talent Extraction ]     │
+│  • Eligibility Rules • Load-Balanced Tickets • 1-Click Startup Export  │
+│  • Policy Engine     • Threaded Discussions  • Pre-Vetted Candidates   │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+1. **[Student Profile System](plan/student_profile_architecture.md):** Admin-locked college meta (`@kiet.edu`), nightly BullMQ sync for GitHub and LeetCode activity charts, self-declared SGPA/CGPA with S3 presigned marksheets, and a 1-click fraud audit & fine mechanism.
+2. **[Campus Placement Engine (Superset-Grade ATS)](plan/superset_placement_engine.md):** 3-party stakeholder workflow (Student, TPO, Recruiter), dynamic JSONB eligibility criteria, multi-round selection pipelines, and institutional offer policies (1-Student 1-Job rule, Dream Company upgrade rules).
+3. **[Campus Feed Engine](plan/campus_feed_architecture.md):** Social motivation hub featuring Redis atomic 3-posts-per-day rate limits with rollback mechanics and high-throughput cursor pagination.
+4. **[3-Phase Learning & Certification Engine](plan/learning_and_certification_engine.md):** Beginner $\rightarrow$ Intermediate $\rightarrow$ Advance sequential progression gatekeeping with auto-minted cryptographic certificates.
+5. **[Class Project Rooms](plan/class_project_rooms_architecture.md):** Noise-free lab submission drop box enforcing a zero-text policy (screenshots + repository link only) and 1-click teacher grading.
+6. **[Alumni Directory & Network](plan/alumni_directory_architecture.md):** Automated final-year placement graduation transition, package privacy toggles (`isPackagePublic`), and multi-dimensional company filters.
+7. **[Exams & Mock Tests Engine](plan/exam_and_mock_test_engine.md):** Server-enforced test windows, BullMQ delayed auto-submit workers, and anti-cheating telemetry (disqualification after 3 tab switches).
+8. **[Helper & Mentor Support Engine](plan/helper_mentor_support_engine.md):** Embedded in-course testing co-located with load-balanced doubt ticket queues for peer mentors and TAs.
+
+---
+
+## 🗺️ Master Engineering Blueprint & Roadmap
+
+Detailed architecture specifications, database schemas, middleware guards, and pitch decks are organized inside the [`plan/`](plan/) directory:
+
+* 📋 **[Master Strategic Plan (plan/plan.md)](plan/plan.md):** 10-day Dean preparation roadmap and 6-month development sprints.
+* 🏛️ **[Placement Automation Specification](plan/superset_placement_engine.md)**
+* 👤 **[Student Identity & Coding Sync Specification](plan/student_profile_architecture.md)**
+* 📱 **[Campus Feed & Rate Limiting Specification](plan/campus_feed_architecture.md)**
+* 🎓 **[Skill Gatekeeping & Talent Extraction Specification](plan/learning_and_certification_engine.md)**
+* 🔬 **[Class Project Rooms & Faculty Evaluation Specification](plan/class_project_rooms_architecture.md)**
+* 💼 **[Alumni Mentorship Network Specification](plan/alumni_directory_architecture.md)**
+* ⏱️ **[Server-Timed Assessment Engine Specification](plan/exam_and_mock_test_engine.md)**
+* 🆘 **[In-Course Testing & Mentor Ticket Specification](plan/helper_mentor_support_engine.md)**
+
+---
+
+## 📅 Timeline & Upcoming Milestones
+
+* **Current Stage:** Architectural Design, Schema Blueprinting & Feasibility Research.
+* **Target Pitch Date:** **25 October 2026** — Presentation to Dean, KIET Group of Institutions (Seeking approval for 100-student controlled pilot).
+* **Development Phase:** **November 2026 – April 2027 (6 Months)** across a 4-member squad.
+* **Pilot Department:** Department of Computer Science & Engineering (CSE / IT).
+
+---
+
+## 👥 Engineering Team & Ownership
+
+* **Backend Architecture, Database & DevOps Lead:** Arpit Prajapati
+* **Frontend Lead:** Client UI/UX, Next.js App Router & Performance
+* **AI & Data Specialist:** Python FastAPI, Code Analysis & External APIs
+* **Product & Institutional Liaison:** Wireframes, Pilot User Testing & Administration Coordination
+
+---
+*Maintained with strict engineering discipline. Last updated: October 2026.*
