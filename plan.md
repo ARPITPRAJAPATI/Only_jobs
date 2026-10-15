@@ -21,7 +21,7 @@ Goal: Build an airtight, institutional-grade proposal and architecture blueprint
 | :--- | :--- | :--- | :--- | :--- |
 | **Day 1** | **15 Oct** | **KIET Problem Discovery** | Document KIET-specific gaps in Superset/ERP, unverified resumes, and junior visibility. | 🔄 In Progress |
 | **Day 2** | **16 Oct** | **Competitive Benchmarking** | Comparative analysis & Superset architecture breakdown ([superset_placement_engine.md](file:///c:/Users/arpit/New%20folder%20%286%29/Only_jobs/superset_placement_engine.md)). | ✅ Ready |
-| **Day 3** | **17 Oct** | **Student Experience & Growth** | Wireframes/flows for Student Profile, Proof of Work (GitHub/LeetCode), Peer Motivation, and Badges. | ⏳ Pending |
+| **Day 3** | **17 Oct** | **Student Experience & Growth** | Profiles & nightly sync ([student_profile_architecture.md](file:///c:/Users/arpit/New%20folder%20%286%29/Only_jobs/student_profile_architecture.md)) + Campus feed engine ([campus_feed_architecture.md](file:///c:/Users/arpit/New%20folder%20%286%29/Only_jobs/campus_feed_architecture.md)). | ✅ Ready |
 | **Day 4** | **18 Oct** | **Faculty & Dean Workflows** | Teacher verification portal (low overhead), department analytics, and talent discovery filters. | ⏳ Pending |
 | **Day 5** | **19 Oct** | **Placement Cell & Recruiter Engine** | Placement drive workflows, eligibility engine & policy rules ([superset_placement_engine.md](file:///c:/Users/arpit/New%20folder%20%286%29/Only_jobs/superset_placement_engine.md)). | ✅ Architecture Drafted |
 | **Day 6** | **20 Oct** | **AI Feasibility & Ethical Guardrails** | Explainable skill scoring, project plagiarism/similarity checks, and realistic AI boundaries. | ⏳ Pending |
