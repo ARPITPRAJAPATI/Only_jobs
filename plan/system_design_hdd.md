@@ -92,7 +92,7 @@ C4Context
 | M2 | **Student Profile** | Student, TPO, Dean | Admin-locked meta, coding stats (GitHub/LC/CF), academics with audit trail |
 | M3 | **Campus Feed** | Student, Teacher, Dean | Achievement posts (3/day Redis limit), cursor pagination, role-based card styling |
 | M4 | **Placement Engine (Triple-Pillar)** | TPO, Student, In-App Team, Recruiter | (1) On-Campus TPO Drives & Policy Engine, (2) In-App Off-Campus Curation (leco.ai/ATS), (3) 1st-4th Yr Vector Recommendations |
-| M5 | **Learning Engine** | Student, Mentor | 3-phase course roadmaps, resource tracking, phase-gatekept progression |
+| M5 | **Learning & Certification** | Student, Mentor, Recruiter | Slider navigation, Smart course recommender, open exploration freedom, 3-phase pipelines, 20 project + 80 exam split, end-of-sem test windows (max 3 attempts), top 15–20 capstones & career outcomes |
 | M6 | **Exam Engine** | Student, Teacher | Server-timed MCQ tests, delayed BullMQ auto-submit, anti-cheat telemetry |
 | M7 | **Class Project Rooms** | Student, Teacher | Zero-text submission rooms, Zod-validated payloads, 1-click faculty review |
 | M8 | **Alumni Directory** | Student, Alumni | Auto-graduation transition, package privacy toggle, multi-filter search |
