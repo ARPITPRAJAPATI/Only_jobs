@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Only_Jobs — KIET Campus Talent & Career Operating System</title>
+  <meta name="description" content="Single-institution institutional talent ecosystem, automated placement ATS, and verified proof-of-work platform for KIET Group of Institutions">
+  
+  <!-- Modern Editorial & Monospace Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="theme-dark-pro">
+
+  <!-- ==================================================================== -->
+  <!-- TOP APPLICATION BAR                                                  -->
+  <!-- ==================================================================== -->
+  <header class="top-nav">
+    <div class="top-nav-left">
+      <button id="sidebarCollapseBtn" class="nav-icon-btn" title="Toggle Navigation Sidebar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
+
+      <div class="brand-group">
+        <div class="brand-badge">OJ</div>
+        <div class="brand-meta">
+          <span class="brand-name">Only_Jobs <span class="inst-tag">KIET</span></span>
+          <span class="brand-caption">Campus Talent & Career OS</span>
+        </div>
+      </div>
+
+      <div class="network-status-badge">
+        <span class="status-indicator-dot"></span>
+        <span class="status-text">7,140 Verified Students Online</span>
+      </div>
+    </div>
+
+    <!-- Center Search Bar -->
+    <div class="top-nav-center">
+      <div class="global-search-wrapper">
+        <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="globalSearchInput" placeholder="Search verified students, placement drives, courses, alumni..." class="global-search-input">
+        <span class="search-kbd">⌘K</span>
+      </div>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="top-nav-right">
+      <div class="role-switcher-box">
+        <span class="role-label">POV:</span>
+        <select id="personaSwitch" class="role-select">
+          <option value="student">Student (CSE / 3rd Yr)</option>
+          <option value="tpo">TPO (Placement Officer)</option>
+          <option value="faculty">Faculty / Lab Instructor</option>
+          <option value="dean">Dean (Executive View)</option>
+        </select>
+      </div>
+
+      <button class="nav-icon-btn" id="notifBtn" title="Placement Notifications">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+        <span class="notif-count">4</span>
+      </button>
+
+      <div class="profile-account-chip">
+        <div class="user-avatar-initials">AP</div>
+        <div class="user-chip-text">
+          <span class="user-full-name">Arpit Prajapati</span>
+          <span class="user-meta-sub">2200290100042 • CSE</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <!-- ==================================================================== -->
+    <!-- SIDEBAR SLIDER NAVIGATION (ALL ARCHITECTURAL MODULES)                 -->
+    <!-- ==================================================================== -->
+    <aside class="app-sidebar" id="appSidebar">
+      <div class="sidebar-category">CORE PLATFORM</div>
+      <nav class="sidebar-menu">
+        <button class="menu-item active" data-tab="tab-architecture">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span class="item-label">Architecture Map</span>
+        </button>
+
+        <button class="menu-item" data-tab="tab-profile">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span class="item-label">Student Profile (Proof)</span>
+          <span class="item-tag tag-blue">Sync</span>
+        </button>
+
+        <button class="menu-item" data-tab="tab-placement">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+          <span class="item-label">Triple Placement ATS</span>
+          <span class="item-tag tag-blue">M2</span>
+        </button>
+
+        <button class="menu-item" data-tab="tab-learning">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          <span class="item-label">Learning & Certification</span>
+          <span class="item-tag tag-blue">Slider</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-category">CAMPUS WORKFLOWS</div>
+      <nav class="sidebar-menu">
+        <button class="menu-item" data-tab="tab-classrooms">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+          <span class="item-label">Class Project Rooms</span>
+          <span class="item-tag">Zero-Text</span>
+        </button>
+
+        <button class="menu-item" data-tab="tab-exams">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <span class="item-label">Proctored Exams & Tests</span>
+          <span class="item-tag">Anti-Cheat</span>
+        </button>
+
+        <button class="menu-item" data-tab="tab-feed">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+          <span class="item-label">Campus Social Feed</span>
+          <span class="item-tag">3 Posts/Day</span>
+        </button>
+
+        <button class="menu-item" data-tab="tab-alumni">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span class="item-label">Alumni Network</span>
+          <span class="item-tag">Privacy Guard</span>
+        </button>
+
+        <button class="menu-item" data-tab="tab-support">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          <span class="item-label">Mentor Doubt Queue</span>
+          <span class="item-tag">TA Routing</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-category">INSTITUTIONAL GOVERNANCE</div>
+      <nav class="sidebar-menu">
+        <button class="menu-item" data-tab="tab-dean">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          <span class="item-label">Dean & TPO Analytics</span>
+        </button>
+      </nav>
+
+      <!-- Sidebar Bottom System Health -->
+      <div class="sidebar-bottom">
+        <div class="sys-health-card">
+          <div class="sys-health-title">INFRASTRUCTURE STATUS</div>
+          <div class="sys-item">
+            <span class="sys-dot"></span>
+            <span class="sys-name">Postgres + Redis</span>
+            <span class="sys-metric">3.2 ms</span>
+          </div>
+          <div class="sys-item">
+            <span class="sys-dot"></span>
+            <span class="sys-name">BullMQ Nightly Sync</span>
+            <span class="sys-metric">Ready (00:00)</span>
+          </div>
+          <div class="sys-item">
+            <span class="sys-dot"></span>
+            <span class="sys-name">FastAPI AI Worker</span>
+            <span class="sys-metric">:8000</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ==================================================================== -->
+    <!-- MAIN WORKSPACE CONTAINER                                             -->
+    <!-- ==================================================================== -->
+    <main class="main-viewport" id="mainViewport">
+
+      <!-- ================================================================ -->
+      <!-- TAB 1: ARCHITECTURE MAP & SYSTEM TOPOLOGY                        -->
+      <!-- ================================================================ -->
+      <section id="tab-architecture" class="view-panel active">
+        <div class="view-hero">
+          <div class="eyebrow-tag">KIET GROUP OF INSTITUTIONS • OCTOBER 2026 BLUEPRINT</div>
+          <h1 class="view-title">Campus Talent & Career Operating System</h1>
+          <p class="view-subtitle">
+            A production modular monolith designed to eliminate resume fraud, automate TPO placement governance, and provide continuous verified skill development for 7,140 undergraduate engineers.
+          </p>
+
+          <div class="hero-button-row">
+            <button class="btn btn-primary" onclick="navigateToTab('tab-placement')">Inspect Placement ATS</button>
+            <button class="btn btn-secondary" onclick="navigateToTab('tab-learning')">View Learning Slider & DevOps Track</button>
+            <button class="btn btn-outline" id="simulateSyncBtn">Simulate Nightly Batch Sync</button>
+          </div>
+        </div>
+
+        <!-- 3 Core Architecture Pillars Cards -->
+        <div class="arch-pillars-grid">
+          <div class="pillar-box">
+            <div class="pillar-box-icon">🏛️</div>
+            <h3 class="pillar-box-title">Triple-Pillar Placement Engine</h3>
+            <p class="pillar-box-desc">
+              1. <strong>On-Campus TPO:</strong> Dynamic JSONB rules, 1-Student 1-Job lock & Dream upgrades.<br>
+              2. <strong>In-App Extraction:</strong> Curated external jobs (leco.ai, LinkedIn, Greenhouse).<br>
+              3. <strong>1st–4th Year Matcher:</strong> Semantic recommendations & missing skill diagnostics.
+            </p>
+            <div class="pillar-box-meta"><span class="code-ref">Module M2</span> <a href="#" onclick="navigateToTab('tab-placement')">View ATS Workflows &rarr;</a></div>
+          </div>
+
+          <div class="pillar-box">
+            <div class="pillar-box-icon">📚</div>
+            <h3 class="pillar-box-title">Learning & Certification Engine</h3>
+            <p class="pillar-box-desc">
+              Navigation slider hub with <strong>"Recommend Course"</strong> AI button. Open exploration freedom (zero content locks), <strong>20 Project + 80 Exam</strong> split, and end-of-sem test windows.
+            </p>
+            <div class="pillar-box-meta"><span class="code-ref">Module M5</span> <a href="#" onclick="navigateToTab('tab-learning')">Explore Curriculum &rarr;</a></div>
+          </div>
+
+          <div class="pillar-box">
+            <div class="pillar-box-icon">⚡</div>
+            <h3 class="pillar-box-title">Verified Proof-of-Work Identity</h3>
+            <p class="pillar-box-desc">
+              Admin-locked academic metadata with zero live external API hits. Asynchronous <strong>BullMQ workers</strong> pull GitHub/LeetCode stats nightly into PostgreSQL for sub-10ms profile loads.
+            </p>
+            <div class="pillar-box-meta"><span class="code-ref">Module M1</span> <a href="#" onclick="navigateToTab('tab-profile')">Inspect Profile &rarr;</a></div>
+          </div>
+        </div>
+
+        <!-- System Architecture Topology Diagram -->
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <div>
+              <h2 class="card-panel-title">End-to-End Architectural Data Flow</h2>
+              <p class="card-panel-subtitle">Zero-latency cached profile delivery backed by asynchronous BullMQ queues and Tree-Sitter AST inspection</p>
+            </div>
+            <div class="diag-legend">
+              <span class="legend-chip"><span class="dot-node"></span> Express Monolith</span>
+              <span class="legend-chip"><span class="dot-redis"></span> Redis Queue</span>
+              <span class="legend-chip"><span class="dot-ai"></span> FastAPI AI AST</span>
+            </div>
+          </div>
+
+          <div class="topology-grid">
+            <div class="topology-node">
+              <span class="node-step">01</span>
+              <h4>Campus Clients</h4>
+              <p>Students, Faculty, TPO, and Recruiters access via role-based JWT routes</p>
+              <span class="node-tech">Next.js + Vanilla Web</span>
+            </div>
+            <div class="topology-connector">&rarr;</div>
+            <div class="topology-node">
+              <span class="node-step">02</span>
+              <h4>Modular Monolith</h4>
+              <p>Express.js gateway enforcing atomic Redis rate limits (3 posts/day)</p>
+              <span class="node-tech">Node.js API Server</span>
+            </div>
+            <div class="topology-connector">&rarr;</div>
+            <div class="topology-node">
+              <span class="node-step">03</span>
+              <h4>BullMQ Workers</h4>
+              <p>Nightly batches sync GitHub/LeetCode; server timers auto-submit exams</p>
+              <span class="node-tech">Redis Queue Workers</span>
+            </div>
+            <div class="topology-connector">&rarr;</div>
+            <div class="topology-node">
+              <span class="node-step">04</span>
+              <h4>FastAPI AI Microservice</h4>
+              <p>Tree-Sitter code AST inspection, plagiarism audit, and pgvector matcher</p>
+              <span class="node-tech">Python FastAPI (:8000)</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- TAB 2: STUDENT PROFILE & VERIFIED PROOF (M1)                     -->
+      <!-- ================================================================ -->
+      <section id="tab-profile" class="view-panel">
+        <div class="profile-hero-card">
+          <div class="profile-hero-left">
+            <div class="avatar-holder">
+              <div class="avatar-large">AP</div>
+              <div class="verified-badge-pill" title="Officially Verified by KIET Administration">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span>Verified Student</span>
+              </div>
+            </div>
+
+            <div class="profile-main-details">
+              <div class="profile-name-row">
+                <h2>Arpit Prajapati</h2>
+                <span class="mono-badge">PRN: 2200290100042</span>
+                <span class="mono-badge">CSE • 3rd Year (Batch 2022–2026)</span>
+              </div>
+              <p class="profile-bio-text">
+                Backend Architecture & Distributed Systems Engineer. Lead architect of KIET Only_Jobs platform. 
+                PostgreSQL indexing, BullMQ workers, Redis distributed rate-limiting, and high-throughput monoliths.
+              </p>
+              <div class="profile-meta-chips">
+                <span class="meta-chip"><strong>Official Email:</strong> arpit.2200290100042@kiet.edu <span class="tag-locked">Locked</span></span>
+                <span class="meta-chip"><strong>Current CGPA:</strong> 8.74 (Audited Marksheet in S3)</span>
+                <span class="meta-chip"><strong>Active Backlogs:</strong> 0</span>
+                <span class="meta-chip status-placed-ok">Status: Eligible For Placement Drives</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coding Telemetry Stats -->
+        <div class="two-col-grid">
+          <!-- LeetCode Sync Tile -->
+          <div class="card-panel">
+            <div class="telemetry-card-header">
+              <div class="telemetry-brand">
+                <div class="telemetry-logo lc-logo">LC</div>
+                <div>
+                  <h4>LeetCode Activity Sync</h4>
+                  <span class="text-muted">Cached from 00:00 AM BullMQ Worker</span>
+                </div>
+              </div>
+              <span class="mono-rating-pill">Rating: 1,842 (Top 4%)</span>
+            </div>
+
+            <div class="four-stat-row">
+              <div class="mini-stat-box">
+                <span class="stat-number">512</span>
+                <span class="stat-caption">Total Solved</span>
+              </div>
+              <div class="mini-stat-box">
+                <span class="stat-number text-easy">160</span>
+                <span class="stat-caption">Easy</span>
+              </div>
+              <div class="mini-stat-box">
+                <span class="stat-number text-med">284</span>
+                <span class="stat-caption">Medium</span>
+              </div>
+              <div class="mini-stat-box">
+                <span class="stat-number text-hard">68</span>
+                <span class="stat-caption">Hard</span>
+              </div>
+            </div>
+
+            <div class="heatmap-container" id="leetcodeHeatmapStrip"></div>
+            <div class="telemetry-footer-note">&check; Synced via internal GraphQL query without Cloudflare 429 blocks</div>
+          </div>
+
+          <!-- GitHub Verified Stats Tile -->
+          <div class="card-panel">
+            <div class="telemetry-card-header">
+              <div class="telemetry-brand">
+                <div class="telemetry-logo gh-logo">GH</div>
+                <div>
+                  <h4>GitHub Verified Code Stats</h4>
+                  <span class="text-muted">AST Complexity & Plagiarism Audited</span>
+                </div>
+              </div>
+              <span class="mono-rating-pill">1,428 Commits (2026)</span>
+            </div>
+
+            <div class="four-stat-row">
+              <div class="mini-stat-box">
+                <span class="stat-number">24</span>
+                <span class="stat-caption">Public Repos</span>
+              </div>
+              <div class="mini-stat-box">
+                <span class="stat-number text-blue">98%</span>
+                <span class="stat-caption">AST Originality</span>
+              </div>
+              <div class="mini-stat-box">
+                <span class="stat-number">JavaScript</span>
+                <span class="stat-caption">Top Language</span>
+              </div>
+              <div class="mini-stat-box">
+                <span class="stat-number">Postgres</span>
+                <span class="stat-caption">Primary DB</span>
+              </div>
+            </div>
+
+            <div class="tags-flex-wrap">
+              <span class="code-tag">Node.js</span>
+              <span class="code-tag">PostgreSQL</span>
+              <span class="code-tag">Prisma ORM</span>
+              <span class="code-tag">Redis</span>
+              <span class="code-tag">BullMQ</span>
+              <span class="code-tag">Tree-Sitter AST</span>
+            </div>
+            <div class="telemetry-footer-note">&check; Verified Capstone: Only_Jobs Campus Platform Monolith</div>
+          </div>
+        </div>
+
+        <!-- Top Featured Projects (Audited Proof of Work) -->
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <div>
+              <h3 class="card-panel-title">Top Featured Capstone Projects</h3>
+              <p class="card-panel-subtitle">Verified by Faculty Endorsement & AST Code Plagiarism Checkers</p>
+            </div>
+          </div>
+
+          <div class="two-col-grid">
+            <div class="project-item-box">
+              <div class="project-badge-row">
+                <span class="proj-badge badge-verified">&check; Faculty Verified Badge</span>
+                <span class="proj-badge badge-ast">AST Complexity: 94/100</span>
+              </div>
+              <h4>Only_Jobs — Campus Platform Monolith</h4>
+              <p class="project-desc">High-concurrency modular backend architecture implementing Redis 3-post rate limits, BullMQ nightly sync queues, and Superset ATS policy guards.</p>
+              <div class="tags-flex-wrap">
+                <span class="code-tag">Node.js</span><span class="code-tag">PostgreSQL</span><span class="code-tag">BullMQ</span><span class="code-tag">Redis</span>
+              </div>
+              <div class="project-foot">
+                <a href="https://github.com/arpitprajapati/Only_jobs" target="_blank" class="text-link">GitHub Repository &rarr;</a>
+                <span class="audit-pass-text">&check; 0% Plagiarism Detected</span>
+              </div>
+            </div>
+
+            <div class="project-item-box">
+              <div class="project-badge-row">
+                <span class="proj-badge badge-verified">&check; Lab Grade: 10/10</span>
+                <span class="proj-badge badge-ast">AST Complexity: 91/100</span>
+              </div>
+              <h4>Cloud-Native GitOps Microservice Pipeline</h4>
+              <p class="project-desc">Multi-stage Docker containers deployed to Amazon EKS using ArgoCD GitOps sync, Prometheus monitoring, and automated Helm releases.</p>
+              <div class="tags-flex-wrap">
+                <span class="code-tag">Kubernetes</span><span class="code-tag">Docker</span><span class="code-tag">ArgoCD</span><span class="code-tag">Helm</span>
+              </div>
+              <div class="project-foot">
+                <a href="#" class="text-link">GitHub Repository &rarr;</a>
+                <span class="audit-pass-text">&check; Validated Clean AST</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- TAB 3: TRIPLE-PILLAR PLACEMENT ATS (M2)                          -->
+      <!-- ================================================================ -->
+      <section id="tab-placement" class="view-panel">
+        <div class="view-hero">
+          <div class="eyebrow-tag">MODULE M2 • SUPERSET-GRADE PLACEMENT ATS</div>
+          <h1 class="view-title">Triple-Pillar Opportunity Hub</h1>
+          <p class="view-subtitle">
+            Unifying official campus placement drives, curated external job feeds, and 1st-to-4th-year smart recommendations into one seamless workflow.
+          </p>
+        </div>
+
+        <!-- Pillar Switcher Buttons -->
+        <div class="pillar-toggle-bar">
+          <button class="pillar-toggle-btn active" data-pillar="pillar-1">
+            <span class="pt-num">PILLAR 1</span>
+            <span class="pt-title">🏛️ On-Campus Corporate Drives</span>
+            <span class="pt-sub">Official TPO drives & 1-Student 1-Job policy</span>
+          </button>
+          <button class="pillar-toggle-btn" data-pillar="pillar-2">
+            <span class="pt-num">PILLAR 2</span>
+            <span class="pt-title">🔍 In-App Extraction Team</span>
+            <span class="pt-sub">Curated external jobs (leco.ai, LinkedIn, ATS)</span>
+          </button>
+          <button class="pillar-toggle-btn" data-pillar="pillar-3">
+            <span class="pt-num">PILLAR 3</span>
+            <span class="pt-title">🎯 1st–4th Year Smart Matcher</span>
+            <span class="pt-sub">Semantic vector matching & skill gap alerts</span>
+          </button>
+        </div>
+
+        <!-- PILLAR 1: ON-CAMPUS TPO DRIVES -->
+        <div id="pillar-1" class="pillar-view active">
+          <div class="policy-notice-box">
+            <div class="notice-icon">📜</div>
+            <div>
+              <strong>Institutional Policy Engine Active:</strong>
+              <span>
+                <strong>1-Student 1-Job:</strong> Once placed, regular drives lock automatically. | 
+                <strong>Dream Upgrade:</strong> Drives with CTC &ge; 1.5&times; current offer remain unlocked.
+              </span>
+            </div>
+          </div>
+
+          <div class="drives-stack">
+            <!-- Drive 1 (Eligible) -->
+            <div class="drive-listing-row eligible">
+              <div class="drive-main-col">
+                <div class="drive-company-avatar">AMZ</div>
+                <div class="drive-info">
+                  <div class="drive-header-line">
+                    <h3 class="drive-name">Amazon Web Services (AWS)</h3>
+                    <span class="drive-tag tag-dream">Dream Drive (18.5 LPA)</span>
+                    <span class="drive-date">Deadline: 28 Oct 2026</span>
+                  </div>
+                  <div class="drive-role-text">Software Development Engineer — Cloud Infrastructure (SDE-1)</div>
+                  <div class="criteria-chips-row">
+                    <span class="criteria-chip met">&check; Min CGPA: 7.5 (Yours: 8.74)</span>
+                    <span class="criteria-chip met">&check; Branches: CSE, IT, CS-AI</span>
+                    <span class="criteria-chip met">&check; Backlogs: 0 Active</span>
+                    <span class="criteria-chip met">&check; Verified Badges: &ge; 2</span>
+                  </div>
+                </div>
+              </div>
+              <div class="drive-action-col">
+                <div class="drive-ctc">₹18.5 LPA</div>
+                <button class="btn btn-primary btn-sm" onclick="applyDrive('Amazon AWS')">1-Click Apply</button>
+                <span class="drive-action-note">Auto-attaches verified dossier</span>
+              </div>
+            </div>
+
+            <!-- Drive 2 (Ineligible with explicit diagnostic) -->
+            <div class="drive-listing-row ineligible">
+              <div class="drive-main-col">
+                <div class="drive-company-avatar cred-avatar">CD</div>
+                <div class="drive-info">
+                  <div class="drive-header-line">
+                    <h3 class="drive-name">Cred Financial</h3>
+                    <span class="drive-tag tag-marquee">Super Dream (24 LPA)</span>
+                    <span class="drive-date">Deadline: 24 Oct 2026</span>
+                  </div>
+                  <div class="drive-role-text">Backend Platform Trainee (Go, High-Throughput Distributed Systems)</div>
+                  <div class="criteria-chips-row">
+                    <span class="criteria-chip met">&check; Min CGPA: 8.5 (Yours: 8.74)</span>
+                    <span class="criteria-chip unmet">&cross; Requires 4th Year Standing (You are 3rd Year)</span>
+                    <span class="criteria-chip met">&check; Backlogs: 0 Active</span>
+                  </div>
+                </div>
+              </div>
+              <div class="drive-action-col">
+                <div class="drive-ctc">₹24.0 LPA</div>
+                <button class="btn btn-disabled btn-sm" disabled>Locked: Ineligible</button>
+                <span class="drive-action-note text-danger">Eligible for Batch 2026 only</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PILLAR 2: IN-APP EXTRACTION TEAM -->
+        <div id="pillar-2" class="pillar-view">
+          <div class="sub-header-bar">
+            <div>
+              <h3>Verified Off-Campus & Startup Opportunities</h3>
+              <p>Discovered via crawlers on <strong>leco.ai</strong>, <strong>Wellfound</strong>, and <strong>Greenhouse ATS</strong>, then audited by the KIET In-App Operations Team.</p>
+            </div>
+            <div class="anti-scam-shield">
+              <span class="shield-icon">&check;</span> Anti-Scam Shield Active • 100% Verified Corporate Domains
+            </div>
+          </div>
+
+          <div class="two-col-grid">
+            <div class="extracted-job-card">
+              <div class="extracted-source">Source: <strong>leco.ai</strong> • Audited by KIET Team</div>
+              <h4>Backend Systems Intern</h4>
+              <div class="extracted-company">Postman • Bengaluru (Hybrid / Remote)</div>
+              <div class="extracted-stipend">₹60,000 / month • 6-Month Summer PPI</div>
+              <div class="tags-flex-wrap">
+                <span class="code-tag">Node.js</span><span class="code-tag">PostgreSQL</span><span class="code-tag">Docker</span><span class="code-tag">Batch 2026 & 2027</span>
+              </div>
+              <div class="extracted-footer">
+                <a href="https://leco.ai" target="_blank" class="btn btn-secondary btn-sm">Direct Apply Link &rarr;</a>
+                <span class="verified-audit-text">&check; Official Postman Careers ATS</span>
+              </div>
+            </div>
+
+            <div class="extracted-job-card">
+              <div class="extracted-source">Source: <strong>Greenhouse ATS</strong> • Audited by KIET Team</div>
+              <h4>Cloud Infrastructure Associate</h4>
+              <div class="extracted-company">Razorpay • Bengaluru / Gurugram</div>
+              <div class="extracted-stipend">₹14.0 LPA • Full Time FTE (2026 Batch)</div>
+              <div class="tags-flex-wrap">
+                <span class="code-tag">Linux</span><span class="code-tag">Kubernetes</span><span class="code-tag">AWS</span><span class="code-tag">Terraform</span>
+              </div>
+              <div class="extracted-footer">
+                <a href="#" class="btn btn-secondary btn-sm">Direct Apply Link &rarr;</a>
+                <span class="verified-audit-text">&check; Official Razorpay Feed</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PILLAR 3: 1ST TO 4TH YEAR SMART MATCHER -->
+        <div id="pillar-3" class="pillar-view">
+          <div class="year-filters-bar">
+            <span class="year-filter-label">Filter by Academic Year:</span>
+            <button class="year-btn active" data-year="all">All Years</button>
+            <button class="year-btn" data-year="1">1st Yr (GSoC / Hackathons)</button>
+            <button class="year-btn" data-year="2">2nd Yr (Micro-Internships)</button>
+            <button class="year-btn" data-year="3">3rd Yr (Summer PPIs)</button>
+            <button class="year-btn" data-year="4">4th Yr (FTE Placement)</button>
+          </div>
+
+          <div class="recommendations-stream" id="recommendationsList">
+            <!-- Populated dynamically via JS with Match % and Skill-Gap alerts -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- TAB 4: LEARNING & CERTIFICATION ENGINE (SLIDER HUB) (M5)         -->
+      <!-- ================================================================ -->
+      <section id="tab-learning" class="view-panel">
+        <div class="view-hero">
+          <div class="hero-split-row">
+            <div>
+              <div class="eyebrow-tag">MODULE M5 • SIDEBAR LEARNING & CERTIFICATION</div>
+              <h1 class="view-title">Skill Mastery, Open Exploration & Phased Credentials</h1>
+              <p class="view-subtitle">
+                Learn freely without artificial locks. Earn formal KIET credentials through <strong>20 Project + 80 Exam</strong> end-term windows.
+              </p>
+            </div>
+            <button class="btn btn-accent btn-lg" onclick="openRecommendCourseModal()">
+              ✨ Recommend Course For Me
+            </button>
+          </div>
+        </div>
+
+        <!-- Sub-View Switcher -->
+        <div class="subnav-tabs-row">
+          <button class="subnav-tab-btn active" id="btnViewCatalog" onclick="switchLearningView('catalog')">📚 Course Catalog</button>
+          <button class="subnav-tab-btn" id="btnViewDevOps" onclick="switchLearningView('devops')">🚀 Deep-Dive: Cloud Native DevOps Track</button>
+        </div>
+
+        <!-- VIEW A: CATALOG VIEW -->
+        <div id="learningCatalogView" class="learning-subview active">
+          <div class="three-col-grid">
+            <!-- DevOps Card -->
+            <div class="course-card featured" onclick="switchLearningView('devops')">
+              <div class="course-card-top">
+                <span class="course-icon">☸️</span>
+                <span class="item-tag tag-blue">High Placement Demand</span>
+              </div>
+              <h3 class="course-title">Cloud Native DevOps Engineering</h3>
+              <p class="course-desc">Linux System Calls, Multi-Stage Docker, Kubernetes Orchestration, CI/CD with GitHub Actions, Terraform IaC, and SRE Observability.</p>
+              <div class="course-pipeline-stats">3 Sequential Phases • 20 Capstone Projects</div>
+              <div class="course-outcomes-note">
+                <strong>Career Outcomes:</strong> SRE, DevOps Engineer, Cloud Architect (₹8 – ₹18 LPA)
+              </div>
+              <div class="course-footer">
+                <button class="btn btn-primary btn-sm">Enter DevOps Track &rarr;</button>
+                <span class="course-status-pill">Phase 2 In Progress</span>
+              </div>
+            </div>
+
+            <!-- Full-Stack Card -->
+            <div class="course-card">
+              <div class="course-card-top">
+                <span class="course-icon">⚡</span>
+                <span class="item-tag tag-green">&check; Completed (Verified)</span>
+              </div>
+              <h3 class="course-title">Full-Stack Software Architecture</h3>
+              <p class="course-desc">Scalable Node.js microservices, Prisma relational integrity, Redis BullMQ queues, Next.js App Router, and clean system design.</p>
+              <div class="course-pipeline-stats">3 Sequential Phases • All Passed</div>
+              <div class="course-outcomes-note">
+                <strong>Career Outcomes:</strong> Full-Stack Engineer, Backend SDE (₹7 – ₹16 LPA)
+              </div>
+              <div class="course-footer">
+                <span class="tag-verified">&check; KIET Master Credential Minted</span>
+              </div>
+            </div>
+
+            <!-- AI/ML Card -->
+            <div class="course-card">
+              <div class="course-card-top">
+                <span class="course-icon">🧠</span>
+                <span class="item-tag">Emerging Track</span>
+              </div>
+              <h3 class="course-title">AI Systems & Applied Machine Learning</h3>
+              <p class="course-desc">Python AST parsing, Tree-sitter inspection, pgvector semantic search, PyTorch fine-tuning, and production LLM orchestration.</p>
+              <div class="course-pipeline-stats">3 Sequential Phases • 15 Capstone Projects</div>
+              <div class="course-outcomes-note">
+                <strong>Career Outcomes:</strong> AI Engineer, MLOps Intern (₹10 – ₹22 LPA)
+              </div>
+              <div class="course-footer">
+                <button class="btn btn-secondary btn-sm">Explore Curriculum &rarr;</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW B: DEVOPS TRACK DEEP-DIVE -->
+        <div id="learningDevOpsView" class="learning-subview">
+          <div class="card-panel">
+            <div class="deepdive-header-row">
+              <div>
+                <span class="eyebrow-tag">INFRASTRUCTURE & RELIABILITY ENGINEERING</span>
+                <h2>Cloud Native DevOps Engineering</h2>
+                <p class="text-muted">Master production container orchestration, CI/CD automation, and high-availability architecture.</p>
+              </div>
+              <div class="open-exploration-alert">
+                <span class="alert-symbol">🔓</span>
+                <div>
+                  <strong>Open Exploration Freedom:</strong>
+                  <span>You can jump to ANY phase to read notes, clone starter code, and experiment with labs. Zero content locks!</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- The 3 Phases Pipeline -->
+            <div class="three-col-grid">
+              <!-- Phase 1: Beginner -->
+              <div class="phase-box phase-passed">
+                <div class="phase-box-top">
+                  <span class="phase-tier-tag">PHASE 1 • PASSED</span>
+                  <span class="phase-pass-status">&check; Credential Minted</span>
+                </div>
+                <h3>DevOps Beginner: Linux & Containers</h3>
+                <p>Linux Kernel fundamentals, Shell scripting, Git branching workflows, Docker multi-stage builds, and Nginx reverse proxies.</p>
+                <div class="phase-grade-box">
+                  <div class="grade-line"><span>Capstone Project:</span> <strong>19 / 20</strong></div>
+                  <div class="grade-line"><span>Proctored Exam:</span> <strong>72 / 80</strong></div>
+                  <div class="grade-total">Total: <strong>91 / 100</strong> (Passed &ge; 60)</div>
+                </div>
+                <div class="cert-token-box">
+                  <span class="token-title">📜 KIET Certified DevOps — Beginner</span>
+                  <span class="token-hash">SHA-256: 7f8a9...b4e1 (Public Verified)</span>
+                </div>
+              </div>
+
+              <!-- Phase 2: Intermediate (Current Active) -->
+              <div class="phase-box phase-active">
+                <div class="phase-box-top">
+                  <span class="phase-tier-tag text-blue">PHASE 2 • IN PROGRESS</span>
+                  <span class="phase-attempts-pill">Attempts Left: 2 of 3</span>
+                </div>
+                <h3>DevOps Intermediate: Kubernetes & CI/CD</h3>
+                <p>Container orchestration with K8s, Helm packaging, GitHub Actions CI/CD to Amazon EKS, Prometheus + Grafana observability.</p>
+                <div class="phase-grade-box">
+                  <div class="grade-line"><span>Capstone Project:</span> <strong class="text-amber">Pending Submission (20 Mks)</strong></div>
+                  <div class="grade-line"><span>End-Sem Exam:</span> <strong class="text-amber">Scheduled (80 Mks)</strong></div>
+                </div>
+                <div class="phase-button-row">
+                  <button class="btn btn-primary btn-sm" onclick="openPhaseSubmissionModal('Phase 2')">Submit Capstone Project (20 Mks)</button>
+                  <button class="btn btn-secondary btn-sm" onclick="openExamRegistrationModal('Phase 2')">Apply For End-Sem Exam</button>
+                </div>
+              </div>
+
+              <!-- Phase 3: Advanced Master (Accessible!) -->
+              <div class="phase-box phase-accessible">
+                <div class="phase-box-top">
+                  <span class="phase-tier-tag">PHASE 3 • ADVANCED</span>
+                  <span class="open-status-tag">🔓 Open For Exploration</span>
+                </div>
+                <h3>DevOps Advanced: GitOps & Site Reliability</h3>
+                <p>ArgoCD GitOps, Terraform multi-cloud IaC, Istio mTLS Service Mesh, Chaos Engineering, and disaster recovery automation.</p>
+                <div class="phase-grade-box">
+                  <div class="grade-line"><span>Content Access:</span> <strong>100% Unrestricted</strong></div>
+                  <div class="grade-line"><span>Exam Prerequisite:</span> <strong>Complete Phase Modules</strong></div>
+                </div>
+                <div class="phase-button-row">
+                  <button class="btn btn-outline btn-sm" onclick="viewPhaseModules('Phase 3')">Browse Phase 3 Curriculum &rarr;</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top 15-20 Production Capstone Projects Library -->
+          <div class="card-panel">
+            <div class="card-panel-header">
+              <div>
+                <h3 class="card-panel-title">Top 20 Production Capstone Projects</h3>
+                <p class="card-panel-subtitle">Architect, build, and deploy these 20 battle-tested production systems into your portfolio</p>
+              </div>
+              <span class="mono-badge">20 Available</span>
+            </div>
+
+            <div class="table-scroll-wrapper">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Project Name & Architecture</th>
+                    <th>Phase Level</th>
+                    <th>Tech Stack</th>
+                    <th>Deployment Target</th>
+                  </tr>
+                </thead>
+                <tbody id="capstonesTableBody">
+                  <!-- Populated dynamically via app.js with the 20 real projects -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Career & Job Outcomes Footer -->
+          <div class="card-panel">
+            <div class="card-panel-header">
+              <div>
+                <h3 class="card-panel-title">Career Pathways & Recruiter Job Unlocks</h3>
+                <p class="card-panel-subtitle">Verified jobs unlocked in KIET Placement Drives upon qualifying these certificates</p>
+              </div>
+            </div>
+
+            <div class="three-col-grid">
+              <div class="career-card">
+                <div class="career-tier">Phase 1 Credential</div>
+                <div class="career-role">Junior Cloud Operations Associate</div>
+                <div class="career-ctc">₹4.5 – ₹7.0 LPA</div>
+                <div class="career-eligible">Eligible: Product Startups, IT Services</div>
+              </div>
+              <div class="career-card">
+                <div class="career-tier">Phase 2 Credential</div>
+                <div class="career-role">SRE Intern / DevOps Engineer</div>
+                <div class="career-ctc">₹8.0 – ₹14.0 LPA</div>
+                <div class="career-eligible">Eligible: FinTechs, Mid-tier Unicorns</div>
+              </div>
+              <div class="career-card highlight-card">
+                <div class="career-tier text-blue">Phase 3 Master Credential</div>
+                <div class="career-role">Platform Infrastructure Architect</div>
+                <div class="career-ctc text-blue">₹15.0 – ₹24.0 LPA</div>
+                <div class="career-eligible">Eligible: Amazon, Cred, Stripe, Razorpay</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- TAB 5: CLASS PROJECT ROOMS (M4)                                  -->
+      <!-- ================================================================ -->
+      <section id="tab-classrooms" class="view-panel">
+        <div class="view-hero">
+          <div class="eyebrow-tag">MODULE M4 • ZERO-CONVERSATIONAL CLUTTER</div>
+          <h1 class="view-title">Class Project Rooms & Faculty Lab Evaluations</h1>
+          <p class="view-subtitle">Zero conversational chit-chat allowed. Strict drop-box enforcing verified repository URLs, live screenshots, and 1-click teacher sign-offs.</p>
+        </div>
+
+        <div class="card-panel">
+          <div class="room-header-row">
+            <span class="mono-badge">CSE-301</span>
+            <span class="text-muted">Prof. R. K. Sharma • Lab Session 04</span>
+          </div>
+          <h3 class="card-panel-title">Assignment: Redis Distributed Locking & Rate Limiter</h3>
+          <p class="room-instruction">Implement an atomic 3-posts-per-day rate limiter with Redis and Lua scripts to prevent race conditions during concurrent user clicks.</p>
+
+          <div class="room-submit-form">
+            <h4 class="form-title">Submit Lab Project (Zero-Text Guard Enforced)</h4>
+            <div class="form-row">
+              <label>GitHub Repository URL (Public):</label>
+              <input type="url" class="form-input" value="https://github.com/arpitprajapati/redis-rate-limiter">
+            </div>
+            <div class="form-row">
+              <label>Proof Screenshot (Presigned Upload to S3):</label>
+              <div class="drop-zone">&check; terminal_test_run.png (Uploaded to AWS S3 / R2)</div>
+            </div>
+            <button class="btn btn-primary" onclick="alert('Submission received! Fast-API Tree-Sitter AST inspection queued for CSE-301.')">Submit For Faculty Review</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- TAB 6: TIMED EXAM & PROCTORING (M6)                              -->
+      <!-- ================================================================ -->
+      <section id="tab-exams" class="view-panel">
+        <div class="view-hero">
+          <div class="eyebrow-tag">MODULE M6 • ANTI-CHEAT TELEMETRY</div>
+          <h1 class="view-title">Server-Timed Proctored Exam Room</h1>
+          <p class="view-subtitle">Strict server-enforced countdowns, BullMQ delayed auto-submit workers, and anti-cheating telemetry (disqualification after 3 tab switches).</p>
+        </div>
+
+        <div class="card-panel">
+          <div class="exam-top-bar">
+            <div>
+              <span class="mono-badge">Mid-Sem Assessment: Distributed Systems</span>
+              <span class="text-muted">Question 4 of 25</span>
+            </div>
+            <div class="exam-countdown-timer" id="examCountdown">Time Remaining: 44:12</div>
+          </div>
+
+          <div class="question-container">
+            <p class="question-prompt">
+              In a distributed system using Redis for distributed locks, what is the primary risk of using a simple <code>SETNX lock 1</code> command without an atomic TTL or Redlock algorithm?
+            </p>
+            <div class="answer-options-list">
+              <label class="answer-option"><input type="radio" name="q4"> The key will automatically delete before the worker completes execution.</label>
+              <label class="answer-option active"><input type="radio" name="q4" checked> Deadlock risk: If the worker process crashes before calling <code>DEL</code>, the lock is never released.</label>
+              <label class="answer-option"><input type="radio" name="q4"> Redis will crash due to heap memory overflow.</label>
+              <label class="answer-option"><input type="radio" name="q4"> The command requires root Linux privileges to execute.</label>
+            </div>
+          </div>
+
+          <div class="telemetry-audit-card">
+            <div class="telemetry-card-title"><span class="status-indicator-dot"></span> Active Anti-Cheat Telemetry:</div>
+            <div class="telemetry-line">&check; Window Focus: Active (0 tab switches detected • Limit: 3)</div>
+            <div class="telemetry-line">&check; Clipboard Copy/Paste: Blocked by Client Guard</div>
+            <div class="telemetry-line">&check; DevTools Inspector: Closed</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- TAB 7: CAMPUS FEED (3 POSTS/DAY) (M3)                            -->
+      <!-- ================================================================ -->
+      <section id="tab-feed" class="view-panel">
+        <div class="view-hero">
+          <div class="eyebrow-tag">MODULE M3 • PEER MOTIVATION HUB</div>
+          <h1 class="view-title">Campus Achievement & Proof Feed</h1>
+          <p class="view-subtitle">Institutional social feed with strict Redis atomic limits (maximum 3 posts per day per student) to eliminate noise and motivate real work.</p>
+        </div>
+
+        <div class="feed-wrapper">
+          <div class="card-panel">
+            <div class="post-quota-status">
+              <span>Today's Post Quota (Redis Atomic Counter):</span>
+              <strong id="userPostQuota" class="text-blue">2 of 3 Posts Remaining</strong>
+            </div>
+            <textarea id="feedPostInput" class="post-textarea" placeholder="Share verified proof of work (e.g. Cleared 100 LeetCode Mediums or Deployed AWS Capstone)..."></textarea>
+            <div class="post-btn-row">
+              <button class="btn btn-secondary btn-sm">+ Attach Repo Link</button>
+              <button class="btn btn-primary btn-sm" onclick="publishFeedPost()">Publish (Consumes 1 Quota)</button>
+            </div>
+          </div>
+
+          <div class="posts-stream" id="postsStream">
+            <div class="post-card">
+              <div class="post-author-bar">
+                <div class="author-avatar-sm">AP</div>
+                <div>
+                  <span class="author-title">Arpit Prajapati <span class="tag-verified">&check; Verified</span></span>
+                  <span class="post-timestamp">2 hours ago • CSE 3rd Year</span>
+                </div>
+              </div>
+              <p class="post-text">
+                Just completed the full High-Level Design (HDD) & implementation specs for the <strong>KIET Campus Talent OS</strong>. 
+                Next milestone: Pitch to Dean on 25th October for the 100-student controlled pilot in CSE/IT! 🚀
+              </p>
+              <div class="post-tags-line">#ProofOfWork #SystemDesign #KIET</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- TAB 8: ALUMNI DIRECTORY & PRIVACY GUARD (M7)                     -->
+      <!-- ================================================================ -->
+      <section id="tab-alumni" class="view-panel">
+        <div class="view-hero">
+          <div class="eyebrow-tag">MODULE M7 • ALUMNI MENTORSHIP NETWORK</div>
+          <h1 class="view-title">Verified Alumni Directory</h1>
+          <p class="view-subtitle">Connect with verified KIET alumni working at Amazon, Google, Microsoft, and top startups. Package privacy toggles protect individual financial disclosures.</p>
+        </div>
+
+        <div class="card-panel">
+          <div class="alumni-filter-bar">
+            <input type="text" placeholder="Filter by company, role, or graduation batch..." class="form-input" id="alumniSearchFilter">
+            <select class="form-select">
+              <option>All Companies (Amazon, Microsoft, Cred)</option>
+              <option>Tier-1 Startups</option>
+              <option>MNC Giants</option>
+            </select>
+          </div>
+
+          <div class="two-col-grid" id="alumniCardsGrid">
+            <div class="alumni-card">
+              <div class="alumni-top">
+                <div class="alumni-avatar">RK</div>
+                <div>
+                  <h4>Rohan Kumar</h4>
+                  <span class="text-muted">Software Development Engineer II @ Amazon AWS</span>
+                </div>
+              </div>
+              <div class="alumni-meta-info">
+                <span>Batch of 2023 • CSE Department</span>
+                <span class="privacy-pill">Package: Hidden by Alumni Privacy Toggle</span>
+              </div>
+              <div class="tags-flex-wrap">
+                <span class="code-tag">Distributed Systems</span><span class="code-tag">AWS ECS</span><span class="code-tag">Java</span>
+              </div>
+              <div class="alumni-actions">
+                <button class="btn btn-secondary btn-sm" onclick="alert('Mentorship request sent to Rohan Kumar via alumni queue.')">Request 1-on-1 Guidance</button>
+              </div>
+            </div>
+
+            <div class="alumni-card">
+              <div class="alumni-top">
+                <div class="alumni-avatar">NS</div>
+                <div>
+                  <h4>Neha Sharma</h4>
+                  <span class="text-muted">Site Reliability Engineer @ Cred</span>
+                </div>
+              </div>
+              <div class="alumni-meta-info">
+                <span>Batch of 2024 • IT Department</span>
+                <span class="privacy-pill text-blue">Verified Package: 18.5 LPA (Public)</span>
+              </div>
+              <div class="tags-flex-wrap">
+                <span class="code-tag">Kubernetes</span><span class="code-tag">Go</span><span class="code-tag">Terraform</span>
+              </div>
+              <div class="alumni-actions">
+                <button class="btn btn-secondary btn-sm" onclick="alert('Mentorship request sent to Neha Sharma via alumni queue.')">Request Resume Referral</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- TAB 9: MENTOR SUPPORT & DOUBT TICKETS (M8)                       -->
+      <!-- ================================================================ -->
+      <section id="tab-support" class="view-panel">
+        <div class="view-hero">
+          <div class="eyebrow-tag">MODULE M8 • PEER MENTORSHIP & TA QUEUES</div>
+          <h1 class="view-title">Structured Doubt Ticketing Queue</h1>
+          <p class="view-subtitle">High-efficiency academic helpdesk with automatic load-balancing to the least-busy peer mentor or teaching assistant.</p>
+        </div>
+
+        <div class="card-panel">
+          <div class="sub-header-bar">
+            <div>
+              <h3>Active Course Doubt Tickets</h3>
+              <p>Threaded academic support co-located with roadmaps and assignments.</p>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="alert('Creating new doubt ticket modal.')">+ Raise New Doubt Ticket</button>
+          </div>
+
+          <div class="ticket-list">
+            <div class="ticket-row">
+              <div class="ticket-status-col">
+                <span class="ticket-status open">OPEN</span>
+                <span class="mono-badge">#TCK-481</span>
+              </div>
+              <div class="ticket-info-col">
+                <h4>Docker Daemon socket permission denied when running rootless container</h4>
+                <p class="ticket-snippet">During Phase 1 lab task 3, executing `docker run` gives dial unix /var/run/docker.sock: connect: permission denied...</p>
+                <div class="ticket-meta">Assigned to: <strong>Priya Singh (TA, Cloud Lab)</strong> • CSE-301 Lab</div>
+              </div>
+              <div class="ticket-action-col">
+                <button class="btn btn-secondary btn-sm" onclick="alert('Opening thread #TCK-481')">View Discussion (3 replies)</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================ -->
+      <!-- TAB 10: DEAN & TPO EXECUTIVE ANALYTICS (M9 / M10)                 -->
+      <!-- ================================================================ -->
+      <section id="tab-dean" class="view-panel">
+        <div class="view-hero">
+          <div class="eyebrow-tag">EXECUTIVE OVERSIGHT • DEAN & HOD DASHBOARD</div>
+          <h1 class="view-title">Department Skill Distribution & Recruiter Extraction</h1>
+          <p class="view-subtitle">Real-time institutional talent heatmaps across 7,140 students with 1-click candidate dossier exports for startup founders.</p>
+        </div>
+
+        <div class="four-stat-row">
+          <div class="stat-card-metric">
+            <div class="metric-number">7,140</div>
+            <div class="metric-label">Enrolled Students (CSE, IT, CS-AI, ECE)</div>
+          </div>
+          <div class="stat-card-metric">
+            <div class="metric-number text-blue">84.2%</div>
+            <div class="metric-label">Verified Coding Profiles</div>
+          </div>
+          <div class="stat-card-metric">
+            <div class="metric-number text-blue">142</div>
+            <div class="metric-label">Amazon / Tier-1 Eligible</div>
+          </div>
+          <div class="stat-card-metric">
+            <div class="metric-number">0</div>
+            <div class="metric-label">Disputed Marksheet Audits</div>
+          </div>
+        </div>
+
+        <div class="card-panel">
+          <div class="card-panel-header">
+            <div>
+              <h3 class="card-panel-title">1-Click Candidate Talent Dossier Exporter</h3>
+              <p class="card-panel-subtitle">Export pre-vetted candidate pools directly to startup recruiters during placement pitches</p>
+            </div>
+          </div>
+
+          <div class="export-controls-flex">
+            <select class="form-select">
+              <option>Tech Stack: Node.js + Docker + Distributed Systems</option>
+              <option>Tech Stack: Python + Applied AI/ML</option>
+              <option>Tech Stack: Cloud Native DevOps (EKS + Terraform)</option>
+            </select>
+            <select class="form-select">
+              <option>Minimum CGPA: &ge; 7.5</option>
+              <option>Minimum CGPA: &ge; 8.0</option>
+            </select>
+            <select class="form-select">
+              <option>Backlogs: 0 Active Backlogs (Strict)</option>
+            </select>
+            <button class="btn btn-primary" onclick="alert('Exporting pre-vetted dossier CSV for 142 candidates matching criteria.')">Export Candidate Dossier (CSV)</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL 1: RECOMMEND COURSE MODAL                                      -->
+  <!-- ==================================================================== -->
+  <div class="modal-overlay" id="recommendCourseModal">
+    <div class="modal-box">
+      <div class="modal-box-header">
+        <div>
+          <span class="eyebrow-tag">AI CAREER PATHWAY ENGINE</span>
+          <h3>✨ Smart Course Recommendation</h3>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('recommendCourseModal')">&times;</button>
+      </div>
+
+      <div class="modal-box-body">
+        <p class="text-muted">
+          Our recommendation algorithm evaluates your <strong>completed courses</strong> (e.g. Full-Stack completed), 
+          <strong>GitHub AST repositories</strong>, and <strong>LeetCode topics</strong> to prescribe your highest-leverage next step.
+        </p>
+
+        <div class="form-row">
+          <label>What is your primary career aspiration for the upcoming placement cycle?</label>
+          <select id="userCareerSelect" class="form-select">
+            <option value="cloud">Cloud Infrastructure / SRE / DevOps Startups (₹10–18 LPA)</option>
+            <option value="fintech">High-Scale Backend & FinTech Engineering (₹14–24 LPA)</option>
+            <option value="ai">AI Systems & Applied Machine Learning (₹12–20 LPA)</option>
+          </select>
+        </div>
+
+        <div class="recommendation-result-card" id="recommendationCard">
+          <div class="rec-score-badge">96% Career Fit Match</div>
+          <h4>Recommended Track: Cloud Native DevOps Engineering</h4>
+          <p>
+            <strong>Why This Fits You:</strong> You have already completed <em>Full-Stack Software Architecture</em> and hold 24 Node.js repositories. 
+            Pairing your backend skill set with Docker, Kubernetes, and CI/CD will place you into the top 5% of candidate dossiers for AWS and Tier-1 startup recruiters.
+          </p>
+          <div class="rec-footer-row">
+            <span>Suggested Action: <strong>Specialization Continuation Track</strong></span>
+            <button class="btn btn-primary btn-sm" onclick="closeModal('recommendCourseModal'); navigateToTab('tab-learning'); switchLearningView('devops');">Launch DevOps Track &rarr;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL 2: APPLY FOR END-SEM CERTIFICATION EXAM                        -->
+  <!-- ==================================================================== -->
+  <div class="modal-overlay" id="examRegModal">
+    <div class="modal-box">
+      <div class="modal-box-header">
+        <div>
+          <span class="eyebrow-tag">END-OF-SEMESTER TESTING WINDOW</span>
+          <h3 id="examRegTitle">Apply For Phase Certification Exam</h3>
+        </div>
+        <button class="modal-close-btn" onclick="closeModal('examRegModal')">&times;</button>
+      </div>
+
+      <div class="modal-box-body">
+        <div class="rules-card">
+          <div class="rule-row">&check; <strong>Testing Window:</strong> Conducted alongside End-Term Semester Exams.</div>
+          <div class="rule-row">&check; <strong>Evaluation Breakdown:</strong> 20 Marks Capstone Project + 80 Marks Proctored Exam (Total 100).</div>
+          <div class="rule-row">&check; <strong>Passing Threshold:</strong> Minimum 60/100 combined score required.</div>
+          <div class="rule-row text-amber">&excl; <strong>Attempt Guard:</strong> Strict limit of <strong>3 attempts</strong> per certification (You have 2 attempts remaining).</div>
+        </div>
+
+        <p class="modal-note">
+          If you fail, you <strong>do not lose access</strong> to any course content and can continue exploring higher phases freely!
+        </p>
+
+        <div class="modal-btn-row">
+          <button class="btn btn-secondary" onclick="closeModal('examRegModal')">Cancel</button>
+          <button class="btn btn-primary" onclick="alert('Registration confirmed for Odd-Sem 2026 End-Term Testing Window! Examination slot booked.'); closeModal('examRegModal');">Confirm Exam Registration</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastNotification" class="toast-popup"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
