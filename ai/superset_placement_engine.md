@@ -1,39 +1,54 @@
 # Superset Placement Engine & AI Opportunity Hub: Architecture & Implementation Blueprint
+> **The 3 AI-Enhanced Pillars of Campus Placements & Opportunity Matching for KIET Group of Institutions**
 
 ---
 
 ## 📌 Executive Summary
 
-**Superset** is an end-to-end **Campus Placement Automation & ATS (Applicant Tracking System)**.
-Traditionally, college placement cells (TPOs) handle recruitment manually using Google Sheets, WhatsApp groups, and notice boards, which causes data errors, student disputes, and placement policy violations.
+Traditional placement software (like vanilla Superset) operates strictly as a transactional database for final-year placement drives.
 
-In our **KIET Campus Platform**, we upgrade the traditional Superset model in two revolutionary ways:
+In the **KIET Campus Platform (`Only_Jobs`)**, the **Placement Engine** is expanded into a **Triple-Pillar Opportunity Hub** powered by local asynchronous queues and a specialized **FastAPI AI Code & Vector Intelligence Microservice**:
 
-1. **On-Campus Governance + Proof of Work:** Automated eligibility rules, multi-round tracking, and "1-Student-1-Job / Dream Upgrade" policy enforcement backed by verified GitHub/LeetCode metrics.
-2. **🧠 Autonomous Daily Internet Job Hunter & AI Recommender:** Unlike standard Superset (which sits idle when no campus drive is active), an AI Agent scrapes relevant off-campus internships and fresher jobs from across the internet every night and recommends top-matching opportunities (both on-campus and off-campus) tailored to each student's `StudentProfile` vector.
+1. **🏛️ Section 1: On-Campus Corporate TPO Drives:** Automated eligibility checks, multi-round selection tracking, and institutional policies (1-Student 1-Job & Dream Upgrades) combined with **AI Recruiter Candidate Dossiers**.
+2. **🔍 Section 2: KIET In-App Opportunity Extraction Team:** Dedicated student ops committee assisted by an **Autonomous LLM Parser & Scraper** extracting verified internships and fresher roles from `leco.ai`, LinkedIn, Wellfound, Greenhouse, Lever, and Ashby with spam-filtering.
+3. **🎯 Section 3: 1st-to-4th Year Personalized AI Recommendation Engine:** Semantic `pgvector` matchmaking connecting students (from 1st-year open-source/hackathons to 4th-year marquee FTE roles) with real-time **Match %** and **Missing Skill Gap Alerts**.
 
 ---
 
-## 🔄 1. Dual-Engine Placement & AI Job Discovery Workflow
+## 🔄 1. Triple-Pillar Placement & AI Discovery Architecture
 
 ```mermaid
 flowchart TD
-    subgraph OnCampus [🏛️ Engine 1: On-Campus TPO Drives]
-        A[🏢 Company Posts Job & Criteria] --> B[🏛️ TPO Configures Rules & Publishes Drive]
-        B --> C[⚙️ Automated Eligibility Engine Runs]
-        C -->|Meets Criteria| D[✅ 1-Click Apply Enabled]
-        C -->|Fails Criteria| E[🔒 Disabled + Explicit Diagnostic Reason]
-        D --> F[🎯 Multi-Round Pipeline: OA ➔ Tech ➔ HR ➔ Offer]
-        F --> G[📜 Offer Policy Engine: 1-Offer Freeze / Dream Upgrade]
+    subgraph S1["🏛️ SECTION 1: On-Campus TPO Drives"]
+        A1["🏢 Company Posts Drive"] --> A2["🏛️ TPO Sets Dynamic JSONB Rules"]
+        A2 --> A3["⚙️ Automated Eligibility Filter"]
+        A3 -->|Eligible| A4["✅ 1-Click Apply Enabled"]
+        A3 -->|Ineligible| A5["🔒 Diagnostic Reason Displayed"]
+        A4 --> A6["🎯 Multi-Round Pipeline: OA ➔ Tech ➔ HR ➔ Offer"]
+        A6 --> A7["📜 1-Offer Freeze / Dream Upgrade Rules"]
+        A6 --> A8["🧠 AI Recruiter Dossier Generator<br/>(Summarizes student AST repo quality & LC score)"]
     end
 
-    subgraph OffCampusAI [🌐 Engine 2: Daily AI Internet Job Scraper & Matcher]
-        H[⏰ 02:00 AM Nightly Scraper Agent<br/>Greenhouse, Lever, YC, LinkedIn, Tavily] --> I[🧠 LLM Structured Job Parser<br/>Extracts Role, Skills, Batch, Apply URL]
-        I --> J[(🐘 ExternalJob Table + pgvector)]
-        K[🎓 Student Profile Vector<br/>GitHub + LeetCode + Courses + CGPA] --> L[🎯 Two-Stage Hybrid Recommender]
-        J --> L
-        B --> L
-        L --> M[🔥 Personalized 'Recommended For You' Job Feed<br/>Match % + Missing Skill Gap Alerts]
+    subgraph S2["🔍 SECTION 2: In-App Extraction & AI Curation"]
+        B1["🌐 External Platforms<br/>(leco.ai, LinkedIn, Wellfound, ATS feeds)"] --> B2["⏰ Nightly Ingestion Queue (BullMQ)"]
+        B2 --> B3["🧠 LLM Job Parser & Anti-Scam Filter<br/>(Validates stipend, company domain, eliminates scams)"]
+        B3 --> B4["👥 KIET In-App Team Dashboard<br/>(1-Click approve, tag batch & publish)"]
+        B4 --> B5[("🐘 Verified Opportunity Pool + pgvector")]
+    end
+
+    subgraph S3["🎯 SECTION 3: 1st–4th Year AI Recommendation Engine"]
+        C1["🎓 Student Profile Vector (384-Dim)<br/>(GitHub AST + LeetCode Topics + CGPA + Sem)"]
+        
+        B5 --> D_MATCH["🧠 Two-Stage Semantic Hybrid Matcher<br/>(Cosine Similarity + Hard Eligibility Filter)"]
+        A2 -.-> D_MATCH
+        C1 --> D_MATCH
+
+        D_MATCH --> E1["🌱 1st Year: GSoC, Hackathons & Tech Gigs"]
+        D_MATCH --> E2["🚀 2nd Year: Startup Micro-Internships"]
+        D_MATCH --> E3["💼 3rd Year: Summer PPIs & 6-Mo Internships"]
+        D_MATCH --> E4["🏆 4th Year: Full-Time Placement Drives"]
+        
+        D_MATCH --> E5["📊 Match % Score + Missing Skill Gap Alerts"]
     end
 ```
 
@@ -42,6 +57,19 @@ flowchart TD
 ## 💻 2. Database Schema (Prisma / PostgreSQL + pgvector)
 
 ```prisma
+enum OpportunityType {
+  ON_CAMPUS_TPO         // Section 1: Official college drive
+  IN_APP_CURATED        // Section 2: External job extracted by in-app team
+  OPEN_SOURCE_PROGRAM   // Section 3: GSoC, MLH, Hackathons for 1st/2nd years
+}
+
+enum OpportunityCategory {
+  INTERNSHIP_SUMMER     // 2-month summer internship (3rd years)
+  INTERNSHIP_SEMESTER   // 6-month pre-placement internship (7th/8th sem)
+  MICRO_INTERNSHIP      // Part-time / project gig (1st/2nd years)
+  FULL_TIME_FTE         // Full-time corporate placement (4th years)
+}
+
 enum ApplicationStatus {
   APPLIED
   OA_SHORTLISTED
@@ -52,191 +80,188 @@ enum ApplicationStatus {
   WITHDRAWN
 }
 
-enum JobSourceType {
-  ON_CAMPUS_TPO
-  AI_INTERNET_SCRAPED
-}
-
-model JobDrive {
-  id               String             @id @default(uuid())
-  tenantId         String             @default("kiet-main")
-  sourceType       JobSourceType      @default(ON_CAMPUS_TPO)
-  companyName      String             // e.g., "Amazon", "TCS", "Stripe"
-  jobRole          String             // e.g., "SDE-1", "AI/ML Intern"
-  ctcLpa           Float?             // e.g., 12.5
-  isDreamCompany   Boolean            @default(false)
-  externalApplyUrl String?            // Populated by Daily AI Scraper for off-campus jobs
-  driveDate        DateTime?
-  deadline         DateTime
-
-  // JSONB rule engine allows 100% dynamic eligibility rules per drive
-  eligibilityRules Json
+model JobOpportunity {
+  id                  String               @id @default(uuid())
+  tenantId            String               @default("kiet-main")
+  type                OpportunityType      @default(ON_CAMPUS_TPO)
+  category            OpportunityCategory  @default(FULL_TIME_FTE)
+  
+  companyName         String               // e.g. "Amazon", "Cred", "Stripe"
+  jobRole             String               // e.g. "Backend Intern", "SDE-1"
+  location            String               // e.g. "Delhi-NCR", "Bengaluru", "Remote"
+  ctcLpa              Float?               // e.g. 14.5 LPA
+  stipendMonthly      Float?               // e.g. 45,000 INR/mo
+  isDreamCompany      Boolean              @default(false)
+  externalApplyUrl    String?              // Populated for IN_APP_CURATED
+  deadline            DateTime
+  
+  // Section 1: JSONB rule engine for TPO drives
+  eligibilityRules    Json?
   /* Example JSON Structure:
     {
       "minCgpa": 7.5,
       "allowedBranches": ["CSE", "IT", "CS-AI"],
       "maxBacklogs": 0,
-      "maxGapYears": 1,
-      "minVerifiedBadges": 3,
-      "requiredSkills": ["Node.js", "PostgreSQL", "Docker"],
-      "eligibleBatches": [2026, 2027, 2028]
+      "eligibleBatches": [2026, 2027],
+      "minVerifiedBadges": 2
     }
   */
 
-  // 🧠 Vector embedding of Job Description + Required Skills for AI Recommender
-  jobEmbedding     Unsupported("vector(384)")?
+  // Section 2 & 3: Metadata for In-App Extraction & Year-Based Matching
+  targetYears         Int[]                // [1, 2] for 1st/2nd yr; [3] for summer interns; [4] for FTE
+  targetSkills        String[]             // ["Node.js", "PostgreSQL", "Docker"]
+  curatedByUserId     String?              // In-App Team member ID
+  isVerifiedByTeam    Boolean              @default(false)
 
-  applications     JobApplication[]
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
+  // Section 3: 🧠 Semantic Vector Embedding for AI Recommender
+  opportunityVector   Unsupported("vector(384)")?
 
+  applications        JobApplication[]
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  @@index([type, category])
   @@index([deadline])
-  @@index([sourceType, createdAt(sort: Desc)])
+  @@index([isVerifiedByTeam])
 }
 
 model JobApplication {
-  id           String            @id @default(uuid())
-  jobDriveId   String
-  userId       String            // Student ID
-  status       ApplicationStatus @default(APPLIED)
-  aiMatchScore Float?            // 0 to 100% match score computed at application time
-  notes        String?
-  appliedAt    DateTime          @default(now())
-  updatedAt    DateTime          @updatedAt
+  id                  String               @id @default(uuid())
+  jobOpportunityId    String
+  userId              String               // Student ID
+  status              ApplicationStatus    @default(APPLIED)
+  roundIndex          Int                  @default(1)
+  appliedAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
 
-  jobDrive     JobDrive          @relation(fields: [jobDriveId], references: [id], onDelete: Cascade)
+  opportunity         JobOpportunity       @relation(fields: [jobOpportunityId], references: [id], onDelete: Cascade)
 
-  @@unique([jobDriveId, userId])
+  @@unique([jobOpportunityId, userId])
   @@index([userId, status])
 }
 ```
 
 ---
 
-## ⚙️ 3. Core Eligibility Checking Engine (Node.js)
+## 🧠 3. Detailed AI Subsystem Implementations
 
-Evaluates all criteria simultaneously and returns a complete diagnostic array so students know every exact requirement they meet or miss:
+### A. Section 1 AI Enhancement: Instant Recruiter Candidate Dossiers
+When a company requests a candidate shortlist from the TPO, the FastAPI AI service generates a 1-page structured JSON dossier summarizing verifiable proof of work:
 
-```javascript
-/**
- * Evaluates student profile against drive criteria.
- * Combines traditional academic rules with Proof-of-Work checks.
- */
-export function evaluateJobEligibility(student, drive) {
-  const rules = drive.eligibilityRules;
-  const unmetReasons = [];
-
-  if (rules.minCgpa && student.cgpa < rules.minCgpa) {
-    unmetReasons.push(`CGPA requirement not met (Required: ${rules.minCgpa}, Current: ${student.cgpa})`);
-  }
-
-  if (rules.allowedBranches && !rules.allowedBranches.includes(student.branch)) {
-    unmetReasons.push(`Branch ${student.branch} is not eligible for this drive`);
-  }
-
-  if (rules.maxBacklogs !== undefined && student.activeBacklogs > rules.maxBacklogs) {
-    unmetReasons.push(`Active backlogs exceed limit (Allowed: ${rules.maxBacklogs}, You have: ${student.activeBacklogs})`);
-  }
-
-  if (rules.maxGapYears !== undefined && student.educationGapYears > rules.maxGapYears) {
-    unmetReasons.push(`Education gap exceeds maximum allowed (${rules.maxGapYears} year/s)`);
-  }
-
-  // Offer Policy Enforcement (1-Student 1-Job / Dream Rule)
-  if (student.currentOfferCtc && drive.sourceType === 'ON_CAMPUS_TPO') {
-    const isDreamDrive = drive.isDreamCompany || (drive.ctcLpa && drive.ctcLpa >= student.currentOfferCtc * 1.5);
-    if (!isDreamDrive) {
-      unmetReasons.push(
-        `Offer Policy: Holding ${student.currentOfferCtc} LPA. Eligible only for Dream drives (>= ${student.currentOfferCtc * 1.5} LPA).`
-      );
+```python
+# FastAPI AI Service (app/routers/dossier.py)
+@router.post("/generate-candidate-dossier")
+async def generate_candidate_dossier(student_id: str, db: Session = Depends(get_db)):
+    student = db.query(Student).filter(Student.id == student_id).first()
+    
+    # Analyze AST complexity of top projects & LeetCode topic distribution
+    dossier = {
+        "roll_number": student.roll_number,
+        "academic_summary": {
+            "cgpa": student.cgpa,
+            "branch": student.branch,
+            "backlogs": student.active_backlogs
+        },
+        "verified_coding_proof": {
+            "leetcode_rating": student.coding_stats.get("leetcode_rating"),
+            "problem_depth": {
+                "dp_graphs_greedy": student.coding_stats.get("hard_medium_count", 0),
+                "streak_consistency": student.coding_stats.get("streak_days", 0)
+            },
+            "github_verified_projects": [
+                {
+                    "repo_name": p.title,
+                    "ast_complexity_score": p.ast_score,
+                    "plagiarism_risk": "VERY_LOW" if p.plagiarism_score < 15 else "FLAGGED",
+                    "live_url": p.live_url
+                } for p in student.projects[:3]
+            ]
+        },
+        "placement_readiness_score": calculate_readiness_index(student)
     }
-  }
-
-  // Custom Innovation: Proof of Work / Verified Badges Requirement
-  if (rules.minVerifiedBadges && student.verifiedBadgesCount < rules.minVerifiedBadges) {
-    unmetReasons.push(
-      `Requires at least ${rules.minVerifiedBadges} verified skill badges (You have: ${student.verifiedBadgesCount})`
-    );
-  }
-
-  return {
-    eligible: unmetReasons.length === 0,
-    reasons: unmetReasons
-  };
-}
+    return dossier
 ```
 
 ---
 
-## 🧠 4. Daily AI Job Scraper & Personalized Recommender (`ai-service`)
-
-### A. Autonomous Daily Internet Job Hunter (`app/agents/job_hunter.py`)
-
-Runs every night at 02:00 AM IST, fetching fresh SDE, Data Science, DevOps, and AI/ML opportunities across India and remote boards:
+### B. Section 2 AI Enhancement: Ingestion Parser & Anti-Scam Classifier
+For the **KIET In-App Team**, incoming external job postings from `leco.ai`, LinkedIn, or web crawlers are pre-filtered to remove scams and normalize fields before human review:
 
 ```python
-from fastapi import APIRouter
-from pydantic import BaseModel, Field
+# FastAPI AI Service (app/routers/job_parser.py)
+from pydantic import BaseModel, HttpUrl
 
-router = APIRouter(prefix="/ai/v1/jobs", tags=["AI Job Hunter & Recommender"])
+class ParsedJobOutput(BaseModel):
+    company_name: str
+    role_title: str
+    category: str  # "INTERNSHIP_SUMMER", "FULL_TIME_FTE", "MICRO_INTERNSHIP"
+    target_years: list[int]  # [1, 2], [3], or [4]
+    stipend_or_ctc: str
+    required_skills: list[str]
+    apply_url: HttpUrl
+    scam_risk_score: float  # 0.0 to 1.0 (Flagged if > 0.3)
+    is_auto_approved: bool
 
-class ScrapedJobSchema(BaseModel):
-    companyName: str
-    jobRole: str
-    ctcLpa: float | None = None
-    externalApplyUrl: str
-    requiredSkills: list[str] = Field(description="Extracted tech stack keywords")
-    eligibleBatches: list[int] = Field(description="Graduation years e.g. [2026, 2027, 2028]")
-
-@router.post("/scrape-daily")
-async def trigger_daily_job_scraper():
-    """
-    1. Queries Tavily Search API / Greenhouse / Lever / Wellfound feeds for fresher & intern roles.
-    2. Deduplicates URLs against existing JobDrive records in PostgreSQL.
-    3. Uses Structured LLM output (ScrapedJobSchema) to extract clean eligibility JSON.
-    4. Generates 384-dim jobEmbedding via BAAI/bge-small-en-v1.5 and inserts into JobDrive.
-    """
-    return {"status": "success", "jobsIngested": 42, "duplicatesSkipped": 15}
-```
-
-### B. Two-Stage Student Job Recommender (`GET /ai/v1/jobs/recommend/{student_id}`)
-
-Powers the **"🔥 Recommended For You"** tab in the Placement Portal:
-
-- **Stage 1 (Hard SQL Filter):** Filters active `ON_CAMPUS_TPO` and `AI_INTERNET_SCRAPED` jobs matching the student's batch year and branch.
-- **Stage 2 (pgvector Cosine Similarity + Skill Gap Diff):** Computes semantic similarity between `StudentProfile.profileEmbedding` and `JobDrive.jobEmbedding`, returning exact match percentages and missing skills.
-
-```python
-@router.get("/recommend/{student_id}")
-async def get_personalized_job_recommendations(student_id: str):
-    # Executes pgvector cosine similarity query:
-    # SELECT id, "companyName", "jobRole", 1 - ("jobEmbedding" <=> student.profileEmbedding) AS match_score
-    # FROM "JobDrive" WHERE deadline > NOW() ORDER BY match_score DESC LIMIT 20;
-    return {
-        "studentId": student_id,
-        "recommendations": [
-            {
-                "jobDriveId": "uuid-1",
-                "companyName": "Razorpay",
-                "jobRole": "Backend SDE Intern",
-                "sourceType": "AI_INTERNET_SCRAPED",
-                "matchPercentage": 93.4,
-                "matchedSkills": ["Node.js", "PostgreSQL", "Redis", "Docker"],
-                "missingSkills": ["Golang"],
-                "aiAdvice": "Your Verified Project 'Distributed Task Queue' strongly aligns with this role."
-            }
-        ]
-    }
+@router.post("/parse-and-verify-raw-job", response_model=ParsedJobOutput)
+async def parse_and_verify_job(raw_text: str, source_url: str):
+    # LLM extracts metadata and flags fraud/consultancy warning signs
+    parsed_job = await extract_and_classify_job_posting(raw_text, source_url)
+    return parsed_job
 ```
 
 ---
 
-## 🚀 5. How Our KIET Platform Beats Vanilla Superset
+### C. Section 3 AI Enhancement: 1st-to-4th Year Hybrid Vector Recommender
+Combines semantic text matching with **hard academic-year filtering**:
 
-| Feature | Standard Superset | Our KIET Platform (Superset + AI & Proof of Work) |
-|---|---|---|
-| **Primary Metric** | CGPA, Marks, & Claims | CGPA + Verified Code + AST Score & LeetCode Telemetry |
-| **Opportunity Scope** | Only On-Campus Drives | On-Campus TPO Drives + Daily AI-Scraped Off-Campus Jobs |
-| **Job Discovery** | Chronological list of drives | Personalized AI Match % Feed based on Student Profile Vector |
-| **Target Audience** | Final year students during placement season | 1st to 4th year continuous talent & internship pipeline |
-| **Recruiter Experience** | Filter by Marks only | Filter by Marks + Specific Tech Stacks + Real GitHub Repos |
+```python
+# FastAPI AI Service (app/routers/recommendations.py)
+@router.post("/recommend-opportunities")
+async def recommend_opportunities(student_id: str, db: Session = Depends(get_db)):
+    student = db.query(Student).filter(Student.id == student_id).first()
+    student_vector = student.profile_embedding  # 384-dim vector
+    student_year = calculate_student_year(student.semester)  # 1, 2, 3, or 4
+    
+    # 1. Hard Filter by Academic Year:
+    # 1st yr -> Hackathons & Open-source; 2nd yr -> Micro-interns; 3rd yr -> Summer PPI; 4th yr -> FTE
+    query = text("""
+        SELECT id, company_name, job_role, type, category, target_skills,
+               1 - (opportunity_vector <=> :student_vector) AS match_score
+        FROM job_opportunities
+        WHERE is_verified_by_team = true
+          AND deadline > NOW()
+          AND :student_year = ANY(target_years)
+        ORDER BY match_score DESC
+        LIMIT 10;
+    """)
+    
+    results = db.execute(query, {
+        "student_vector": str(student_vector),
+        "student_year": student_year
+    }).fetchall()
+    
+    # 2. Compute Missing Skill Gaps
+    recommendations = []
+    for r in results:
+        missing_skills = [s for s in r.target_skills if s not in student.verified_skills]
+        recommendations.append({
+            "job_id": r.id,
+            "company": r.company_name,
+            "role": r.job_role,
+            "match_percentage": round(r.match_score * 100, 1),
+            "missing_skills": missing_skills
+        })
+        
+    return recommendations
+```
+
+---
+
+## 🎯 Summary of Key Benefits
+
+1. **For TPO:** Zero manual spreadsheets, zero student disputes, policy-enforced 1-student 1-job rules, and instant recruiter candidate dossiers.
+2. **For In-App Extraction Team:** Automated tooling to discover, filter, normalize, and publish high-quality external opportunities from platforms like `leco.ai` and startup ATS feeds.
+3. **For 1st to 4th-Year Students:** Continuous, personalized career guidance that presents the right opportunity (GSoC $\rightarrow$ Micro-Internships $\rightarrow$ High-Stakes PPI $\rightarrow$ Marquee Placements) at the exact right semester.
+
+---
+*Maintained by Arpit Prajapati & The KIET Campus Platform Engineering Team.*

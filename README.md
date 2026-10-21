@@ -106,24 +106,40 @@ sequenceDiagram
 
 ---
 
-### 2. Superset-Grade Placement Drive & Policy Enforcement
-Automates end-to-end placement operations while strictly enforcing college hiring policies (e.g., **1-Student 1-Job** and **Dream Company Upgrade** rules).
+### 2. The Triple-Pillar Placement & Opportunity Engine
+Unlike traditional portals that only serve 4th-year students during placement season, **Only_Jobs** operates as a continuous, 3-pillar opportunity ecosystem:
 
 ```mermaid
 flowchart TD
-    A["🏛️ TPO Creates Placement Drive<br/>(Job Role, CTC, Dynamic JSONB Criteria)"] --> B["⚡ Auto-Filter Eligible Students<br/>(CGPA, Backlogs, Branch, Verified Skills)"]
-    B --> C["📩 Notification Sent to Eligible Candidates"]
-    C --> D["🎓 Student Applies with 1-Click Dossier"]
-    D --> E["📋 Multi-Round Pipeline<br/>(Shortlist ➔ OA Test ➔ Technical ➔ HR)"]
-    E --> F{"🎉 Candidate Selected for Offer?"}
-    F -- No --> G["Retains Active Application Status"]
-    F -- Yes --> H["Institutional Policy Check Engine"]
-    
-    H --> I{"Existing Active Offer?"}
-    I -- No --> J["✅ Mark as PLACED<br/>Freeze general applications"]
-    I -- Yes --> K{"Is New Drive a 'Dream Company'?<br/>(CTC > 2x Current Offer)"}
-    K -- Yes --> L["🚀 Allow Dream Upgrade<br/>Release previous offer for waitlist"]
-    K -- No --> M["🚫 Block Application<br/>Enforce 1-Student 1-Job rule"]
+    subgraph P1["🏛️ PILLAR 1: On-Campus TPO Drives"]
+        A1["🏢 Company Approaches TPO"] --> A2["🏛️ TPO Sets Dynamic JSONB Rules<br/>(Branch, CGPA, Backlogs, Proof-of-Work)"]
+        A2 --> A3["⚙️ Automated Eligibility Filter"]
+        A3 -->|Eligible| A4["✅ 1-Click Apply Enabled"]
+        A3 -->|Ineligible| A5["🔒 Explicit Diagnostic Reason"]
+        A4 --> A6["🎯 Multi-Round Pipeline: OA ➔ Tech ➔ HR ➔ Offer"]
+        A6 --> A7["📜 Institutional Policy Engine<br/>(1-Student 1-Job Lock / Dream Upgrade >= 1.5x)"]
+    end
+
+    subgraph P2["🔍 PILLAR 2: In-App Extraction Team (External Jobs)"]
+        B1["🌐 External Platforms<br/>(leco.ai, LinkedIn, Wellfound, ATS feeds)"] --> B2["📥 Extraction Team Staging Queue<br/>(Automated Crawlers + Student Ops Team)"]
+        B2 --> B3["🛡️ Anti-Scam Curation & Verification<br/>(Validate legitimacy, stipend, & batch)"]
+        B3 --> B4["🏷️ Normalized Skill & Batch Tags"]
+        B4 --> B5[("🐘 Published In-App Opportunity Pool")]
+    end
+
+    subgraph P3["🎯 PILLAR 3: 1st–4th Year Smart Recommendation Engine"]
+        C1["🎓 Student Profile Vector (384-Dim)<br/>(Year: 1st/2nd/3rd/4th<br/>GitHub AST + LeetCode Topics + CGPA)"]
+        
+        B5 --> D_REC["🧠 Semantic Matcher & Year-Aware Ranker"]
+        A2 -.-> D_REC
+        C1 --> D_REC
+
+        D_REC --> E1["🌱 1st Year: GSoC, Hackathons & Tech Gigs"]
+        D_REC --> E2["🚀 2nd Year: Startup Micro-Internships"]
+        D_REC --> E3["💼 3rd Year: Summer PPIs & 6-Mo Internships"]
+        D_REC --> E4["🏆 4th Year: Full-Time Placement Drives"]
+        D_REC --> E5["📊 Match % Score + Missing Skill-Gap Alerts"]
+    end
 ```
 
 ---
@@ -191,7 +207,7 @@ Only_jobs/
 | # | Module | Core Functionality | Primary Stakeholders |
 |:---|:---|:---|:---|
 | **M1** | **[Student Profile System](plan/student_profile_architecture.md)** | Admin-locked college meta (`@kiet.edu`), nightly coding sync (GitHub/LeetCode), self-declared marks with S3 presigned marksheets, fraud audit trail. | Student, TPO, Dean |
-| **M2** | **[Placement Engine](plan/superset_placement_engine.md)** | Superset-grade ATS, dynamic JSONB eligibility criteria, multi-round selection pipeline, 1-student 1-job rule, and dream company upgrade logic. | TPO, Student, Recruiter |
+| **M2** | **[Triple-Pillar Placement Engine](plan/superset_placement_engine.md)** | (1) On-Campus TPO Drives with 1-student 1-job policy, (2) In-App Team off-campus job curation (leco.ai, Wellfound), and (3) 1st-to-4th-year smart recommendation engine. | TPO, Student, In-App Team, Recruiter |
 | **M3** | **[Campus Feed](plan/campus_feed_architecture.md)** | Achievement & peer motivation hub with Redis atomic 3-posts-per-day rate limits, cursor pagination, and anti-spam controls. | Student, Faculty, Dean |
 | **M4** | **[Class Project Rooms](plan/class_project_rooms_architecture.md)** | Zero-text submission drop box (screenshots + repository URL only) with automated AST plagiarism checks and 1-click teacher review. | Student, Faculty |
 | **M5** | **[Learning & Certification](plan/learning_and_certification_engine.md)** | Sequential gatekeeping (Beginner $\rightarrow$ Intermediate $\rightarrow$ Advanced), comprehensive milestone checkpoints, and auto-minted verifiable credentials. | Student, Mentors |

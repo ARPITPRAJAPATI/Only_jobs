@@ -32,7 +32,7 @@ A **single-institution campus platform** for KIET Group of Institutions that rep
 ### 1.2 What This System IS
 
 * A verified student profile and proof-of-work aggregator.
-* A placement drive automation and eligibility engine.
+* A triple-pillar placement and career discovery engine (On-Campus TPO Drives, In-App Curated Opportunities, and 1st-to-4th-Year Recommendations).
 * A structured skill roadmap with gatekept certifications.
 * A campus social feed with institutional controls.
 * A faculty project verification and grading portal.
@@ -43,7 +43,7 @@ A **single-institution campus platform** for KIET Group of Institutions that rep
 * It is **not** a general-purpose social network (no DMs, no stories, no reels).
 * It is **not** a multi-tenant SaaS product (built exclusively for KIET, architecture allows future extension).
 * It is **not** an LMS that hosts video lectures (it curates external resources and tests comprehension).
-* It is **not** a job board aggregator like Naukri/LinkedIn (it manages only campus-specific drives).
+* It is **not** an uncurated generic job scraper (all external opportunities are strictly curated and verified by the in-app operations team for quality, batch eligibility, and anti-scam protection).
 
 ### 1.4 System Boundary Diagram
 
@@ -91,7 +91,7 @@ C4Context
 | M1 | **Auth & RBAC** | All | `@kiet.edu` SSO, JWT sessions, role-based route guards |
 | M2 | **Student Profile** | Student, TPO, Dean | Admin-locked meta, coding stats (GitHub/LC/CF), academics with audit trail |
 | M3 | **Campus Feed** | Student, Teacher, Dean | Achievement posts (3/day Redis limit), cursor pagination, role-based card styling |
-| M4 | **Placement Engine** | TPO, Student, Recruiter | Drive CRUD, JSONB eligibility rules, multi-round pipeline, offer policies |
+| M4 | **Placement Engine (Triple-Pillar)** | TPO, Student, In-App Team, Recruiter | (1) On-Campus TPO Drives & Policy Engine, (2) In-App Off-Campus Curation (leco.ai/ATS), (3) 1st-4th Yr Vector Recommendations |
 | M5 | **Learning Engine** | Student, Mentor | 3-phase course roadmaps, resource tracking, phase-gatekept progression |
 | M6 | **Exam Engine** | Student, Teacher | Server-timed MCQ tests, delayed BullMQ auto-submit, anti-cheat telemetry |
 | M7 | **Class Project Rooms** | Student, Teacher | Zero-text submission rooms, Zod-validated payloads, 1-click faculty review |

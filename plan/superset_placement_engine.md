@@ -1,95 +1,202 @@
 # Superset Placement Engine: Architecture, Workflow & Implementation Blueprint
+> **The 3 Pillars of Campus Hiring & Opportunity Discovery for KIET Group of Institutions**
 
 ---
 
 ## 📌 Executive Summary
 
-**Superset** is an end-to-end **Campus Placement Automation & ATS (Applicant Tracking System)**. 
-Traditionally, college placement cells (TPOs) handle recruitment manually using Google Sheets, WhatsApp groups, and notice boards, which causes data errors, student disputes, and placement policy violations. Superset automates and digitizes this entire lifecycle.
+Traditional campus placement portals (e.g., vanilla Superset, Google Sheets, WhatsApp groups) suffer from critical limitations:
+1. **TPO-Only Narrow Focus:** They only activate in the 7th/8th semester for 4th-year final placements, completely ignoring 1st, 2nd, and 3rd-year students.
+2. **Campus-Only Siphon:** When on-campus recruitment slows down due to market cycles, students have zero assistance and are left to scramble across unvetted job boards.
+3. **One-Size-Fits-All Inefficiency:** Students receive flooded notifications for roles they are either unqualified for or uninterested in.
 
-In our **KIET Campus Platform**, we are not only adopting the core strengths of Superset (automated eligibility and multi-round pipeline tracking) but also upgrading it by integrating **Verifiable Proof of Work (GitHub, LeetCode, Badges, and Project Verification)**.
+In our **KIET Campus Platform (`Only_Jobs`)**, the **Placement Engine** is engineered as a **Triple-Engine Opportunity Ecosystem**:
 
----
-
-## 👥 1. The Three-Party Stakeholder Model
-
-```mermaid
-graph TD
-    TPO["🏛️ Placement Cell (TPO / Admin)<br/>• Onboard companies<br/>• Configure eligibility rules<br/>• Enforce 1-offer / Dream rules<br/>• Release round shortlists"]
-    Student["🎓 Students<br/>• Verified academic profile<br/>• 1-Click apply to eligible jobs<br/>• Real-time application tracking<br/>• Auto-formatted standardized resume"]
-    Recruiter["🏢 Recruiters (Companies)<br/>• Post job drives & roles<br/>• Filter eligible talent pool<br/>• Conduct tests & rounds<br/>• Release verified offers"]
-
-    TPO <--> Recruiter
-    TPO <--> Student
-    Student <--> Recruiter
+```
+┌─────────────────────────────────────────────────────────────────────────────────────────┐
+│                           SUPERSET PLACEMENT & OPPORTUNITY ENGINE                       │
+├────────────────────────────┬────────────────────────────┬───────────────────────────────┤
+│  SECTION 1: ON-CAMPUS TPO  │  SECTION 2: IN-APP TEAM    │  SECTION 3: 1st–4th YEAR      │
+│  CORPORATE DRIVES          │  OPPORTUNITY EXTRACTION    │  RECOMMENDATION ENGINE        │
+├────────────────────────────┼────────────────────────────┼───────────────────────────────┤
+│ • Official college drives  │ • In-app student/admin team│ • Academic-year tailored matching│
+│ • Dynamic JSONB criteria   │ • Curates off-campus jobs  │   (1st: GSoC/Exploration      │
+│ • Multi-round pipeline     │   (leco.ai, LinkedIn, etc.)│    2nd: Startup internships   │
+│ • 1-Student 1-Job policy   │ • Anti-scam verification   │    3rd: Summer/6-month PPI    │
+│ • Dream upgrade locks      │ • Standardized tags/skills │    4th: Full-time FTE drives) │
+│ • Anti-fraud mark audits   │ • Direct 1-click apply     │ • Skill-gap alerts & Match %  │
+└────────────────────────────┴────────────────────────────┴───────────────────────────────┘
 ```
 
-* **Students:** Access a verified dashboard with locked academic marks, active/dead backlogs, and standardized resume generation. Eligible drives show an active "Apply" button; ineligible drives clearly show why they are locked.
-* **Placement Cell (TPO / College Admin):** Publishes drives, sets branch/CGPA criteria, manages round shortlists, and enforces college placement policies.
-* **Recruiters (Companies):** Receives verified candidate databases, defines assessment stages, shortlists applicants, and rolls out job offers.
-
 ---
 
-## 🔄 2. End-to-End Placement Workflow (Step-by-Step)
+## 🏗️ Master Architectural Flow
 
 ```mermaid
 flowchart TD
-    A[🏢 Company Posts Job & Criteria] --> B[🏛️ TPO Configures Rules & Publishes Drive]
-    B --> C[⚙️ Automated Eligibility Engine Runs]
-    
-    C -->|Meets Criteria| D[✅ 1-Click Apply Button Enabled]
-    C -->|Fails Criteria| E[🔒 Apply Button Disabled + Explicit Reason Displayed]
-    
-    D --> F[📥 Student Applies]
-    F --> G[🎯 Multi-Round Hiring Pipeline]
-    
-    subgraph Pipeline [Hiring Pipeline Stages]
-        G1[Round 1: Online Assessment / OA] --> G2[Round 2: Technical Interview]
-        G2 --> G3[Round 3: HR Interview]
-        G3 --> G4[Round 4: Final Selection / Offer]
+    subgraph S1["🏛️ SECTION 1: On-Campus TPO Drives (Corporate Direct)"]
+        A1["🏢 Company Approaches TPO"] --> A2["🏛️ TPO Sets Dynamic JSONB Rules<br/>(Branch, CGPA, Backlogs, Proof-of-Work)"]
+        A2 --> A3["⚙️ Automated Eligibility Filter"]
+        A3 -->|Eligible| A4["✅ 1-Click Apply Enabled"]
+        A3 -->|Ineligible| A5["🔒 Disabled + Explicit Reason Banner"]
+        A4 --> A6["🎯 Multi-Round Pipeline<br/>(OA ➔ Tech ➔ HR ➔ Offer)"]
+        A6 --> A7["📜 Institutional Policy Engine<br/>(1-Offer Lock / Dream Upgrade >= 1.5x)"]
     end
-    G --> Pipeline
-    
-    G4 --> H[📜 Offer Enforcement & Policy Engine]
-    H -->|Single Offer Policy| I[Freeze Profile for Standard Drives]
-    H -->|Dream Upgrade Rule| J[Allow Applications only for Dream/Marquee Drives]
+
+    subgraph S2["🔍 SECTION 2: KIET In-App Opportunity Extraction Team"]
+        B1["🌐 External Channels<br/>(leco.ai, Wellfound, LinkedIn, Greenhouse, Lever)"] --> B2["📥 Extraction Team Staging Queue<br/>(Automated Crawlers + Student Ops Team)"]
+        B2 --> B3["🛡️ Anti-Scam Verification & Curation<br/>(Validate authenticity, stipend, batch & deadline)"]
+        B3 --> B4["🏷️ Skill & Batch Normalization<br/>(Tag: Backend, Node.js, 2026 Batch, Paid Intern)"]
+        B4 --> B5[("🐘 Published In-App Opportunity Pool")]
+    end
+
+    subgraph S3["🎯 SECTION 3: 1st-to-4th Year Personalized Recommendation Engine"]
+        C1["🎓 Student Identity<br/>(Year: 1st/2nd/3rd/4th<br/>GitHub AST + LeetCode Topics + CGPA)"]
+        
+        A2 -.-> D_REC["⚡ Smart Matching & Ranking Engine"]
+        B5 --> D_REC
+        C1 --> D_REC
+
+        D_REC --> E1["🌱 1st Year: Open-Source, Hackathons, Tech Gigs"]
+        D_REC --> E2["🚀 2nd Year: Startup Micro-Internships & Projects"]
+        D_REC --> E3["💼 3rd Year: High-Stakes Summer PPIs & 6-Mo Internships"]
+        D_REC --> E4["🏆 4th Year: Full-Time Placement Drives & Dream Roles"]
+        
+        D_REC --> E5["📊 Match % Score + Missing Skill-Gap Diagnostic"]
+    end
 ```
-
-### Step 1: Verified Master Student Database (Anti-Fraud)
-* Students cannot fake CGPA, 10th/12th percentages, or backlog counts.
-* Academic records are synced with and locked by College Administration.
-* Standardized, audit-compliant PDF resumes are generated directly by the system.
-
-### Step 2: Strict Rule-Based Eligibility Engine
-When a drive is created (e.g., TCS, Amazon, Infosys), the TPO sets strict rules:
-* **Eligible branches:** CSE, IT, CS-AI, etc.
-* **Academic cutoffs:** CGPA ≥ 7.5, 10th/12th ≥ 60%, Max education gap ≤ 1 year.
-* **Backlogs:** 0 active backlogs.
-
-> **Transparency Layer:**
-> * If a student is eligible $\rightarrow$ **"Apply"** button is active.
-> * If ineligible $\rightarrow$ button is disabled with an explicit tooltip/banner:  
->   *(e.g., "Ineligible: Minimum CGPA required is 7.5 (Your CGPA: 7.1)").*  
->   This eliminates student disputes and saves hundreds of hours for the TPO.
-
-### Step 3: Multi-Round Selection Pipeline
-Each drive moves through structured sequential stages:
-$$\text{Online Assessment (OA)} \longrightarrow \text{Group Discussion} \longrightarrow \text{Technical Interview} \longrightarrow \text{HR Interview} \longrightarrow \text{Final Offer}$$
-* TPOs/Recruiters upload round-wise shortlists via CSV or direct dashboard selection.
-* Unselected candidates automatically move to `REJECTED` status with clear audit trails.
-
-### Step 4: Institutional Placement Policies (Offer Enforcement Engine)
-Colleges enforce strict hiring codes to ensure equitable placement across the batch:
-1. **1-Student 1-Job Policy:** Once an offer is secured, the candidate’s profile is automatically frozen for remaining regular drives.
-2. **Dream / Marquee Upgrade Rule:** A student with a 4 LPA offer can only unlock applications for drives offering $\ge 8\text{ LPA}$ (Dream Category), preventing offer hoarding while allowing career growth.
 
 ---
 
-## 💻 3. Backend Implementation Blueprint (Our System)
+## 🏛️ Section 1: On-Campus TPO Placement Engine
 
-### A. Database Schema (`Prisma` / `PostgreSQL`)
+The core operational system for the **Training & Placement Office (TPO)**, replacing spreadsheets with an automated, policy-enforced ATS.
+
+### 1. Dynamic JSONB Eligibility Rules
+Drives don't use hardcoded schema limits. Every drive defines rich JSONB criteria:
+```json
+{
+  "minCgpa": 7.5,
+  "allowedBranches": ["CSE", "IT", "CS-AI"],
+  "maxActiveBacklogs": 0,
+  "maxHistoricBacklogs": 1,
+  "minTenthPercentage": 70.0,
+  "minTwelfthPercentage": 70.0,
+  "maxEducationGapYears": 1,
+  "eligibleBatches": [2026],
+  "minVerifiedBadges": 2,
+  "requiredCodingThreshold": {
+    "minLeetCodeSolved": 150,
+    "minGitHubCommits": 100
+  }
+}
+```
+
+### 2. Multi-Round Hiring Pipeline
+Each drive transitions through structured, auditable stages:
+$$\text{Applied} \longrightarrow \text{OA Shortlisted} \longrightarrow \text{Technical Round 1} \longrightarrow \text{Technical Round 2} \longrightarrow \text{HR Round} \longrightarrow \text{Offered} / \text{Rejected}$$
+* **Bulk Shortlist Processing:** TPOs upload CSVs or select candidates with 1-click.
+* **Instant Transparency:** Ineligible students see exactly why they cannot apply (e.g., *"Requires CGPA $\ge$ 7.5, current CGPA: 7.2"*), completely eliminating physical TPO disputes.
+
+### 3. Institutional Policy & Offer Enforcement
+Colleges enforce strict equity policies to prevent offer hoarding:
+1. **1-Student 1-Job Rule:** Once a student accepts an offer, their profile is frozen for other regular drives.
+2. **Dream / Super-Dream Upgrade Rule:**
+   - A student placed at 4.5 LPA is eligible **only** for "Dream Drives" ($\ge 8$ LPA or $\ge 1.75\times$ current offer).
+   - A student placed at 12 LPA is eligible **only** for "Super Dream / Marquee Drives" ($\ge 20$ LPA).
+   - If selected for a Dream drive, their previous lower-tier offer is released to the next waitlisted student.
+
+---
+
+## 🔍 Section 2: KIET In-App Opportunity Extraction Team
+
+To ensure students are not solely dependent on the college TPO, the platform incorporates a dedicated **In-App Opportunity Extraction Engine** operated by the **Student Placement Ops Committee + Automated Ingestors**.
+
+### 1. Ingestion Channels
+* **AI & Modern Platforms:** Curated extraction from `leco.ai`, Wellfound (AngelList), and Y-Combinator WorkAtAStartup.
+* **Direct ATS Feeds:** Legitimate public feeds from **Greenhouse, Lever, and Ashby** used by high-growth product startups.
+* **Verified Off-Campus Drives:** National hiring challenges (TCS NQT, Cognizant GenC, Infosys InfyTQ, Amazon WOW, Google Girl Hackathon).
+
+### 2. Human-in-the-Loop Curation & Anti-Scam Guard
+Before any external job reaches students, it undergoes an institutional verification pipeline:
+* **Scam Filter:** Eliminates pay-to-work schemes, fake consultancy calls, and unverified training programs.
+* **Authenticity Check:** Verifies corporate domains, LinkedIn company profiles, and official recruitment mailboxes.
+* **Normalization:** Translates raw job postings into uniform fields:
+  - Exact Role & Work Mode (Remote / Hybrid / On-site Delhi-NCR).
+  - Monthly Stipend (Internship) or Annual CTC (FTE).
+  - Target Graduation Batches (e.g., 2026, 2027, 2028).
+  - Direct Application URLs or Referral Links.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Ext as 🌐 Web / ATS / leco.ai
+    participant Staging as 📥 Staging Queue (Redis)
+    participant Ops as 👥 KIET In-App Team
+    participant DB as 🐘 PostgreSQL (Active Listings)
+    participant Feed as 📱 Student In-App Job Feed
+
+    Ext->>Staging: Raw opportunity extracted (URL, text, role)
+    Staging->>Ops: Alert: New 15 listings pending verification
+    Ops->>Ops: Verify legitimacy, stipend, & batch eligibility
+    Ops->>DB: Publish with normalized tags (Batch 2027, Backend, 35k/mo)
+    DB->>Feed: Broadcast to eligible 2nd/3rd-year student feeds
+```
+
+---
+
+## 🎯 Section 3: 1st to 4th-Year Personalized Recommendation Engine
+
+Unlike vanilla Superset, which is useless for 1st, 2nd, and 3rd-year students, **Only_Jobs guides students throughout their 4-year lifecycle**:
+
+```
+YEAR 1 (Sem 1–2)         YEAR 2 (Sem 3–4)         YEAR 3 (Sem 5–6)         YEAR 4 (Sem 7–8)
+┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
+│ 🌱 FOUNDATIONS   │     │ 🚀 ACCELERATION  │     │ 💼 PRE-PLACEMENT │     │ 🏆 CAREER LAUNCH │
+│ • Open Source    │     │ • Startup Gigs   │     │ • High-Stakes PPI│     │ • On-Campus TPO  │
+│ • GSoC / Hackers │     │ • Micro-Interns  │     │ • 6-Month Interns│     │ • Dream Drives   │
+│ • Campus Gigs    │     │ • Junior Frontend│     │ • Corporate Tests│     │ • Off-Campus FTE │
+│ • DSA Milestones │     │ • Verified Badges│     │ • Skill-Gap Alerts│    │ • Marquee Offers │
+└──────────────────┘     └──────────────────┘     └──────────────────┘     └──────────────────┘
+```
+
+### 1. Year-Wise Opportunity Curation
+
+| Academic Year | Focus Opportunities | How Only_Jobs Matches Them |
+| :--- | :--- | :--- |
+| **1st Year (Fresher)** | Open-Source programs (GSoC, MLH, Outreachy), beginner hackathons, college technical society internships, competitive programming tracks. | Matches by GitHub onboarding milestones, beginner DSA streaks, and fundamental language tags (C++, Python). |
+| **2nd Year (Sophomore)** | Winter/Summer micro-internships, early startup roles, frontend/backend internships, open-source contributor badges. | Evaluates student's top 3 GitHub project tech stacks (React, Node.js) and verified lab project room scores. |
+| **3rd Year (Pre-Final)** | **Critical Summer Internships & 6-Month Pre-Placement Internships (PPIs)** (e.g., Amazon, Microsoft, high-growth startups). | High-precision vector matching against LeetCode topic depth (DP, Graphs, Trees) and system design projects. |
+| **4th Year (Final Year)** | **Full-Time On-Campus Placement Drives (TPO)** + high-tier off-campus fresher roles (FTE). | Strict policy-guided matching, dream company opportunities, and recruiter talent extraction dossiers. |
+
+### 2. Smart Match % & Skill-Gap Diagnostic
+For every job card (on-campus or curated), the engine calculates:
+* **Profile Match Percentage:** E.g., `88% Match`.
+* **Skill-Gap Breakdown:**
+  - ✅ Matched: `Node.js`, `PostgreSQL`, `REST APIs`, `CGPA > 7.5`
+  - ❌ Missing: `Docker`, `Redis`
+* **Direct Action:** *"Complete Phase 2 of Backend Roadmap to unlock 100% eligibility."*
+
+---
+
+## 💻 Database Schema Architecture (`Prisma` / `PostgreSQL`)
+
+The database unifies **On-Campus TPO Drives**, **In-App Team Curated Jobs**, and **Student Applications** into a clean, relational schema:
 
 ```prisma
+enum OpportunityType {
+  ON_CAMPUS_TPO         // Section 1: Official college drive
+  IN_APP_CURATED        // Section 2: External job extracted by in-app team
+  OPEN_SOURCE_PROGRAM   // Section 3: GSoC, MLH, Hackathons for 1st/2nd years
+}
+
+enum OpportunityCategory {
+  INTERNSHIP_SUMMER     // 2-month summer internship (3rd years)
+  INTERNSHIP_SEMESTER   // 6-month pre-placement internship (7th/8th sem)
+  MICRO_INTERNSHIP      // Part-time / project gig (1st/2nd years)
+  FULL_TIME_FTE         // Full-time corporate placement (4th years)
+}
+
 enum ApplicationStatus {
   APPLIED
   OA_SHORTLISTED
@@ -100,137 +207,87 @@ enum ApplicationStatus {
   WITHDRAWN
 }
 
-model JobDrive {
-  id              String             @id @default(uuid())
-  companyName     String             // e.g., "Amazon", "TCS"
-  jobRole         String             // e.g., "SDE-1", "Graduate Engineer Trainee"
-  ctcLpa          Float              // e.g., 12.5
-  isDreamCompany  Boolean            @default(false)
-  driveDate       DateTime
-  deadline        DateTime
+model JobOpportunity {
+  id                  String               @id @default(uuid())
+  tenantId            String               @default("kiet-main")
+  type                OpportunityType      @default(ON_CAMPUS_TPO)
+  category            OpportunityCategory  @default(FULL_TIME_FTE)
   
-  // JSONB rule engine allows 100% dynamic eligibility rules per drive
-  eligibilityRules Json
-  /* Example JSON Structure:
+  // Basic Details
+  companyName         String               // e.g. "Amazon", "Cred", "Google Summer of Code"
+  jobRole             String               // e.g. "Backend Intern", "SDE-1"
+  location            String               // e.g. "Delhi-NCR", "Bengaluru", "Remote"
+  ctcLpa              Float?               // For FTE (e.g. 14.5 LPA)
+  stipendMonthly      Float?               // For Internships (e.g. 45,000 INR/mo)
+  isDreamCompany      Boolean              @default(false)
+  
+  // Application URLs
+  externalApplyUrl    String?              // Populated for IN_APP_CURATED jobs
+  driveDate           DateTime?
+  deadline            DateTime
+  
+  // Dynamic Rule Engine for Section 1 (On-Campus TPO)
+  eligibilityRules    Json?
+  /* JSONB Structure:
     {
       "minCgpa": 7.5,
       "allowedBranches": ["CSE", "IT", "CS-AI"],
       "maxBacklogs": 0,
-      "maxGapYears": 1,
-      "minVerifiedBadges": 3,
-      "requiredSkills": ["Node.js", "PostgreSQL"]
+      "eligibleBatches": [2026, 2027],
+      "minVerifiedBadges": 2
     }
   */
 
-  applications    JobApplication[]
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
+  // Section 2 & 3: Metadata for In-App Extraction & Year-Based Matching
+  targetYears         Int[]                // [1, 2] for 1st/2nd yr gigs; [3] for summer interns; [4] for FTE
+  targetSkills        String[]             // ["Node.js", "PostgreSQL", "Docker"]
+  curatedByUserId     String?              // In-App Team member ID who verified the post
+  isVerifiedByTeam    Boolean              @default(false)
 
+  // Section 3: Semantic Match Vector (AI Embeddings)
+  opportunityVector   Unsupported("vector(384)")?
+
+  applications        JobApplication[]
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+
+  @@index([type, category])
   @@index([deadline])
+  @@index([isVerifiedByTeam])
 }
 
 model JobApplication {
-  id          String            @id @default(uuid())
-  jobDriveId  String
-  userId      String            // Student ID
-  status      ApplicationStatus @default(APPLIED)
-  notes       String?
-  appliedAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  id                  String               @id @default(uuid())
+  jobOpportunityId    String
+  userId              String               // Student ID
+  status              ApplicationStatus    @default(APPLIED)
+  roundIndex          Int                  @default(1)
+  appliedAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
 
-  jobDrive    JobDrive          @relation(fields: [jobDriveId], references: [id], onDelete: Cascade)
+  opportunity         JobOpportunity       @relation(fields: [jobOpportunityId], references: [id], onDelete: Cascade)
 
-  // Prevent duplicate applications by the same student for the same drive
-  @@unique([jobDriveId, userId])
+  @@unique([jobOpportunityId, userId])
   @@index([userId, status])
 }
 ```
 
 ---
 
-### B. Eligibility Checking Engine (`Node.js`)
+## 🚀 How the Triple-Engine Model Wins the Dean Pitch
 
-```javascript
-/**
- * Evaluates student profile against drive criteria.
- * Combines traditional academic rules with Proof-of-Work checks.
- */
-function evaluateJobEligibility(student, driveRules) {
-  // 1. CGPA Check
-  if (student.cgpa < driveRules.minCgpa) {
-    return {
-      eligible: false,
-      reason: `CGPA requirement not met (Required: ${driveRules.minCgpa}, Current: ${student.cgpa})`
-    };
-  }
+When the Dean asks: *"Superset already handles our placement drives, why do we need this?"*
 
-  // 2. Branch Eligibility
-  if (!driveRules.allowedBranches.includes(student.branch)) {
-    return {
-      eligible: false,
-      reason: `Branch ${student.branch} is not eligible for this drive`
-    };
-  }
-
-  // 3. Backlog Constraint
-  if (student.activeBacklogs > driveRules.maxBacklogs) {
-    return {
-      eligible: false,
-      reason: `Active backlogs exceed limit (Allowed: ${driveRules.maxBacklogs}, You have: ${student.activeBacklogs})`
-    };
-  }
-
-  // 4. Education Gap Limit
-  if (student.educationGapYears > driveRules.maxGapYears) {
-    return {
-      eligible: false,
-      reason: `Education gap exceeds maximum allowed (${driveRules.maxGapYears} year/s)`
-    };
-  }
-
-  // 5. Offer Policy Enforcement (1-Student 1-Job / Dream Rule)
-  if (student.currentOfferCtc) {
-    const isDreamDrive = driveRules.isDreamCompany || driveRules.ctcLpa >= (student.currentOfferCtc * 1.5);
-    if (!isDreamDrive) {
-      return {
-        eligible: false,
-        reason: `Offer Policy: You already hold an offer of ${student.currentOfferCtc} LPA. You can only apply to Dream drives (>= ${student.currentOfferCtc * 1.5} LPA).`
-      };
-    }
-  }
-
-  // 6. Custom Innovation: Proof of Work / Verified Badges Requirement
-  if (driveRules.minVerifiedBadges && student.verifiedBadgesCount < driveRules.minVerifiedBadges) {
-    return {
-      eligible: false,
-      reason: `Requires at least ${driveRules.minVerifiedBadges} verified skill badges (You have: ${student.verifiedBadgesCount})`
-    };
-  }
-
-  return { eligible: true, reason: "Eligible to apply" };
-}
-```
-
----
-
-## 🚀 4. How Our KIET Platform Beats Vanilla Superset
-
-| Feature | Standard Superset | Our KIET Platform (Superset + Proof of Work) |
+| Dimension | Vanilla Superset | Our KIET Platform (`Only_Jobs`) |
 | :--- | :--- | :--- |
-| **Primary Metric** | CGPA, Marks, & Claims | **CGPA + Verified Code & Project Proof** |
-| **Resume Authenticity** | Standard PDF (Self-claimed projects) | **Code-inspected Projects + LeetCode Stats + Teacher Sign-off** |
-| **Target Audience** | Final year students during placement season | **1st to 4th year continuous talent pipeline** |
-| **Recruiter Experience** | Filter by Marks only | **Filter by Marks + Specific Tech Stacks + Real GitHub Repos** |
-| **Student Motivation** | Pure anxiety & last-minute preparation | **Gamified badges, peer leaderboards, and continuous skill roadmaps** |
+| **Scope** | 4th-year placements only | **1st to 4th-year end-to-end career growth** |
+| **Off-Campus Support** | Zero (goes silent during slowdowns) | **Dedicated in-app team curating verified off-campus roles** |
+| **Candidate Quality** | Evaluates self-declared PDF resumes | **Evaluates verified GitHub code, LeetCode stats, and lab badges** |
+| **Personalization** | Spam notifications to whole batch | **AI-powered match score + targeted skill gap alerts** |
+| **Student Readiness** | Frantic preparation in 7th semester | **Continuous milestone roadmaps starting from 1st year** |
+
+> **Winning Pitch Statement:**  
+> *"Superset is just a filing cabinet for 4th-year placement drives. Our platform is an active 4-year talent engine that curates opportunities, proves student competence with real code, and ensures our placement records thrive in any market condition."*
 
 ---
-
-## 🎯 5. Takeaways for the 25 Oct Dean Meeting
-
-When Dean asks: *"Superset already automates placement, why do we need this?"*
-
-> **Winning Pitch Line:**  
-> *"Sir, Superset manages the **paperwork of recruitment**, but it does not improve the **quality of our candidates**. Our platform ensures that by the time Superset drives open, KIET students don't just have high marks—they have verified code, live projects, and proven problem-solving track records that top-tier recruiters actually hire."*
-
----
-*Generated: 15 October 2026 — Placement Engine Architecture Specification.*
+*Maintained by Arpit Prajapati & The KIET Campus Engineering Team. Last updated: October 2026.*
