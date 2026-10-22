@@ -1,5 +1,5 @@
 # 🎓 KIET Campus Talent & Career Development Platform
-> **Codename:** `Only_Jobs` • **Target Scale:** KIET Group of Institutions (~7,000+ Students)  
+> **Codename:** `Only_Jobs` • **Target Scale:** KIET Group of Institutions (~8,000+ Students)  
 > **Mission:** Replacing resume fraud, unorganized WhatsApp placement groups, and static portals with **verifiable proof of work**, continuous peer motivation, institutional placement policies, and deep AI-driven skill intelligence.
 
 ---
