@@ -1,0 +1,174 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------ */
+/* Themes — RGB triplets so Tailwind can apply alpha (bg-accent/20).   */
+/* Inspired by the three reference dashboards:                         */
+/*   indigo   = "Success" profile   forest = "Flights"                 */
+/*   mono     = "Fenco" finance     midnight = dark companion          */
+/* ------------------------------------------------------------------ */
+:root,
+[data-theme='indigo'] {
+  --bg: 222 234 250;
+  --surface: 255 255 255;
+  --surface2: 241 241 245;
+  --ink: 28 25 78;
+  --muted: 125 125 158;
+  --line: 230 230 242;
+  --side: 83 76 168;
+  --side-ink: 255 255 255;
+  --side-active: 255 255 255;
+  --side-active-ink: 28 25 78;
+  --accent: 83 76 168;
+  --accent-ink: 255 255 255;
+  --accent-soft: 232 230 252;
+  --accent2: 236 110 173;
+  --good: 22 163 74;
+  --warn: 217 119 6;
+  --bad: 220 38 38;
+}
+
+[data-theme='forest'] {
+  --bg: 226 236 235;
+  --surface: 255 255 255;
+  --surface2: 232 239 238;
+  --ink: 52 77 73;
+  --muted: 112 132 128;
+  --line: 220 230 228;
+  --side: 62 87 84;
+  --side-ink: 233 241 240;
+  --side-active: 255 255 255;
+  --side-active-ink: 52 77 73;
+  --accent: 201 150 20;
+  --accent-ink: 255 255 255;
+  --accent-soft: 250 240 205;
+  --accent2: 84 128 121;
+}
+
+[data-theme='mono'] {
+  --bg: 222 221 219;
+  --surface: 246 245 243;
+  --surface2: 234 233 230;
+  --ink: 38 38 38;
+  --muted: 130 130 130;
+  --line: 224 223 220;
+  --side: 38 38 38;
+  --side-ink: 240 240 240;
+  --side-active: 255 255 255;
+  --side-active-ink: 38 38 38;
+  --accent: 120 144 200;
+  --accent-ink: 255 255 255;
+  --accent-soft: 226 232 246;
+  --accent2: 222 196 108;
+}
+
+[data-theme='midnight'] {
+  --bg: 14 16 22;
+  --surface: 24 27 37;
+  --surface2: 33 37 50;
+  --ink: 236 238 246;
+  --muted: 142 148 170;
+  --line: 42 46 62;
+  --side: 20 22 31;
+  --side-ink: 226 229 240;
+  --side-active: 41 45 66;
+  --side-active-ink: 255 255 255;
+  --accent: 129 140 248;
+  --accent-ink: 15 17 40;
+  --accent-soft: 40 43 84;
+  --accent2: 244 114 182;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-bg font-sans text-ink antialiased;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+  ::selection {
+    background: rgb(var(--accent) / 0.25);
+  }
+  :focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 2px;
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--muted) / 0.35) transparent;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-3xl bg-surface p-5 shadow-card sm:p-6;
+    transition: background-color 0.25s ease;
+  }
+  .input {
+    @apply w-full rounded-xl border border-line bg-surface2 px-3.5 py-2.5 text-sm text-ink outline-none transition placeholder:text-muted/70 focus:border-accent focus:ring-2 focus:ring-accent/20 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .label {
+    @apply mb-1.5 block text-xs font-medium text-muted;
+  }
+  .h-section {
+    @apply text-base font-semibold tracking-tight text-ink;
+  }
+}
+
+/* Markdown rendered from student READMEs (sanitised by rehype-sanitize) */
+.md {
+  @apply text-sm leading-relaxed text-ink;
+}
+.md > * + * {
+  @apply mt-3;
+}
+.md h1 {
+  @apply mt-0 text-2xl font-bold tracking-tight;
+}
+.md h2 {
+  @apply mt-6 border-b border-line pb-1.5 text-lg font-semibold;
+}
+.md h3 {
+  @apply mt-5 text-base font-semibold;
+}
+.md a {
+  @apply font-medium text-accent underline underline-offset-2;
+}
+.md ul {
+  @apply list-disc pl-5;
+}
+.md ol {
+  @apply list-decimal pl-5;
+}
+.md li + li {
+  @apply mt-1;
+}
+.md code {
+  @apply rounded-md bg-surface2 px-1.5 py-0.5 font-mono text-[0.85em];
+}
+.md pre {
+  @apply overflow-x-auto rounded-2xl bg-ink p-4 text-surface;
+}
+.md pre code {
+  @apply bg-transparent p-0 text-[0.82rem] text-inherit;
+}
+.md blockquote {
+  @apply rounded-r-xl border-l-4 border-accent bg-accentSoft/60 px-4 py-2 text-muted;
+}
+.md table {
+  @apply w-full overflow-hidden rounded-xl border border-line text-left text-[0.85rem];
+}
+.md th {
+  @apply bg-surface2 px-3 py-2 font-semibold;
+}
+.md td {
+  @apply border-t border-line px-3 py-2;
+}
+.md img {
+  @apply max-w-full rounded-xl;
+}
+.md hr {
+  @apply border-line;
+}
