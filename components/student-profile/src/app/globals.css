@@ -10,74 +10,83 @@
 /* ------------------------------------------------------------------ */
 :root,
 [data-theme='indigo'] {
-  --bg: 222 234 250;
-  --surface: 255 255 255;
-  --surface2: 241 241 245;
-  --ink: 28 25 78;
-  --muted: 125 125 158;
-  --line: 230 230 242;
-  --side: 83 76 168;
-  --side-ink: 255 255 255;
-  --side-active: 255 255 255;
-  --side-active-ink: 28 25 78;
-  --accent: 83 76 168;
+  --bg: 246 248 250; /* GitHub canvas.subtle #f6f8fa */
+  --surface: 255 255 255; /* GitHub canvas.default #ffffff */
+  --surface2: 246 248 250; /* GitHub canvas.subtle #f6f8fa */
+  --ink: 31 35 40; /* GitHub fg.default #1f2328 */
+  --muted: 101 109 118; /* GitHub fg.muted #656d76 */
+  --line: 208 215 222; /* GitHub border.default #d0d7de */
+  --side: 246 248 250; /* GitHub canvas.subtle #f6f8fa */
+  --side-ink: 31 35 40; /* GitHub fg.default #1f2328 */
+  --side-active: 9 105 218; /* GitHub accent.fg #0969da */
+  --side-active-ink: 255 255 255;
+  --accent: 9 105 218; /* GitHub accent.fg #0969da */
   --accent-ink: 255 255 255;
-  --accent-soft: 232 230 252;
-  --accent2: 236 110 173;
-  --good: 22 163 74;
-  --warn: 217 119 6;
-  --bad: 220 38 38;
+  --accent-soft: 221 244 255; /* GitHub accent.subtle #ddf4ff */
+  --accent2: 36 41 47; /* GitHub dark #24292f */
+  --good: 26 127 55; /* GitHub success.fg #1a7f37 */
+  --warn: 154 103 0; /* GitHub attention.fg #9a6700 */
+  --bad: 207 34 46; /* GitHub danger.fg #cf222e */
 }
 
 [data-theme='forest'] {
-  --bg: 226 236 235;
+  --bg: 242 245 244;
   --surface: 255 255 255;
-  --surface2: 232 239 238;
-  --ink: 52 77 73;
-  --muted: 112 132 128;
-  --line: 220 230 228;
-  --side: 62 87 84;
-  --side-ink: 233 241 240;
-  --side-active: 255 255 255;
-  --side-active-ink: 52 77 73;
-  --accent: 201 150 20;
+  --surface2: 235 240 239;
+  --ink: 24 43 40;
+  --muted: 95 116 112;
+  --line: 218 228 226;
+  --side: 20 38 35;
+  --side-ink: 240 245 244;
+  --side-active: 16 185 129;
+  --side-active-ink: 255 255 255;
+  --accent: 13 148 136;
   --accent-ink: 255 255 255;
-  --accent-soft: 250 240 205;
-  --accent2: 84 128 121;
+  --accent-soft: 230 247 245;
+  --accent2: 20 38 35;
+  --good: 16 185 129;
+  --warn: 245 158 11;
+  --bad: 239 68 68;
 }
 
 [data-theme='mono'] {
-  --bg: 222 221 219;
-  --surface: 246 245 243;
-  --surface2: 234 233 230;
-  --ink: 38 38 38;
-  --muted: 130 130 130;
-  --line: 224 223 220;
-  --side: 38 38 38;
-  --side-ink: 240 240 240;
+  --bg: 245 245 245;
+  --surface: 255 255 255;
+  --surface2: 240 240 240;
+  --ink: 23 23 23;
+  --muted: 115 115 115;
+  --line: 229 229 229;
+  --side: 23 23 23;
+  --side-ink: 250 250 250;
   --side-active: 255 255 255;
-  --side-active-ink: 38 38 38;
-  --accent: 120 144 200;
+  --side-active-ink: 23 23 23;
+  --accent: 38 38 38;
   --accent-ink: 255 255 255;
-  --accent-soft: 226 232 246;
-  --accent2: 222 196 108;
+  --accent-soft: 240 240 240;
+  --accent2: 64 64 64;
+  --good: 16 185 129;
+  --warn: 245 158 11;
+  --bad: 239 68 68;
 }
 
 [data-theme='midnight'] {
-  --bg: 14 16 22;
-  --surface: 24 27 37;
-  --surface2: 33 37 50;
-  --ink: 236 238 246;
-  --muted: 142 148 170;
-  --line: 42 46 62;
-  --side: 20 22 31;
-  --side-ink: 226 229 240;
-  --side-active: 41 45 66;
+  --bg: 13 17 23; /* GitHub dark canvas.default #0d1117 */
+  --surface: 22 27 34; /* GitHub dark canvas.subtle #161b22 */
+  --surface2: 33 38 45; /* GitHub dark canvas.inset #21262d */
+  --ink: 240 246 252; /* GitHub dark fg.default #f0f6fc */
+  --muted: 139 148 158; /* GitHub dark fg.muted #8b949e */
+  --line: 48 54 61; /* GitHub dark border.default #30363d */
+  --side: 13 17 23;
+  --side-ink: 240 246 252;
+  --side-active: 88 166 255; /* GitHub dark accent.fg #58a6ff */
   --side-active-ink: 255 255 255;
-  --accent: 129 140 248;
-  --accent-ink: 15 17 40;
-  --accent-soft: 40 43 84;
-  --accent2: 244 114 182;
+  --accent: 88 166 255; /* GitHub dark accent.fg #58a6ff */
+  --accent-ink: 13 17 23;
+  --accent-soft: 31 111 235;
+  --accent2: 240 246 252;
+  --good: 46 160 67; /* GitHub dark success.fg #2ea043 */
+  --warn: 210 153 34; /* GitHub dark attention.fg #d29922 */
+  --bad: 248 81 73; /* GitHub dark danger.fg #f85149 */
 }
 
 @layer base {
@@ -103,8 +112,8 @@
 
 @layer components {
   .card {
-    @apply rounded-3xl bg-surface p-5 shadow-card sm:p-6;
-    transition: background-color 0.25s ease;
+    @apply rounded-2xl border border-line/80 bg-surface p-5 shadow-sm sm:p-6;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   }
   .input {
     @apply w-full rounded-xl border border-line bg-surface2 px-3.5 py-2.5 text-sm text-ink outline-none transition placeholder:text-muted/70 focus:border-accent focus:ring-2 focus:ring-accent/20 disabled:cursor-not-allowed disabled:opacity-60;

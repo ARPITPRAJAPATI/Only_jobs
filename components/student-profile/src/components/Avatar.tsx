@@ -8,8 +8,8 @@ export function Avatar({ name, src, size = 64, className }: { name: string; src?
   }
   return (
     <span
-      style={{ ...style, background: 'linear-gradient(135deg, rgb(var(--accent)), rgb(var(--accent2)))' }}
-      className={cn('grid shrink-0 place-items-center rounded-full font-semibold text-white', className)}
+      style={style}
+      className={cn('grid shrink-0 place-items-center rounded-full font-extrabold bg-surface2 text-ink border border-line select-none shadow-2xs', className)}
       aria-label={name}
     >
       {initials(name)}

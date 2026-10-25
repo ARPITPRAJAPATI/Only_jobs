@@ -15,18 +15,23 @@ const ICONS: Record<string, LucideIcon> = {
 
 /** Badge.iconUrl is either "lucide:<key>" or a real image URL. */
 export function BadgeIcon({ iconUrl, className, muted }: { iconUrl: string; className?: string; muted?: boolean }) {
-  const wrap = cn('grid h-12 w-12 place-items-center rounded-2xl', muted ? 'bg-surface2 text-muted' : 'bg-accentSoft text-accent', className);
+  const wrap = cn(
+    'grid h-10 w-10 place-items-center rounded-xl shadow-2xs',
+    muted ? 'bg-[#f6f8fa] text-[#656d76] border border-[#d0d7de]' : 'bg-[#ddf4ff] text-[#0969da] border border-[#54aeff]/40',
+    className,
+  );
+
   if (iconUrl.startsWith('lucide:')) {
     const Icon = ICONS[iconUrl.slice(7)] ?? Award;
     return (
       <span className={wrap}>
-        <Icon className="h-6 w-6" />
+        <Icon className="h-5 w-5" />
       </span>
     );
   }
   return (
     <span className={wrap}>
-      <img src={iconUrl} alt="" className="h-7 w-7 object-contain" />
+      <img src={iconUrl} alt="" className="h-6 w-6 object-contain" />
     </span>
   );
 }

@@ -9,9 +9,10 @@ Traditional placement cells suffer because student resumes are filled with unver
 
 This module converts passive learning into **institution-verified talent pipelines**:
 1. **Curated 3-Phase Roadmaps:** Beginner $\rightarrow$ Intermediate $\rightarrow$ Advance.
-2. **Strict Gatekeeping:** Students cannot jump directly to advanced topics without passing rigorous phase assessments ($\ge 70\%$).
-3. **Cryptographic Auto-Certification:** Tamper-proof certificate hashes minted on the fly and mapped directly to student profiles.
-4. **Talent Extraction Engine for Startups/MNCs:** Deans and TPOs can query and export pre-vetted candidate pools in 1-click.
+2. **Catalog & Course Experience UI:** Modeled directly after the high-converting *Aduki Online Academy* standard ([courses_and_learning_ui_architecture.md](file:///c:/Users/arpit/New%20folder%20(6)/Only_jobs/plan/courses_and_learning_ui_architecture.md)).
+3. **Strict Gatekeeping:** Students cannot jump directly to advanced topics without passing rigorous phase assessments ($\ge 70\%$).
+4. **Cryptographic Auto-Certification:** Tamper-proof certificate hashes minted on the fly and mapped directly to student profiles.
+5. **Talent Extraction Engine for Startups/MNCs:** Deans and TPOs can query and export pre-vetted candidate pools in 1-click.
 
 ---
 

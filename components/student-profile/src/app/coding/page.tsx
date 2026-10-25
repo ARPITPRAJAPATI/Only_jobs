@@ -7,6 +7,7 @@ import { GithubIcon } from '@/components/BrandIcons';
 import { Heatmap } from '@/components/Heatmap';
 import { useStudent } from '@/components/store';
 import { Card, CardHeader, Chip, EmptyState, PageGrid, Stat } from '@/components/ui';
+import { ProfileSubnav } from '@/components/ProfileSubnav';
 import { activityStats, cn, formatDateTime, githubDays, leetcodeDays, type Day } from '@/lib/utils';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -38,7 +39,9 @@ export default function CodingPage() {
   ];
 
   return (
-    <PageGrid>
+    <div className="pb-16 animate-fade-in">
+      <ProfileSubnav />
+      <PageGrid>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5 xl:grid-cols-4">
         <Stat label="GitHub contributions" value={student.codingStats?.github?.totalContributions ?? 0} sub="Last 12 months" icon={<GitCommitHorizontal className="h-6 w-6" />} />
         <Stat label="Current streak" value={`${Math.max(ghS.current, lcS.current)} days`} sub={`GitHub ${ghS.current}d · LeetCode ${lcS.current}d`} icon={<Flame className="h-6 w-6" />} tone="warn" />
@@ -52,18 +55,18 @@ export default function CodingPage() {
             <CardHeader title="GitHub contribution calendar" subtitle={`${ghS.active} active days · ${ghS.total} contributions`} icon={<GithubIcon className="h-4 w-4" />} action={student.githubHandle ? <Chip tone="accent">@{student.githubHandle}</Chip> : undefined} />
             {gh.length ? (
               <>
-                <Heatmap days={gh} tone="accent" unit="contributions" />
-                <p className="mt-3 rounded-xl bg-surface2 px-3.5 py-2.5 text-xs text-muted">
+                <Heatmap days={gh} tone="github" unit="contributions" />
+                <p className="mt-3 rounded-xl border border-line bg-surface2/60 px-3.5 py-2.5 text-xs text-muted">
                   <span className="font-semibold text-ink">Latest activity · </span>
                   {student.codingStats?.github?.latestActivity}
                 </p>
                 <div className="mt-5">
-                  <p className="mb-3 text-xs font-medium text-muted">Contributions per month</p>
+                  <p className="mb-3 text-xs font-bold uppercase tracking-wider text-muted">Contributions per month</p>
                   <div className="flex h-28 items-end gap-2">
                     {bars.map((b, i) => (
                       <div key={i} className="flex flex-1 flex-col items-center justify-end gap-1.5" title={`${b.label}: ${b.value}`}>
-                        <div className={cn('w-full max-w-[28px] rounded-full', i === bars.length - 1 ? 'bg-accent' : 'bg-accent/40')} style={{ height: `${Math.max(8, (b.value / maxBar) * 84)}px` }} />
-                        <span className="text-[10px] text-muted">{b.label}</span>
+                        <div className={cn('w-full max-w-[28px] rounded-t-md transition-all', i === bars.length - 1 ? 'bg-[#1f883d]' : 'bg-[#1f883d]/35')} style={{ height: `${Math.max(8, (b.value / maxBar) * 84)}px` }} />
+                        <span className="text-[10px] font-bold text-muted">{b.label}</span>
                       </div>
                     ))}
                   </div>
@@ -78,8 +81,8 @@ export default function CodingPage() {
             <CardHeader title="LeetCode submission calendar" subtitle={`${lcS.active} active days · longest streak ${lcS.longest}`} icon={<Code2 className="h-4 w-4" />} action={student.leetcodeHandle ? <Chip tone="accent">@{student.leetcodeHandle}</Chip> : undefined} />
             {lc.length ? (
               <>
-                <Heatmap days={lc} tone="accent2" unit="submissions" />
-                <p className="mt-3 rounded-xl bg-surface2 px-3.5 py-2.5 text-xs text-muted">
+                <Heatmap days={lc} tone="leetcode" unit="submissions" />
+                <p className="mt-3 rounded-xl border border-line bg-surface2/60 px-3.5 py-2.5 text-xs text-muted">
                   <span className="font-semibold text-ink">Latest accepted · </span>
                   {student.codingStats?.leetcode?.latestActivity}
                 </p>
@@ -93,17 +96,17 @@ export default function CodingPage() {
         <div className="grid content-start gap-4 lg:gap-5">
           <Card>
             <CardHeader title="Coding handles" subtitle="Edit in Settings" icon={<Trophy className="h-4 w-4" />} />
-            <ul className="space-y-2.5">
+            <ul className="space-y-2">
               {handles.map((h) => (
-                <li key={h.name} className="flex items-center gap-3 rounded-2xl bg-surface2 p-3">
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-surface text-accent">{h.icon}</span>
+                <li key={h.name} className="flex items-center gap-3 rounded-xl border border-line/80 bg-surface2/40 p-2.5 transition-all hover:bg-surface2">
+                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-line bg-surface text-[#0969da]">{h.icon}</span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold">{h.name}</p>
-                    <p className="truncate text-xs text-muted">{h.handle ? `@${h.handle}` : 'Not linked'}</p>
+                    <p className="text-xs font-bold text-ink">{h.name}</p>
+                    <p className="truncate text-[11px] font-mono text-muted">{h.handle ? `@${h.handle}` : 'Not linked'}</p>
                   </div>
                   {h.handle ? (
-                    <a href={h.url(h.handle)} target="_blank" rel="noopener noreferrer" aria-label={`Open ${h.name} profile`} className="text-muted hover:text-accent">
-                      <ExternalLink className="h-4 w-4" />
+                    <a href={h.url(h.handle)} target="_blank" rel="noopener noreferrer" aria-label={`Open ${h.name} profile`} className="text-muted hover:text-[#0969da]">
+                      <ExternalLink className="h-3.5 w-3.5" />
                     </a>
                   ) : null}
                   {h.handle && (h.synced ? <Chip tone="good">Synced</Chip> : <Chip>Link only</Chip>)}
@@ -113,12 +116,12 @@ export default function CodingPage() {
           </Card>
 
           <Card>
-            <CardHeader title="How syncing works" icon={<Server className="h-4 w-4" />} />
-            <div className="mb-4 flex items-center gap-3 rounded-2xl bg-accentSoft p-3.5">
-              <CalendarClock className="h-5 w-5 text-accent" />
-              <div className="text-sm">
-                <p className="font-semibold text-accent">Last synced</p>
-                <p className="text-xs text-ink/70">{formatDateTime(student.lastStatsSync)} · next at 12:00 AM</p>
+            <CardHeader title="Campus sync architecture" icon={<Server className="h-4 w-4" />} />
+            <div className="mb-4 flex items-center gap-3 rounded-xl border border-[#54aeff]/40 bg-[#ddf4ff] p-3">
+              <CalendarClock className="h-4 w-4 text-[#0969da] shrink-0" />
+              <div className="text-xs">
+                <p className="font-bold text-[#0969da]">Last Synced</p>
+                <p className="text-muted font-medium">{formatDateTime(student.lastStatsSync)} · next at 12:00 AM</p>
               </div>
             </div>
             <ul className="space-y-3 text-xs text-muted">
@@ -145,5 +148,6 @@ export default function CodingPage() {
         </div>
       </div>
     </PageGrid>
+    </div>
   );
 }

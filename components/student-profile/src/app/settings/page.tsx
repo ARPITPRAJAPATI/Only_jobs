@@ -7,6 +7,7 @@ import { useStudent } from '@/components/store';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import { useToast } from '@/components/toast';
 import { Button, Card, CardHeader, Chip, Field, PageGrid } from '@/components/ui';
+import { ProfileSubnav } from '@/components/ProfileSubnav';
 import { isHttpUrl } from '@/lib/utils';
 
 const HANDLE_RE = /^[A-Za-z0-9_.-]{1,39}$/;
@@ -77,7 +78,9 @@ function SettingsView() {
   );
 
   return (
-    <PageGrid>
+    <div className="pb-16 animate-fade-in">
+      <ProfileSubnav />
+      <PageGrid>
       <div className="grid gap-4 lg:gap-5 xl:grid-cols-3">
         <form onSubmit={save} className="grid gap-4 lg:gap-5 xl:col-span-2">
           <Card>
@@ -122,52 +125,52 @@ function SettingsView() {
         <div className="grid content-start gap-4 lg:gap-5">
           <Card>
             <CardHeader title="College records" subtitle="Managed by the TPO office — read-only" icon={<Lock className="h-4 w-4" />} />
-            <dl className="space-y-3">
+            <dl className="space-y-2.5">
               {locked.map(([k, v]) => (
-                <div key={k} className="flex items-center justify-between gap-3 rounded-2xl bg-surface2 px-4 py-3">
+                <div key={k} className="flex items-center justify-between gap-3 rounded-xl border border-line/80 bg-surface2/40 px-3.5 py-2.5">
                   <div className="min-w-0">
-                    <dt className="text-[11px] text-muted">{k}</dt>
-                    <dd className="truncate text-sm font-semibold">{v}</dd>
+                    <dt className="text-[10.5px] uppercase font-bold tracking-wider text-muted">{k}</dt>
+                    <dd className="truncate text-xs font-bold text-ink font-mono">{v}</dd>
                   </div>
                   <Lock className="h-3.5 w-3.5 shrink-0 text-muted" />
                 </div>
               ))}
             </dl>
-            <p className="mt-3 text-xs text-muted">Spotted a mistake? Contact the TPO office — locking these prevents falsified roll numbers or branches.</p>
+            <p className="mt-3 text-xs text-muted font-medium">Spotted an error? Contact Dean Academics or TPO office — student modification is locked for integrity.</p>
           </Card>
         </div>
       </div>
 
       <Card>
-        <CardHeader title="Appearance" subtitle="Four themes inspired by your reference dashboards" icon={<Palette className="h-4 w-4" />} />
+        <CardHeader title="Appearance & Themes" subtitle="Institutional color systems calibrated for campus readability" icon={<Palette className="h-4 w-4" />} />
         <ThemeSwitcher variant="cards" />
       </Card>
 
       <Card>
         <CardHeader
-          title="Demo controls"
-          subtitle="Only for previewing the UI without a backend"
+          title="Demo Controls"
+          subtitle="Preview simulated verification states and fine flags"
           icon={<FlaskConical className="h-4 w-4" />}
-          action={<Chip tone={source === 'api' ? 'good' : 'warn'}>{source === 'api' ? 'Live API' : 'Mock data'}</Chip>}
+          action={<Chip tone={source === 'api' ? 'good' : 'warn'}>{source === 'api' ? 'Live API' : 'Audited Mock'}</Chip>}
         />
         <div className="grid gap-3 sm:grid-cols-2">
-          <div className="flex items-center justify-between gap-4 rounded-2xl bg-surface2 p-4">
+          <div className="flex items-center justify-between gap-4 rounded-xl border border-line/80 bg-surface2/40 p-4">
             <div>
-              <p className="flex items-center gap-2 text-sm font-semibold">
-                <ShieldAlert className="h-4 w-4 text-bad" /> Simulate fraud flag
+              <p className="flex items-center gap-2 text-xs font-bold text-ink">
+                <ShieldAlert className="h-4 w-4 text-bad" /> Simulate Fraud Flag
               </p>
-              <p className="text-xs text-muted">Freezes the account, adds a ₹500 fine and disables editing — like a TPO click.</p>
+              <p className="text-xs text-muted font-medium mt-0.5">Freezes the account, marks trust score, and logs ₹500 fine.</p>
             </div>
             <Button size="sm" variant={student.isAccountFrozen ? 'secondary' : 'danger'} onClick={() => setFrozen(!student.isAccountFrozen)}>
               {student.isAccountFrozen ? 'Unfreeze' : 'Freeze'}
             </Button>
           </div>
-          <div className="flex items-center justify-between gap-4 rounded-2xl bg-surface2 p-4">
+          <div className="flex items-center justify-between gap-4 rounded-xl border border-line/80 bg-surface2/40 p-4">
             <div>
-              <p className="flex items-center gap-2 text-sm font-semibold">
-                <RotateCcw className="h-4 w-4" /> Reset demo data
+              <p className="flex items-center gap-2 text-xs font-bold text-ink">
+                <RotateCcw className="h-4 w-4" /> Reset Demo Data
               </p>
-              <p className="text-xs text-muted">Discards your local edits and restores the sample student.</p>
+              <p className="text-xs text-muted font-medium mt-0.5">Discards local test edits and restores baseline KIET record.</p>
             </div>
             <Button size="sm" variant="secondary" onClick={resetDemo}>
               Reset
@@ -176,5 +179,6 @@ function SettingsView() {
         </div>
       </Card>
     </PageGrid>
+    </div>
   );
 }

@@ -6,6 +6,7 @@ import { CertificationModal } from '@/components/forms/CertificationModal';
 import { useStudent } from '@/components/store';
 import { useToast } from '@/components/toast';
 import { Button, Card, Chip, EmptyState, IconButton, PageGrid, Stat } from '@/components/ui';
+import { ProfileSubnav } from '@/components/ProfileSubnav';
 import { cn, formatDate } from '@/lib/utils';
 
 type Filter = 'ALL' | 'INTERNAL' | 'EXTERNAL';
@@ -33,7 +34,9 @@ export default function CertificationsPage() {
   };
 
   return (
-    <PageGrid>
+    <div className="pb-16 animate-fade-in">
+      <ProfileSubnav />
+      <PageGrid>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:gap-5">
         <Stat label="Total certifications" value={student.certifications.length} icon={<Award className="h-6 w-6" />} />
         <Stat label="Platform-issued" value={internal} sub="Hash-verified automatically" icon={<Fingerprint className="h-6 w-6" />} tone="good" />
@@ -59,9 +62,9 @@ export default function CertificationsPage() {
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
             {certs.map((c) => (
-              <div key={c.id} className="flex gap-4 rounded-3xl border border-line p-5">
-                <span className={cn('grid h-14 w-14 shrink-0 place-items-center rounded-2xl', c.isInternalCourse ? 'bg-good/10 text-good' : 'bg-accentSoft text-accent')}>
-                  {c.isInternalCourse ? <Fingerprint className="h-7 w-7" /> : <Award className="h-7 w-7" />}
+              <div key={c.id} className="flex gap-4 rounded-2xl border border-line/80 bg-surface p-5 shadow-2xs hover:border-black/20 transition-all">
+                <span className={cn('grid h-10 w-10 shrink-0 place-items-center rounded-xl border', c.isInternalCourse ? 'border-[#4ac26b]/40 bg-[#dafbe1] text-[#1a7f37]' : 'border-[#54aeff]/40 bg-[#ddf4ff] text-[#0969da]')}>
+                  {c.isInternalCourse ? <Fingerprint className="h-5 w-5" /> : <Award className="h-5 w-5" />}
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="mb-1 flex flex-wrap items-center gap-2">
@@ -105,5 +108,6 @@ export default function CertificationsPage() {
 
       <CertificationModal open={open} onClose={() => setOpen(false)} />
     </PageGrid>
+    </div>
   );
 }

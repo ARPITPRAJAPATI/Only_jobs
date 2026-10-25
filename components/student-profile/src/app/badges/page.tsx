@@ -8,6 +8,7 @@ import { BadgeStatusChip } from '@/components/StatusChips';
 import { useStudent } from '@/components/store';
 import { useToast } from '@/components/toast';
 import { Button, Card, Chip, PageGrid, Stat } from '@/components/ui';
+import { ProfileSubnav } from '@/components/ProfileSubnav';
 import type { Badge, BadgeCategory } from '@/lib/types';
 import { cn, formatDate } from '@/lib/utils';
 
@@ -30,7 +31,9 @@ export default function BadgesPage() {
   const count = (s: 'APPROVED' | 'PENDING' | 'REJECTED') => student.badges.filter((b) => b.status === s).length;
 
   return (
-    <PageGrid>
+    <div className="pb-16 animate-fade-in">
+      <ProfileSubnav />
+      <PageGrid>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:gap-5">
         <Stat label="Approved" value={count('APPROVED')} sub="Visible to recruiters" icon={<BadgeCheck className="h-6 w-6" />} tone="good" />
         <Stat label="Pending review" value={count('PENDING')} sub="In the TPO queue" icon={<Clock className="h-6 w-6" />} tone="warn" />
@@ -57,7 +60,13 @@ export default function BadgesPage() {
             const mine = byBadge.get(badge.id);
             const approved = mine?.status === 'APPROVED';
             return (
-              <div key={badge.id} className={cn('flex flex-col rounded-3xl border p-5 transition', approved ? 'border-good/30 bg-good/5' : 'border-line bg-surface')}>
+              <div
+                key={badge.id}
+                className={cn(
+                  'flex flex-col rounded-2xl border p-5 transition-all shadow-2xs hover:border-black/20',
+                  approved ? 'border-emerald-200/80 bg-emerald-50/20' : 'border-line/80 bg-surface',
+                )}
+              >
                 <div className="mb-4 flex items-start justify-between gap-3">
                   <BadgeIcon iconUrl={badge.iconUrl} muted={!approved} className={approved ? '' : 'opacity-80'} />
                   {mine ? <BadgeStatusChip status={mine.status} /> : <Chip>Not requested</Chip>}
@@ -105,5 +114,6 @@ export default function BadgesPage() {
 
       <BadgeRequestModal badge={requesting} onClose={() => setRequesting(null)} />
     </PageGrid>
+    </div>
   );
 }

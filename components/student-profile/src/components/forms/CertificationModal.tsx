@@ -32,7 +32,16 @@ function Form({ onClose }: { onClose: () => void }) {
     if (url && !isHttpUrl(url)) err.url = 'Must be a valid http(s) URL';
     setErrors(err);
     if (Object.keys(err).length) return;
-    if (addCertification({ title: title.trim(), issuingOrg: org.trim(), credentialUrl: url.trim() || null, issueDate: new Date(date + 'T00:00:00Z').toISOString() })) {
+    if (
+      addCertification({
+        title: title.trim(),
+        issuingOrg: org.trim(),
+        credentialUrl: url.trim() || null,
+        issueDate: new Date(date + 'T00:00:00Z').toISOString(),
+        isInternalCourse: false,
+        certificateHash: null,
+      })
+    ) {
       toast('Certification added.');
       onClose();
     }

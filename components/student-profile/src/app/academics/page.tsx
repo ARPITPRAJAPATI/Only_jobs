@@ -8,6 +8,7 @@ import { AuditChip } from '@/components/StatusChips';
 import { useStudent } from '@/components/store';
 import { useToast } from '@/components/toast';
 import { Button, Card, CardHeader, Chip, EmptyState, IconButton, PageGrid, Stat } from '@/components/ui';
+import { ProfileSubnav } from '@/components/ProfileSubnav';
 import type { AcademicSemester } from '@/lib/types';
 import { latestCgpa, totalBacklogs } from '@/lib/utils';
 
@@ -25,7 +26,9 @@ export default function AcademicsPage() {
   const latest = [...sems].sort((a, b) => b.semesterNumber - a.semesterNumber)[0];
 
   return (
-    <PageGrid>
+    <div className="pb-16 animate-fade-in">
+      <ProfileSubnav />
+      <PageGrid>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5 xl:grid-cols-4">
         <Stat label="Cumulative CGPA" value={cgpa ? cgpa.toFixed(2) : '—'} sub={`Across ${sems.length} semesters`} icon={<GraduationCap className="h-6 w-6" />} />
         <Stat label="Latest SGPA" value={latest ? latest.sgpa.toFixed(2) : '—'} sub={latest ? `Semester ${latest.semesterNumber}` : 'Nothing declared'} icon={<ScanSearch className="h-6 w-6" />} tone="accent2" />
@@ -179,5 +182,6 @@ export default function AcademicsPage() {
 
       <SemesterModal key={modal.initial?.id ?? 'new'} open={modal.open} initial={modal.initial} defaultSem={nextSem} onClose={() => setModal({ open: false, initial: null })} />
     </PageGrid>
+    </div>
   );
 }

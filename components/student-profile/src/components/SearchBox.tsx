@@ -14,7 +14,7 @@ interface Hit {
   icon: React.ReactNode;
 }
 
-/** Quick jump: pages, projects, badges, certifications. Press "/" to focus. */
+/** Quick jump: pages, projects, badges, certifications. Press "/" or "⌘K" to focus. */
 export function SearchBox() {
   const { student, catalog } = useStudent();
   const router = useRouter();
@@ -39,7 +39,7 @@ export function SearchBox() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement)?.tagName;
-      if (e.key === '/' && tag !== 'INPUT' && tag !== 'TEXTAREA') {
+      if ((e.key === '/' || (e.key === 'k' && (e.metaKey || e.ctrlKey))) && tag !== 'INPUT' && tag !== 'TEXTAREA') {
         e.preventDefault();
         ref.current?.focus();
       }
@@ -63,8 +63,9 @@ export function SearchBox() {
   };
 
   return (
-    <div ref={box} className="relative w-full max-w-[260px]">
-      <div className="flex items-center rounded-full bg-surface2 pl-4 pr-1 ring-accent/30 focus-within:ring-2">
+    <div ref={box} className="relative w-full">
+      <div className="flex h-9 w-full items-center gap-2 rounded-xl bg-surface2 px-3 border border-line focus-within:border-[#0969da] focus-within:bg-surface focus-within:ring-2 focus-within:ring-[#0969da]/20 transition-all">
+        <Search className="h-3.5 w-3.5 text-muted shrink-0" />
         <input
           ref={ref}
           value={q}
@@ -80,29 +81,33 @@ export function SearchBox() {
             if (e.key === 'Enter' && hits[active]) go(hits[active]);
             if (e.key === 'Escape') setOpen(false);
           }}
-          placeholder="Search…  ( / )"
+          placeholder="Search profile..."
           aria-label="Search profile"
-          className="min-w-0 flex-1 bg-transparent py-2.5 text-sm outline-none placeholder:text-muted"
+          className="min-w-0 flex-1 bg-transparent text-xs text-ink placeholder:text-muted outline-none font-medium"
         />
-        <span className="grid h-8 w-8 place-items-center rounded-full bg-accent text-accentInk">
-          <Search className="h-4 w-4" />
-        </span>
+        <kbd className="hidden sm:inline-flex items-center rounded bg-surface px-1.5 py-0.5 text-[10px] font-mono text-muted border border-line">
+          /
+        </kbd>
       </div>
+
       {open && q.trim() && (
-        <div className="absolute left-0 right-0 top-12 z-40 overflow-hidden rounded-2xl bg-surface p-1.5 shadow-pop ring-1 ring-line animate-fade-in">
+        <div className="absolute left-0 right-0 top-11 z-50 overflow-hidden rounded-xl bg-surface p-1 shadow-lg ring-1 ring-line animate-fade-in min-w-[240px]">
           {hits.length === 0 ? (
-            <p className="px-3 py-3 text-sm text-muted">No matches</p>
+            <p className="px-3 py-2.5 text-xs text-muted font-medium">No matches found</p>
           ) : (
             hits.map((h, i) => (
               <button
                 key={h.kind + h.label}
                 onMouseEnter={() => setActive(i)}
                 onClick={() => go(h)}
-                className={cn('flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm', i === active ? 'bg-accentSoft text-accent' : 'hover:bg-surface2')}
+                className={cn(
+                  'flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-xs transition-colors',
+                  i === active ? 'bg-[#ddf4ff] text-[#0969da] font-semibold' : 'text-ink/80 hover:bg-surface2',
+                )}
               >
-                {h.icon}
+                <span className="shrink-0 text-muted">{h.icon}</span>
                 <span className="flex-1 truncate">{h.label}</span>
-                <span className="text-[10px] uppercase tracking-wide text-muted">{h.kind}</span>
+                <span className="text-[10px] uppercase tracking-wide text-muted font-bold font-mono">{h.kind}</span>
               </button>
             ))
           )}

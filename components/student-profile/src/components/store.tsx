@@ -11,7 +11,7 @@ const KEY = 'sp:student:v1';
 
 export type SemesterInput = Omit<AcademicSemester, 'id' | 'auditStatus' | 'auditedBy' | 'teacherReview'> & { id?: string };
 export type ProjectInput = Omit<Project, 'id' | 'createdAt' | 'aiPlagScore' | 'isTeacherApproved' | 'teacherRemarks'> & { id?: string };
-export type CertificationInput = Omit<Certification, 'id' | 'isInternalCourse' | 'certificateHash'>;
+export type CertificationInput = Omit<Certification, 'id'> & { isInternalCourse?: boolean; certificateHash?: string | null };
 
 interface StudentCtx {
   student: Student;
@@ -192,7 +192,15 @@ export function StudentProvider({ children }: { children: ReactNode }) {
       if (!guard()) return false;
       setStudent((s) => ({
         ...s,
-        certifications: [...s.certifications, { ...input, id: uid(), isInternalCourse: false, certificateHash: null }],
+        certifications: [
+          ...s.certifications,
+          {
+            ...input,
+            id: uid(),
+            isInternalCourse: input.isInternalCourse ?? false,
+            certificateHash: input.certificateHash ?? null,
+          },
+        ],
       }));
       pushRemote('POST', '/api/v1/certifications', input);
       return true;

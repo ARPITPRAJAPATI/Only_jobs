@@ -7,6 +7,7 @@ import { ProjectCard } from '@/components/ProjectCard';
 import { useStudent } from '@/components/store';
 import { useToast } from '@/components/toast';
 import { Button, Card, Chip, EmptyState, IconButton, PageGrid } from '@/components/ui';
+import { ProfileSubnav } from '@/components/ProfileSubnav';
 import type { Project } from '@/lib/types';
 import { MAX_PROJECTS, cn } from '@/lib/utils';
 
@@ -18,28 +19,30 @@ export default function ProjectsPage() {
   const full = count >= MAX_PROJECTS;
 
   return (
-    <PageGrid>
+    <div className="pb-16 animate-fade-in">
+      <ProfileSubnav />
+      <PageGrid>
       <Card className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-4">
-          <span className="grid h-12 w-12 place-items-center rounded-2xl bg-accentSoft text-accent">
-            <Pin className="h-6 w-6" />
+        <div className="flex items-center gap-3">
+          <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#ddf4ff] text-[#0969da] border border-[#54aeff]/40">
+            <Pin className="h-4 w-4" />
           </span>
           <div>
-            <h2 className="text-lg font-bold tracking-tight">Pinned projects</h2>
-            <p className="text-sm text-muted">Max {MAX_PROJECTS} — quality over quantity. Each README is rendered as safe Markdown.</p>
+            <h2 className="text-base font-bold tracking-tight text-ink">Pinned Projects</h2>
+            <p className="text-xs text-muted font-medium">Max {MAX_PROJECTS} showcase projects — each audited with AST plagiarism checks.</p>
           </div>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1" aria-label={`${count} of ${MAX_PROJECTS} slots used`}>
             {Array.from({ length: MAX_PROJECTS }, (_, i) => (
-              <span key={i} className={cn('h-2.5 w-6 rounded-full', i < count ? 'bg-accent' : 'bg-muted/20')} />
+              <span key={i} className={cn('h-2 w-5 rounded-full transition-all', i < count ? 'bg-[#0969da]' : 'bg-line')} />
             ))}
-            <Chip tone={full ? 'warn' : 'accent'} className="ml-2">
+            <Chip tone={full ? 'warn' : 'accent'} className="ml-2 font-mono">
               {count}/{MAX_PROJECTS}
             </Chip>
           </div>
           <Button disabled={full} onClick={() => setModal({ open: true, initial: null })} title={full ? 'Remove a project to add another' : undefined}>
-            <Plus className="h-4 w-4" /> Add project
+            <Plus className="h-3.5 w-3.5" /> Add Project
           </Button>
         </div>
       </Card>
@@ -96,5 +99,6 @@ export default function ProjectsPage() {
 
       <ProjectModal key={modal.initial?.id ?? 'new'} open={modal.open} initial={modal.initial} onClose={() => setModal({ open: false, initial: null })} />
     </PageGrid>
+    </div>
   );
 }

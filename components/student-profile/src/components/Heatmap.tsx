@@ -3,12 +3,11 @@
 import { useEffect, useMemo, useRef } from 'react';
 import type { Day } from '@/lib/utils';
 
-const CELL = 12;
+const CELL = 11;
 const GAP = 3;
 const STEP = CELL + GAP;
-const LEFT = 26;
+const LEFT = 24;
 const TOP = 18;
-const LEVELS = [0, 0.22, 0.42, 0.68, 0.95];
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 function level(count: number, max: number) {
@@ -17,8 +16,19 @@ function level(count: number, max: number) {
   return r > 0.75 ? 4 : r > 0.5 ? 3 : r > 0.25 ? 2 : 1;
 }
 
-/** GitHub-style yearly calendar. Colours come from theme tokens, so it re-themes automatically. */
-export function Heatmap({ days, tone = 'accent', unit = 'contributions' }: { days: Day[]; tone?: 'accent' | 'accent2'; unit?: string }) {
+const GREEN_PALETTE = ['#EBEDF0', '#9BE9A8', '#40C463', '#30A14E', '#216E39'];
+const ORANGE_PALETTE = ['#EBEDF0', '#FED7AA', '#FB923C', '#EA580C', '#C2410C'];
+const BLUE_PALETTE = ['#EBEDF0', '#BAE6FD', '#60A5FA', '#2563EB', '#1D4ED8'];
+
+export function Heatmap({
+  days,
+  tone = 'accent',
+  unit = 'contributions',
+}: {
+  days: Day[];
+  tone?: 'accent' | 'accent2' | 'github' | 'leetcode';
+  unit?: string;
+}) {
   const scroller = useRef<HTMLDivElement>(null);
 
   const { cells, weeks, labels } = useMemo(() => {
@@ -28,6 +38,7 @@ export function Heatmap({ days, tone = 'accent', unit = 'contributions' }: { day
     let lastLabelW = -10;
     const cells: { x: number; y: number; lvl: number; title: string }[] = [];
     const labels: { x: number; text: string }[] = [];
+
     days.forEach((d, i) => {
       const dt = new Date(d.date + 'T00:00:00Z');
       const dow = dt.getUTCDay();
@@ -42,7 +53,12 @@ export function Heatmap({ days, tone = 'accent', unit = 'contributions' }: { day
         x: LEFT + w * STEP,
         y: TOP + dow * STEP,
         lvl: level(d.count, max),
-        title: `${d.count} ${unit} on ${dt.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })}`,
+        title: `${d.count} ${unit} on ${dt.toLocaleDateString('en-IN', {
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric',
+          timeZone: 'UTC',
+        })}`,
       });
     });
     return { cells, weeks: w + 1, labels };
@@ -54,35 +70,46 @@ export function Heatmap({ days, tone = 'accent', unit = 'contributions' }: { day
 
   const width = LEFT + weeks * STEP;
   const height = TOP + 7 * STEP;
-  const fill = (lvl: number) => (lvl === 0 ? 'rgb(var(--muted) / .14)' : `rgb(var(--${tone}) / ${LEVELS[lvl]})`);
+
+  const palette =
+    tone === 'github' || tone === 'accent'
+      ? GREEN_PALETTE
+      : tone === 'leetcode' || tone === 'accent2'
+      ? ORANGE_PALETTE
+      : BLUE_PALETTE;
+
+  const fill = (lvl: number) => {
+    if (lvl === 0) return 'rgba(0, 0, 0, 0.06)';
+    return palette[lvl] ?? palette[4];
+  };
 
   return (
     <div>
-      <div ref={scroller} className="overflow-x-auto pb-2">
+      <div ref={scroller} className="overflow-x-auto pb-2 scrollbar-none">
         <svg width={width} height={height} role="img" aria-label={`Activity calendar, ${unit}`} className="block">
           {labels.map((l) => (
-            <text key={l.x} x={l.x} y={10} fontSize="10" style={{ fill: 'rgb(var(--muted))' }}>
+            <text key={l.x} x={l.x} y={11} fontSize="9.5" fontWeight="600" style={{ fill: 'rgb(var(--muted))' }}>
               {l.text}
             </text>
           ))}
           {['Mon', 'Wed', 'Fri'].map((t, i) => (
-            <text key={t} x={0} y={TOP + (i * 2 + 1) * STEP + 10} fontSize="9" style={{ fill: 'rgb(var(--muted))' }}>
+            <text key={t} x={0} y={TOP + (i * 2 + 1) * STEP + 9} fontSize="9" fontWeight="600" style={{ fill: 'rgb(var(--muted))' }}>
               {t}
             </text>
           ))}
           {cells.map((c, i) => (
-            <rect key={i} x={c.x} y={c.y} width={CELL} height={CELL} rx={3} style={{ fill: fill(c.lvl) }}>
+            <rect key={i} x={c.x} y={c.y} width={CELL} height={CELL} rx={2.5} style={{ fill: fill(c.lvl) }}>
               <title>{c.title}</title>
             </rect>
           ))}
         </svg>
       </div>
-      <div className="mt-1 flex items-center justify-end gap-1.5 text-[10px] text-muted">
-        Less
+      <div className="mt-2 flex items-center justify-end gap-1.5 text-[11px] font-semibold text-muted">
+        <span>Less</span>
         {[0, 1, 2, 3, 4].map((l) => (
-          <span key={l} className="inline-block h-2.5 w-2.5 rounded-[3px]" style={{ background: fill(l) }} />
+          <span key={l} className="inline-block h-2.5 w-2.5 rounded-[2.5px] border border-black/5" style={{ background: fill(l) }} />
         ))}
-        More
+        <span>More</span>
       </div>
     </div>
   );

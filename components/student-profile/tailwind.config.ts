@@ -4,6 +4,7 @@ import type { Config } from 'tailwindcss';
 const token = (name: string) => `rgb(var(--${name}) / <alpha-value>)`;
 
 const config: Config = {
+  darkMode: ['class', '[data-theme="midnight"]'],
   content: ['./src/**/*.{ts,tsx}'],
   theme: {
     extend: {
@@ -30,8 +31,10 @@ const config: Config = {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
       },
       boxShadow: {
-        card: '0 1px 2px rgba(0,0,0,.04), 0 10px 30px -14px rgba(0,0,0,.14)',
-        pop: '0 20px 50px -12px rgba(0,0,0,.35)',
+        '2xs': '0 1px 2px 0 rgba(0, 0, 0, 0.04)',
+        xs: '0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.06)',
+        card: '0 1px 2px rgba(0,0,0,.04), 0 6px 16px -8px rgba(0,0,0,.08)',
+        pop: '0 20px 50px -12px rgba(0,0,0,.25)',
       },
       keyframes: {
         'fade-up': { from: { opacity: '0', transform: 'translateY(8px)' }, to: { opacity: '1', transform: 'none' } },
