@@ -20,9 +20,13 @@ export function AppShell({ children }: { children: ReactNode }) {
 
 
 
-  // Standalone full-width pages: Landing, Feed, Courses, Jobs, Alumni, Contact, Profile, Projects, Academics, Badges, Certifications, Coding, Settings
+  // Landing page renders as an immersive standalone screen
+  if (pathname === '/') {
+    return <main className="min-h-screen bg-[#F0F2F5] text-ink">{children}</main>;
+  }
+
+  // Standalone full-width pages: Feed, Courses, Jobs, Alumni, Contact, Profile, Projects, Academics, Badges, Certifications, Coding, Settings
   if (
-    pathname === '/' ||
     pathname.startsWith('/feed') ||
     pathname.startsWith('/courses') ||
     pathname.startsWith('/jobs') ||
