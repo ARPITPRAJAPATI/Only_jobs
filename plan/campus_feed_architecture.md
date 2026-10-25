@@ -58,23 +58,34 @@ enum RoleType {
   ADMIN
 }
 
+enum PostType {
+  PROJECT_SHOWCASE     // Production projects, GitHub repos, live demos
+  HACKATHON_WIN        // Podium finishes, competition achievements
+  PLACEMENT_UPDATE     // Verified placement offers, interview breakdown
+  CAMPUS_NOTICE        // Official CRPC/TPO drives, dean circulars
+}
+
 model Post {
   id             String        @id @default(uuid())
   tenantId       String        @default("kiet-main") // College isolation
   authorId       String
   author         User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
   
+  postType       PostType      @default(PROJECT_SHOWCASE)
   content        String        @db.Text
-  mediaUrls      String[]      // Max 4 project images / screenshots (S3/R2 direct CDN)
+  hashtags       String[]      // e.g. ["#KIET2025", "#PlacementDrive", "#DevOps"]
+  mediaUrls      String[]      // High-res project screenshots, system architecture diagrams (S3/R2 direct CDN)
   projectLink    String?       // Optional GitHub repo or live demo link
   
   // High-performance denormalized counters (avoid expensive COUNT queries)
   likesCount     Int           @default(0)
   commentsCount  Int           @default(0)
+  savesCount     Int           @default(0)
   
   // Relations
   likes          PostLike[]
   comments       PostComment[]
+  saves          PostSave[]
 
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
@@ -94,6 +105,18 @@ model PostLike {
   // Prevents multiple likes from the same user on a single post
   @@unique([postId, userId])
   @@index([postId])
+}
+
+model PostSave {
+  id        String   @id @default(uuid())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+
+  // Bookmarking a post for later reference (interview prep, project inspiration)
+  @@unique([postId, userId])
+  @@index([userId])
 }
 
 model PostComment {
@@ -300,33 +323,54 @@ export async function getCampusFeed(req, res) {
 
 ---
 
-## 🎨 5. Role-Based Visual Hierarchy (Frontend Contract)
+## 🎨 5. 3-Column UI Architecture & Institutional Contract (Only Jobs × KIET)
 
-To maintain academic decorum and highlight critical institution notices, the frontend applies distinct styling based on `author.role`:
+The campus feed UI implements an anti-slop, high-usability **3-Column Architecture** built with clean typography (Nunito ExtraBold 800 headings), pure white cards, and an authentic blue accent (`#1E75FF` / `#0a66c2`):
 
 ```mermaid
-graph LR
-    Role{author.role}
-    Role -->|DEAN / ADMIN| A["👑 Dean Official Announcement<br/>• Subtle 1.5px Gold Hairline Border<br/>• 'Official Institutional Notice' Pill<br/>• Pinned at top of feed"]
-    Role -->|TEACHER| B["👨‍🏫 Faculty Project Endorsement<br/>• Verified Blue Checkmark<br/>• Department & Subject Tag"]
-    Role -->|STUDENT| C["🎓 Student Achievement<br/>• Branch & Semester Tag (e.g. CSE Sem 5)<br/>• Project Link Chip (GitHub / Live Demo)<br/>• Max 4 Media Grid"]
+graph TD
+    subgraph Navbar ["Top Sticky Navbar (64px)"]
+        Logo["Only Jobs × KIET Wordmark"]
+        SearchPill["Dynamic Pill Search Bar"]
+        NavTabs["Home Pill (Active) | Explore | Messages | Notifications (Red Dot) | Campus Groups"]
+        ProfileSwitch["User Avatar Ring + Name + Switch Portal CTA"]
+    end
+
+    subgraph Column1 ["Left Column (280px)"]
+        C1_Profile["Student Profile Mini-Card<br/>• Campus Cover Banner<br/>• Avatar with Yellow Ring<br/>• Roll Number & Branch<br/>• Verified Badges, Posts, Peers<br/>• 'My Profile' Link to /profile"]
+        C1_Shortcuts["Campus Shortcuts<br/>• DevOps & Cloud Circle<br/>• Innogeeks Coding Society<br/>• Placement Cell (CRPC)<br/>• AI & ML Lab"]
+    end
+
+    subgraph Column2 ["Center Main Feed (640px)"]
+        C2_Composer["Interactive Composer Card<br/>• 'Share a project, achievement or doubt...'<br/>• Media Attachments: Image, Architecture Diagram, Poll<br/>• Audience Scope: Campus Verified vs Public<br/>• Live 3-Post/Day Atomic Quota Feedback"]
+        C2_Feed["Infinite Scroll Post Stream<br/>• Author Role Badging (Student / Faculty / TPO / Dean)<br/>• Verified Project Links (GitHub / Live Demo)<br/>• High-Res Media Gallery<br/>• Interactive Heart Likes, Threaded Comments, Bookmarks<br/>• Inline Quick Comment Capsule"]
+    end
+
+    subgraph Column3 ["Right Column (300px)"]
+        C3_Activity["Real-time Campus Activity<br/>• TPO Placement Drive announcements<br/>• Faculty project verifications<br/>• Peer skill endorsements & milestone likes"]
+        C3_Suggested["Suggested Batchmates & Placed Alumni<br/>• Placed Seniors (e.g. Amazon, Atlassian, Adobe)<br/>• Domain Specialist Peers<br/>• Interactive 'Connect / Follow' toggles"]
+    end
 ```
 
-### Visual Preview of Feed Cards
+### Visual Preview of the 3-Column Interface
 ```
-┌────────────────────────────────────────────────────────────────────────┐
-│ 👑 Dr. Dean Office • [OFFICIAL ANNOUNCEMENT]             📌 Pinned     │
-│ Mandatory Briefing on Smart India Hackathon internal rounds on Friday.  │
-├────────────────────────────────────────────────────────────────────────┤
-│ 👨‍🏫 Prof. V. Sharma • CSE Dept (Verified Faculty ✅)      2 hours ago   │
-│ Congratulations to Team 14 for completing their Distributed KV Store!   │
-├────────────────────────────────────────────────────────────────────────┤
-│ 🎓 Arpit Prajapati • CSE • Sem 7                       5 hours ago   │
-│ Deployed KubePay: Production microservices payment gateway on EKS!     │
-│ [GitHub: arpit/kubepay] [Live Demo ↗]                                   │
-│ [🖼️ Architecture.png] [🖼️ GrafanaMetrics.png]                          │
-│ ❤️ 42 Likes  💬 8 Comments                                             │
-└────────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ [ONLY JOBS × KIET]   [🔍 Search campus...]       🏠 Home   🧭 Explore   💬 Chat   🔔 (•)   👥 Circles     [RV] Reinhard  [Switch]│
+├──────────────────────────┬─────────────────────────────────────────────────┬─────────────────────────────────┤
+│ ┌──────────────────────┐ │ ┌─────────────────────────────────────────────┐ │ ┌─────────────────────────────┐ │
+│ │ 🖼️ Campus Banner     │ │ │ [RV] Share a project or achievement...  😊   │ │ │ ⚡ Campus Activity     See all│ │
+│ │  (RV) Reinhard V.    │ │ ├─────────────────────────────────────────────┤ │ │ • TPO: Amazon Drive live 15m│ │
+│ │  CSE • Sem 7 • KIET  │ │ │ [🖼️ Image]  [📊 Poll]   [🌐 Campus]  [Post] │ │ │ • Prof. Sharma verified Kube│ │
+│ │  12 Badges | 4 Projs │ │ └─────────────────────────────────────────────┘ │ │ • Rohan endorsed Next.js  2h│ │
+│ │ [View Full Profile]  │ │                                                 │ └─────────────────────────────┘ │
+│ └──────────────────────┘ │ ┌─────────────────────────────────────────────┐ │ ┌─────────────────────────────┐ │
+│ ┌──────────────────────┐ │ │ 🎓 Briansky • CSE • 12m ago             ⋮   │ │ │ 🤝 Suggested Batchmates     │ │
+│ │ 📌 Campus Shortcuts  │ │ │ Beautiful art & deployment! #KIET #Cloud   │ │ │ • Aman (SDE @ Atlassian)    │ │
+│ │ • DevOps & Cloud Lab │ │ │ [🖼️ Full-width Architecture / Demo]         │ │ │ • Sneha (Lead, Innogeeks)   │ │
+│ │ • Innogeeks Society  │ │ │ ❤️ 320k   💬 120   🔖 148   ↗ Share          │ │ │ • Kartik (AI Researcher)    │ │
+│ │ • Placement Cell     │ │ │ [RV] [Write your comment...               ] │ │ └─────────────────────────────┘ │
+│ └──────────────────────┘ │ └─────────────────────────────────────────────┘ │                                 │
+└──────────────────────────┴─────────────────────────────────────────────────┴─────────────────────────────────┘
 ```
 
 ---
