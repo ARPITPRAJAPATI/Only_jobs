@@ -82,6 +82,24 @@ export default function OverviewPage() {
       handle: student.leetcodeHandle ? `@${student.leetcodeHandle}` : '',
     },
     {
+      href: student.codeforcesHandle && `https://codeforces.com/profile/${student.codeforcesHandle}`,
+      icon: <Code2 className="h-3.5 w-3.5" />,
+      label: 'Codeforces',
+      handle: student.codeforcesHandle ? `@${student.codeforcesHandle}` : '',
+    },
+    {
+      href: student.codechefHandle && `https://www.codechef.com/users/${student.codechefHandle}`,
+      icon: <Code2 className="h-3.5 w-3.5" />,
+      label: 'CodeChef',
+      handle: student.codechefHandle ? `@${student.codechefHandle}` : '',
+    },
+    {
+      href: student.gfgHandle && `https://www.geeksforgeeks.org/user/${student.gfgHandle}`,
+      icon: <Code2 className="h-3.5 w-3.5" />,
+      label: 'GeeksforGeeks',
+      handle: student.gfgHandle ? `@${student.gfgHandle}` : '',
+    },
+    {
       href: student.linkedinUrl,
       icon: <LinkedinIcon className="h-3.5 w-3.5" />,
       label: 'LinkedIn',
@@ -198,9 +216,10 @@ export default function OverviewPage() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 rounded-md border border-line bg-surface hover:bg-surface2 px-2.5 py-1 text-xs font-semibold text-ink/85 transition-all shadow-2xs"
+                title={s.handle ? `${s.label} (${s.handle})` : s.label}
               >
                 <span className="text-[#0969da]">{s.icon}</span>
-                <span className="text-[11.5px]">{s.handle || s.label}</span>
+                <span className="text-[11.5px]">{s.label}</span>
               </a>
             ))}
           </div>

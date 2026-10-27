@@ -9,7 +9,6 @@ import {
   Code2,
   Award,
   BadgeCheck,
-  Pencil,
 } from 'lucide-react';
 import { useStudent } from '@/components/store';
 import { cn } from '@/lib/utils';
@@ -60,13 +59,6 @@ export function ProfileSubnav() {
       count: student.certifications.length,
       isActive: pathname.startsWith('/certifications'),
     },
-    {
-      label: 'Edit Profile',
-      href: '/settings',
-      icon: Pencil,
-      isRight: true,
-      isActive: pathname.startsWith('/settings'),
-    },
   ];
 
   return (
@@ -83,8 +75,7 @@ export function ProfileSubnav() {
                   'flex items-center gap-2 py-3 px-3 text-xs sm:text-sm font-semibold border-b-2 transition-colors whitespace-nowrap cursor-pointer',
                   tab.isActive
                     ? 'border-[#0969da] text-ink'
-                    : 'border-transparent text-muted hover:text-ink hover:border-line',
-                  tab.isRight && 'ml-auto'
+                    : 'border-transparent text-muted hover:text-ink hover:border-line'
                 )}
               >
                 <Icon className={cn('h-4 w-4', tab.isActive ? 'text-[#0969da]' : 'text-muted')} />

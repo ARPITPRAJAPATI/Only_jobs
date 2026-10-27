@@ -7,7 +7,7 @@ import { SgpaChart } from '@/components/SgpaChart';
 import { AuditChip } from '@/components/StatusChips';
 import { useStudent } from '@/components/store';
 import { useToast } from '@/components/toast';
-import { Button, Card, CardHeader, Chip, EmptyState, IconButton, PageGrid, Stat } from '@/components/ui';
+import { Button, Card, CardHeader, EmptyState, IconButton, PageGrid, Stat } from '@/components/ui';
 import { ProfileSubnav } from '@/components/ProfileSubnav';
 import type { AcademicSemester } from '@/lib/types';
 import { latestCgpa, totalBacklogs } from '@/lib/utils';
@@ -155,26 +155,6 @@ export default function AcademicsPage() {
                 <li>₹500 fine is levied</li>
                 <li>Dean’s disciplinary notice is generated</li>
               </ul>
-            </div>
-          </Card>
-
-          <Card>
-            <CardHeader title="Legend" />
-            <div className="space-y-2.5 text-xs">
-              <div className="flex items-center gap-3">
-                <AuditChip status="SELF_DECLARED" /> <span className="text-muted">Editable until audited</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <AuditChip status="VERIFIED" /> <span className="text-muted">Confirmed by TPO — locked</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <AuditChip status="FLAGGED_FRAUD" /> <span className="text-muted">Triggers freeze + fine</span>
-              </div>
-              {nextSem && (
-                <Chip tone="accent" className="mt-1">
-                  Next up: Semester {nextSem}
-                </Chip>
-              )}
             </div>
           </Card>
         </div>
