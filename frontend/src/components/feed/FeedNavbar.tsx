@@ -225,27 +225,24 @@ export function FeedNavbar() {
             );
           })}
 
-          {/* 7: Notification Bell with Flyout (GitHub unread dot style) */}
+          {/* 7: Notification Bell with Flyout */}
           <div ref={notifRef} className="relative ml-0.5">
             <button
               onClick={() => setNotifOpen(!notifOpen)}
               aria-label="Campus Notifications"
               className={cn(
-                'relative h-8 px-2.5 xl:px-3 rounded-md flex items-center gap-1.5 text-[12.5px] font-semibold transition-all cursor-pointer',
-                notifOpen || pendingBadges > 0
-                  ? 'text-ink bg-surface2 font-bold border border-line'
-                  : 'text-muted hover:bg-surface2 hover:text-ink'
+                'relative h-8 rounded-md flex items-center gap-1.5 text-[12.5px] font-semibold transition-all cursor-pointer',
+                notifOpen
+                  ? 'px-2.5 xl:px-3 text-ink bg-surface2 font-bold border border-line shadow-2xs'
+                  : 'px-2 sm:px-2.5 text-muted hover:bg-surface2 hover:text-ink'
               )}
             >
-              <div className="relative">
-                <Bell className="w-3.5 h-3.5 shrink-0" />
-                {pendingBadges > 0 && (
-                  <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-[#cf222e] ring-2 ring-surface" />
-                )}
-              </div>
-              <span>Notification</span>
+              <Bell className={cn('w-3.5 h-3.5 shrink-0', notifOpen ? 'text-ink' : 'text-muted')} />
+              {notifOpen && (
+                <span className="text-ink animate-fade-in">Notification</span>
+              )}
               {pendingBadges > 0 && (
-                <span className="text-[10px] font-bold bg-[#cf222e] text-white px-1.5 py-0.2 rounded-full">
+                <span className="text-[10px] font-bold bg-[#cf222e] text-white px-1.5 py-0.5 rounded-full leading-none">
                   {pendingBadges}
                 </span>
               )}
@@ -343,19 +340,6 @@ export function FeedNavbar() {
             </span>
           </Link>
 
-          {/* GitHub Primer Style Button */}
-          <Link
-            href="/profile"
-            className={cn(
-              'hidden sm:inline-flex items-center gap-1 text-[12px] font-semibold px-3 py-1 rounded-md transition-all border shadow-2xs cursor-pointer',
-              pathname.startsWith('/profile')
-                ? 'bg-ink text-surface border-ink'
-                : 'bg-surface2 hover:bg-surface border-line text-ink'
-            )}
-          >
-            <span>Portfolio</span>
-            <span className="text-xs">&rarr;</span>
-          </Link>
 
           {/* Mobile Hamburger Button */}
           <button
