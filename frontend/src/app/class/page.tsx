@@ -9,6 +9,7 @@ import {
   Award,
   Bell,
   BookOpen,
+  Calendar,
   Check,
   CheckCircle2,
   ChevronDown,
@@ -16,29 +17,37 @@ import {
   Clock,
   Code2,
   Copy,
+  Download,
   ExternalLink,
+  Eye,
+  FileCheck,
   FileCode,
   FileText,
   Filter,
+  Flame,
   FolderGit2,
-  Globe,
   GraduationCap,
+  HelpCircle,
   Image as ImageIcon,
-  Info,
   Layers,
+  LayoutGrid,
   MessageSquare,
   MoreVertical,
   Paperclip,
-  Phone,
   Plus,
+  Radio,
   RefreshCw,
   Search,
   Send,
   Share2,
+  ShieldAlert,
   ShieldCheck,
   Sparkles,
+  Timer,
+  TrendingUp,
   Upload,
   UserCheck,
+  UserMinus,
   Users,
   Video,
   X,
@@ -47,6 +56,7 @@ import { useStudent } from '@/components/store';
 import { useToast } from '@/components/toast';
 import { cn } from '@/lib/utils';
 
+// Types
 interface ProjectAttachment {
   title: string;
   githubUrl: string;
@@ -60,7 +70,7 @@ interface ProjectAttachment {
 
 interface ChatMessage {
   id: string;
-  roomId: string;
+  classId: string;
   senderName: string;
   senderRoll?: string;
   senderAvatar: string;
@@ -72,95 +82,492 @@ interface ChatMessage {
   reactions?: { emoji: string; count: number; reacted?: boolean }[];
 }
 
-interface ClassRoom {
+interface ClassNote {
+  id: string;
+  title: string;
+  unit: string;
+  fileType: 'pdf' | 'slides' | 'code';
+  fileSize: string;
+  author: string;
+  date: string;
+  downloadUrl?: string;
+}
+
+interface ClassTest {
+  id: string;
+  title: string;
+  unit: string;
+  date: string;
+  time: string;
+  duration: string;
+  maxMarks: number;
+  studentScore?: number;
+  status: 'upcoming' | 'completed' | 'in_progress';
+  topics: string[];
+}
+
+interface ClassStudent {
   id: string;
   name: string;
+  roll: string;
+  avatar: string;
+  isActiveNow: boolean;
+  attendance: 'present' | 'absent' | 'late';
+  lastSeen: string;
+  submittedToday?: {
+    title: string;
+    time: string;
+    status: 'APPROVED' | 'SUBMITTED' | 'NEEDS_REVISION';
+  };
+}
+
+interface SemClass {
+  id: string;
   code: string;
+  shortName: string;
+  fullName: string;
   teacher: string;
   semester: string;
   section: string;
-  activeAssignment: string;
-  deadline: string;
-  enrolledCount: number;
-  verifiedCount: number;
-  avatarBg: string;
+  timing: string;
+  labRoom: string;
+  totalStudents: number;
+  activeToday: number;
+  todayTopic: string;
+  accentBg: string;
+  accentColor: string;
+  notesCount: number;
+  upcomingTestsCount: number;
+  notes: ClassNote[];
+  tests: ClassTest[];
+  students: ClassStudent[];
 }
 
-const INITIAL_ROOMS: ClassRoom[] = [
+// Initial Semester Classes Data
+const INITIAL_SEM_CLASSES: SemClass[] = [
   {
-    id: 'room-1',
-    name: 'Cloud Computing Lab - CSE 3A',
-    code: 'KCS-601',
-    teacher: 'Prof. V. Sharma',
-    semester: 'Semester 6',
-    section: 'Section 3A',
-    activeAssignment: 'Mini Project 1: Dockerized REST API with Redis Queue',
-    deadline: '28 Oct 2026',
-    enrolledCount: 38,
-    verifiedCount: 34,
-    avatarBg: 'bg-[#0969da]',
-  },
-  {
-    id: 'room-2',
-    name: 'Distributed Systems Lab - CSE 3A',
-    code: 'KCS-602',
-    teacher: 'Dr. A. Verma',
-    semester: 'Semester 6',
-    section: 'Section 3A',
-    activeAssignment: 'Raft Consensus Protocol Implementation in Go',
-    deadline: '04 Nov 2026',
-    enrolledCount: 38,
-    verifiedCount: 18,
-    avatarBg: 'bg-[#1a7f37]',
-  },
-  {
-    id: 'room-3',
-    name: 'Compiler Design Lab - CSE 3A',
-    code: 'KCS-603',
-    teacher: 'Prof. Neha Gupta',
-    semester: 'Semester 6',
-    section: 'Section 3A',
-    activeAssignment: 'Lexical Analyzer & AST Generator with Flex/Bison',
-    deadline: '10 Nov 2026',
-    enrolledCount: 38,
-    verifiedCount: 38,
-    avatarBg: 'bg-[#8250df]',
-  },
-  {
-    id: 'room-4',
-    name: 'Full Stack Web Dev Lab - CSE 3A',
+    id: 'web-d',
+    shortName: 'Web D',
     code: 'KCS-604',
+    fullName: 'Full Stack Web Development & Microservices Lab',
     teacher: 'Prof. S. K. Rastogi',
     semester: 'Semester 6',
     section: 'Section 3A',
-    activeAssignment: 'Microservices Portfolio with Next.js & GraphQL',
-    deadline: '15 Nov 2026',
-    enrolledCount: 36,
-    verifiedCount: 12,
-    avatarBg: 'bg-[#cf222e]',
+    timing: 'Mon, Wed • 10:00 AM - 11:40 AM',
+    labRoom: 'Lab 4, Computing Complex',
+    totalStudents: 64,
+    activeToday: 58,
+    todayTopic: 'Next.js 14 App Router, Server Actions & AST Plagiarism Verification',
+    accentBg: 'bg-[#ddf4ff]',
+    accentColor: 'text-[#0969da]',
+    notesCount: 12,
+    upcomingTestsCount: 2,
+    notes: [
+      {
+        id: 'wn-1',
+        title: 'Unit 1: Modern DOM, TypeScript Generics & Async Queues',
+        unit: 'Unit 1',
+        fileType: 'pdf',
+        fileSize: '3.8 MB',
+        author: 'Prof. S. K. Rastogi',
+        date: '20 Oct 2026',
+      },
+      {
+        id: 'wn-2',
+        title: 'Unit 2: Next.js App Router, SSR vs ISR & Server Actions',
+        unit: 'Unit 2',
+        fileType: 'pdf',
+        fileSize: '5.2 MB',
+        author: 'Prof. S. K. Rastogi',
+        date: '24 Oct 2026',
+      },
+      {
+        id: 'wn-3',
+        title: 'Unit 3: Microservices Communication & Redis BullMQ Queue Handlers',
+        unit: 'Unit 3',
+        fileType: 'slides',
+        fileSize: '8.4 MB',
+        author: 'Faculty Team',
+        date: '28 Oct 2026',
+      },
+      {
+        id: 'wn-4',
+        title: 'Docker Orchestration & Docker-Compose Production Configs',
+        unit: 'Unit 4',
+        fileType: 'code',
+        fileSize: '1.2 MB',
+        author: 'DevOps Lab Mentor',
+        date: 'Yesterday',
+      },
+    ],
+    tests: [
+      {
+        id: 'wt-1',
+        title: 'Unit Test 2: Full-Stack Architecture & State Machines',
+        unit: 'Unit 2 & 3',
+        date: '06 Nov 2026',
+        time: '11:00 AM - 12:00 PM',
+        duration: '60 Mins',
+        maxMarks: 25,
+        status: 'upcoming',
+        topics: ['Next.js SSR', 'Database Indexing', 'JWT Authentication', 'Redis Caching'],
+      },
+      {
+        id: 'wt-2',
+        title: 'Continuous Evaluation Quiz 1: TypeScript & REST API Contracts',
+        unit: 'Unit 1',
+        date: '22 Oct 2026',
+        time: '10:15 AM',
+        duration: '30 Mins',
+        maxMarks: 20,
+        studentScore: 19,
+        status: 'completed',
+        topics: ['Generics', 'Type Narrowing', 'HTTP 200/201/409 codes'],
+      },
+      {
+        id: 'wt-3',
+        title: 'Mid-Sem Practical Lab Viva & AST Code Verification',
+        unit: 'Comprehensive',
+        date: '14 Nov 2026',
+        time: '09:30 AM',
+        duration: '90 Mins',
+        maxMarks: 50,
+        status: 'upcoming',
+        topics: ['Live Git clone', 'Docker run', 'AST plagiarism verification'],
+      },
+    ],
+    students: [
+      {
+        id: 'st-1',
+        name: 'Arpit Prajapati',
+        roll: '2100290100045',
+        avatar: 'AP',
+        isActiveNow: true,
+        attendance: 'present',
+        lastSeen: 'Active Now',
+        submittedToday: {
+          title: 'Distributed Log Aggregator with BullMQ',
+          time: '10:14 AM',
+          status: 'APPROVED',
+        },
+      },
+      {
+        id: 'st-2',
+        name: 'Rahul Sharma',
+        roll: '2100290120045',
+        avatar: 'RS',
+        isActiveNow: true,
+        attendance: 'present',
+        lastSeen: 'Active Now',
+        submittedToday: {
+          title: 'Distributed Task Queue with Redis',
+          time: '10:45 AM',
+          status: 'APPROVED',
+        },
+      },
+      {
+        id: 'st-3',
+        name: 'Priya Verma',
+        roll: '2100290120089',
+        avatar: 'PV',
+        isActiveNow: true,
+        attendance: 'present',
+        lastSeen: 'Active Now',
+        submittedToday: {
+          title: 'RESTful Auth Microservice with PostgreSQL',
+          time: '11:30 AM',
+          status: 'NEEDS_REVISION',
+        },
+      },
+      {
+        id: 'st-4',
+        name: 'Devansh Saxena',
+        roll: '2100290120038',
+        avatar: 'DS',
+        isActiveNow: false,
+        attendance: 'late',
+        lastSeen: '12m ago',
+      },
+      {
+        id: 'st-5',
+        name: 'Ananya Mishra',
+        roll: '2100290120021',
+        avatar: 'AM',
+        isActiveNow: true,
+        attendance: 'present',
+        lastSeen: 'Active Now',
+      },
+      {
+        id: 'st-6',
+        name: 'Kunal Singh',
+        roll: '2100290120067',
+        avatar: 'KS',
+        isActiveNow: false,
+        attendance: 'absent',
+        lastSeen: 'Offline (Last seen yesterday)',
+      },
+    ],
+  },
+  {
+    id: 'dsa',
+    shortName: 'DSA',
+    code: 'KCS-401',
+    fullName: 'Data Structures, Advanced Algorithms & Problem Solving',
+    teacher: 'Prof. Neha Gupta',
+    semester: 'Semester 6',
+    section: 'Section 3A',
+    timing: 'Tue, Thu • 09:00 AM - 10:40 AM',
+    labRoom: 'Lab 2, Algorithm Wing',
+    totalStudents: 64,
+    activeToday: 61,
+    todayTopic: 'Segment Trees, Range Queries & Trie Implementations for Autocomplete',
+    accentBg: 'bg-[#dafbe1]',
+    accentColor: 'text-[#1a7f37]',
+    notesCount: 16,
+    upcomingTestsCount: 1,
+    notes: [
+      {
+        id: 'dn-1',
+        title: 'Unit 1: Asymptotic Analysis, Master Theorem & Recurrences',
+        unit: 'Unit 1',
+        fileType: 'pdf',
+        fileSize: '4.1 MB',
+        author: 'Prof. Neha Gupta',
+        date: '18 Oct 2026',
+      },
+      {
+        id: 'dn-2',
+        title: 'Unit 2: Graph Algorithms (Dijkstra, Bellman-Ford, Tarjan SCC)',
+        unit: 'Unit 2',
+        fileType: 'pdf',
+        fileSize: '6.7 MB',
+        author: 'Prof. Neha Gupta',
+        date: '23 Oct 2026',
+      },
+      {
+        id: 'dn-3',
+        title: 'Unit 3: Dynamic Programming on Trees & Digit DP Problem Set',
+        unit: 'Unit 3',
+        fileType: 'pdf',
+        fileSize: '5.5 MB',
+        author: 'Faculty Mentors',
+        date: '29 Oct 2026',
+      },
+    ],
+    tests: [
+      {
+        id: 'dt-1',
+        title: 'LeetCode Style Speed Contest 3: DP & Graphs',
+        unit: 'Unit 2 & 3',
+        date: '08 Nov 2026',
+        time: '04:00 PM - 05:30 PM',
+        duration: '90 Mins',
+        maxMarks: 100,
+        status: 'upcoming',
+        topics: ['Disjoint Set Union', 'Shortest Paths', '0/1 Knapsack variations'],
+      },
+      {
+        id: 'dt-2',
+        title: 'DSA Unit Test 1: Trees & Balanced BST (AVL/Red-Black)',
+        unit: 'Unit 1',
+        date: '15 Oct 2026',
+        time: '09:30 AM',
+        duration: '45 Mins',
+        maxMarks: 25,
+        studentScore: 24,
+        status: 'completed',
+        topics: ['Tree Traversals', 'AVL Rotations', 'Lowest Common Ancestor'],
+      },
+    ],
+    students: [
+      {
+        id: 'st-d1',
+        name: 'Arpit Prajapati',
+        roll: '2100290100045',
+        avatar: 'AP',
+        isActiveNow: true,
+        attendance: 'present',
+        lastSeen: 'Active Now',
+      },
+      {
+        id: 'st-d2',
+        name: 'Pooja Agarwal',
+        roll: '2100290120078',
+        avatar: 'PA',
+        isActiveNow: true,
+        attendance: 'present',
+        lastSeen: 'Active Now',
+      },
+      {
+        id: 'st-d3',
+        name: 'Tanmay Bhatt',
+        roll: '2100290120112',
+        avatar: 'TB',
+        isActiveNow: false,
+        attendance: 'absent',
+        lastSeen: 'Offline',
+      },
+    ],
+  },
+  {
+    id: 'os',
+    shortName: 'Operating Systems',
+    code: 'KCS-402',
+    fullName: 'Operating Systems Kernel Design & Concurrency Lab',
+    teacher: 'Dr. A. Verma',
+    semester: 'Semester 6',
+    section: 'Section 3A',
+    timing: 'Wed, Fri • 02:00 PM - 03:40 PM',
+    labRoom: 'Linux Systems Lab 1',
+    totalStudents: 64,
+    activeToday: 55,
+    todayTopic: 'Raft Consensus Protocol, POSIX Mutexes & Kernel Memory Management',
+    accentBg: 'bg-[#fff8c5]',
+    accentColor: 'text-[#9a6700]',
+    notesCount: 10,
+    upcomingTestsCount: 1,
+    notes: [
+      {
+        id: 'on-1',
+        title: 'Unit 1: Process Scheduling Algorithms & Linux CFS Mechanics',
+        unit: 'Unit 1',
+        fileType: 'pdf',
+        fileSize: '3.2 MB',
+        author: 'Dr. A. Verma',
+        date: '16 Oct 2026',
+      },
+      {
+        id: 'on-2',
+        title: 'Unit 2: Inter-Process Communication, Semaphores & Deadlock Detection',
+        unit: 'Unit 2',
+        fileType: 'pdf',
+        fileSize: '4.8 MB',
+        author: 'Dr. A. Verma',
+        date: '25 Oct 2026',
+      },
+    ],
+    tests: [
+      {
+        id: 'ot-1',
+        title: 'Operating Systems Unit Test 2: Virtual Memory & Page Replacement',
+        unit: 'Unit 3',
+        date: '12 Nov 2026',
+        time: '02:00 PM',
+        duration: '60 Mins',
+        maxMarks: 30,
+        status: 'upcoming',
+        topics: ['Paging', 'TLB Miss Handling', 'LRU Approximation'],
+      },
+    ],
+    students: [
+      {
+        id: 'st-o1',
+        name: 'Arpit Prajapati',
+        roll: '2100290100045',
+        avatar: 'AP',
+        isActiveNow: true,
+        attendance: 'present',
+        lastSeen: 'Active Now',
+      },
+      {
+        id: 'st-o2',
+        name: 'Shreya Saxena',
+        roll: '2100290120101',
+        avatar: 'SS',
+        isActiveNow: true,
+        attendance: 'present',
+        lastSeen: 'Active Now',
+      },
+    ],
+  },
+  {
+    id: 'dbms',
+    shortName: 'DBMS',
+    code: 'KCS-501',
+    fullName: 'Database Management Systems & Distributed Storage',
+    teacher: 'Prof. Manish Pant',
+    semester: 'Semester 6',
+    section: 'Section 3A',
+    timing: 'Thu • 11:45 AM - 01:15 PM',
+    labRoom: 'Database Lab 3',
+    totalStudents: 64,
+    activeToday: 60,
+    todayTopic: 'B-Tree Indexing, Query Optimizer Cost Estimations & ACID in Sharded DBs',
+    accentBg: 'bg-[#fbefff]',
+    accentColor: 'text-[#8250df]',
+    notesCount: 8,
+    upcomingTestsCount: 2,
+    notes: [
+      {
+        id: 'dbn-1',
+        title: 'Unit 1: Relational Algebra & Advanced SQL Query Optimization',
+        unit: 'Unit 1',
+        fileType: 'pdf',
+        fileSize: '4.4 MB',
+        author: 'Prof. Manish Pant',
+        date: '12 Oct 2026',
+      },
+      {
+        id: 'dbn-2',
+        title: 'Unit 2: Normalization (1NF to BCNF) & Dependency Preservation',
+        unit: 'Unit 2',
+        fileType: 'pdf',
+        fileSize: '3.9 MB',
+        author: 'Prof. Manish Pant',
+        date: '21 Oct 2026',
+      },
+    ],
+    tests: [
+      {
+        id: 'dbt-1',
+        title: 'Database Unit Test 2: Transactions & Two-Phase Locking (2PL)',
+        unit: 'Unit 3',
+        date: '10 Nov 2026',
+        time: '11:45 AM',
+        duration: '50 Mins',
+        maxMarks: 25,
+        status: 'upcoming',
+        topics: ['Serializability', 'Deadlocks', 'WAL Log Recovery'],
+      },
+    ],
+    students: [
+      {
+        id: 'st-db1',
+        name: 'Arpit Prajapati',
+        roll: '2100290100045',
+        avatar: 'AP',
+        isActiveNow: true,
+        attendance: 'present',
+        lastSeen: 'Active Now',
+      },
+    ],
   },
 ];
 
-const INITIAL_MESSAGES: Record<string, ChatMessage[]> = {
-  'room-1': [
+// Initial Messages for each class
+const INITIAL_CLASS_MESSAGES: Record<string, ChatMessage[]> = {
+  'web-d': [
     {
-      id: 'm-1',
-      roomId: 'room-1',
-      senderName: 'Prof. V. Sharma',
-      senderAvatar: 'VS',
+      id: 'wm-1',
+      classId: 'web-d',
+      senderName: 'Prof. S. K. Rastogi',
+      senderAvatar: 'SK',
       senderRole: 'teacher',
-      text: 'Good morning everyone. Mini Project 1 submission channel is now open. Please drop your project cards with at least 1-4 screenshots and a public GitHub repo. Zero text chat policy: keep comments strictly related to code verification.',
+      text: 'Good morning everyone! Welcome to Web D lab. Today’s assignment submission window is live. Attach your project cards with GitHub repository links and live URLs. Plagiarism engine will inspect AST hashes automatically.',
       timestamp: 'Today at 09:30 AM',
-      reactions: [{ emoji: '👍', count: 24, reacted: true }, { emoji: '🚀', count: 12 }],
+      reactions: [
+        { emoji: '👍', count: 28, reacted: true },
+        { emoji: '🚀', count: 14 },
+      ],
     },
     {
-      id: 'm-2',
-      roomId: 'room-1',
+      id: 'wm-2',
+      classId: 'web-d',
       senderName: 'Rahul Sharma',
       senderRoll: '2100290120045',
       senderAvatar: 'RS',
       senderRole: 'student',
-      text: 'Submitted my Distributed Task Queue implementation. Tested under 5,000 concurrent jobs using Redis BullMQ.',
+      text: 'Submitted my Distributed Task Queue implementation with Redis BullMQ and Node.js workers.',
       timestamp: 'Today at 10:45 AM',
       project: {
         title: 'Distributed Task Queue with Redis & BullMQ',
@@ -170,16 +577,16 @@ const INITIAL_MESSAGES: Record<string, ChatMessage[]> = {
           'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80',
           'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80',
         ],
-        astPlagScore: 4.2,
+        astPlagScore: 3.2,
         status: 'APPROVED',
-        teacherFeedback: 'Clean multi-stage Docker build. Redis cluster retry logic verified. Verified for placement docket.',
+        teacherFeedback: 'Excellent cluster failover handling and clean queue backoff configuration. Approved for placement portfolio.',
         grade: 9.5,
       },
-      reactions: [{ emoji: '⭐', count: 8 }, { emoji: '🔥', count: 4 }],
+      reactions: [{ emoji: '⭐', count: 9 }, { emoji: '🔥', count: 6 }],
     },
     {
-      id: 'm-3',
-      roomId: 'room-1',
+      id: 'wm-3',
+      classId: 'web-d',
       senderName: 'Priya Verma',
       senderRoll: '2100290120089',
       senderAvatar: 'PV',
@@ -194,19 +601,19 @@ const INITIAL_MESSAGES: Record<string, ChatMessage[]> = {
         ],
         astPlagScore: 6.8,
         status: 'NEEDS_REVISION',
-        teacherFeedback: 'Missing Dockerfile spec in repository root. Please add container config and re-upload.',
+        teacherFeedback: 'Missing Docker container spec in repository root. Please add container config and re-upload.',
       },
-      reactions: [{ emoji: '👀', count: 3 }],
+      reactions: [{ emoji: '👀', count: 4 }],
     },
     {
-      id: 'm-4',
-      roomId: 'room-1',
+      id: 'wm-4',
+      classId: 'web-d',
       senderName: 'Arpit Prajapati',
       senderRoll: '2100290100045',
       senderAvatar: 'AP',
       senderRole: 'student',
       isCurrentUser: true,
-      text: 'Sir, I have submitted the High-Throughput Log Aggregator pipeline deployed with Docker Swarm. AST plagiarism check completed.',
+      text: 'Sir, I have submitted the High-Throughput Log Aggregator pipeline deployed with Docker Swarm. All AST checks passed.',
       timestamp: 'Today at 02:15 PM',
       project: {
         title: 'High-Throughput Log Aggregator & Docker Swarm Pipeline',
@@ -221,30 +628,66 @@ const INITIAL_MESSAGES: Record<string, ChatMessage[]> = {
         teacherFeedback: 'Outstanding container orchestration benchmarks and stress testing results. Recommended for Dean innovation docket.',
         grade: 10.0,
       },
-      reactions: [{ emoji: '🔥', count: 16, reacted: true }, { emoji: '⭐', count: 11 }],
+      reactions: [{ emoji: '🔥', count: 18, reacted: true }, { emoji: '⭐', count: 12 }],
+    },
+  ],
+  dsa: [
+    {
+      id: 'dm-1',
+      classId: 'dsa',
+      senderName: 'Prof. Neha Gupta',
+      senderAvatar: 'NG',
+      senderRole: 'teacher',
+      text: 'Welcome to DSA Lab CSE 3A! Please upload your verified solutions for Trie Autocomplete and Segment Tree range queries with execution profiling.',
+      timestamp: 'Yesterday at 09:15 AM',
+      reactions: [{ emoji: '⚡', count: 22 }],
+    },
+  ],
+  os: [
+    {
+      id: 'om-1',
+      classId: 'os',
+      senderName: 'Dr. A. Verma',
+      senderAvatar: 'AV',
+      senderRole: 'teacher',
+      text: 'Operating Systems lab submission channel active. Drop your Raft consensus implementation or POSIX thread producer-consumer proofs.',
+      timestamp: 'Wednesday at 02:00 PM',
+      reactions: [{ emoji: '💻', count: 15 }],
+    },
+  ],
+  dbms: [
+    {
+      id: 'dbm-1',
+      classId: 'dbms',
+      senderName: 'Prof. Manish Pant',
+      senderAvatar: 'MP',
+      senderRole: 'teacher',
+      text: 'DBMS lab project cards: Submit your B-Tree Index visualizer or Sharded SQL transaction demo.',
+      timestamp: 'Thursday at 11:45 AM',
+      reactions: [{ emoji: '📁', count: 19 }],
     },
   ],
 };
 
-export default function ClassRoomChatPage() {
+export default function ClassPage() {
   const { student } = useStudent();
   const toast = useToast();
 
-  // Rooms and Active Selection
-  const [rooms, setRooms] = useState<ClassRoom[]>(INITIAL_ROOMS);
-  const [activeRoomId, setActiveRoomId] = useState<string>('room-1');
-  const [messages, setMessages] = useState<Record<string, ChatMessage[]>>(INITIAL_MESSAGES);
-  const [searchRoom, setSearchRoom] = useState('');
+  // Selected Class: if null, shows "My Sem Classes" hub; if string, enters that class
+  const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
 
-  // Right sidebar toggle
-  const [showRightSidebar, setShowRightSidebar] = useState(true);
-  // Mobile responsive tab state
-  const [mobileTab, setMobileTab] = useState<'rooms' | 'chat' | 'dossier'>('chat');
+  // Sem Classes Store
+  const [classes, setClasses] = useState<SemClass[]>(INITIAL_SEM_CLASSES);
+  const [messages, setMessages] = useState<Record<string, ChatMessage[]>>(INITIAL_CLASS_MESSAGES);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Role toggle: Teacher mode vs Student mode
+  // Role toggle: student vs teacher
   const [userRole, setUserRole] = useState<'student' | 'teacher'>('student');
 
-  // Input state
+  // Side Tab for Student: 'notes' | 'tests'
+  const [studentSideTab, setStudentSideTab] = useState<'notes' | 'tests'>('notes');
+
+  // Chat message & project drawer input state
   const [inputText, setInputText] = useState('');
   const [attachProjectOpen, setAttachProjectOpen] = useState(false);
   const [projectTitle, setProjectTitle] = useState('');
@@ -255,36 +698,34 @@ export default function ClassRoomChatPage() {
     'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80',
   ]);
 
-  // Create Room Modal state (for teachers!)
-  const [createRoomOpen, setCreateRoomOpen] = useState(false);
-  const [newRoomName, setNewRoomName] = useState('');
-  const [newRoomCode, setNewRoomCode] = useState('');
-  const [newRoomSection, setNewRoomSection] = useState('Section 3A');
-  const [newRoomAssignment, setNewRoomAssignment] = useState('');
-  const [newRoomDeadline, setNewRoomDeadline] = useState('15 Nov 2026');
-
-  // Photo zoom modal
+  // Selected Photo Zoom Modal
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
 
-  // Auto-scroll chat feed to bottom
+  // Auto-scroll chat feed
   const chatBottomRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, activeRoomId]);
+    if (selectedClassId) {
+      chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, selectedClassId]);
 
-  const activeRoom = rooms.find((r) => r.id === activeRoomId) || rooms[0];
-  const roomMessages = messages[activeRoomId] || [];
+  // Active Class details
+  const currentClass = classes.find((c) => c.id === selectedClassId);
+  const currentMessages = selectedClassId ? messages[selectedClassId] || [] : [];
 
-  // Filtered rooms
-  const filteredRooms = rooms.filter(
-    (r) =>
-      r.name.toLowerCase().includes(searchRoom.toLowerCase()) ||
-      r.code.toLowerCase().includes(searchRoom.toLowerCase())
+  // Filtered classes list for the Hub
+  const filteredClasses = classes.filter(
+    (c) =>
+      c.shortName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.teacher.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Handle Send Project / Message in Chat
+  // Send Message / Project in Chat
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!selectedClassId) return;
     if (!inputText.trim() && !attachProjectOpen) return;
 
     if (attachProjectOpen) {
@@ -300,10 +741,10 @@ export default function ClassRoomChatPage() {
 
     const newMsg: ChatMessage = {
       id: `msg-${Date.now()}`,
-      roomId: activeRoomId,
-      senderName: userRole === 'student' ? student.name : 'Prof. V. Sharma',
+      classId: selectedClassId,
+      senderName: userRole === 'student' ? student.name : currentClass?.teacher || 'Faculty',
       senderRoll: userRole === 'student' ? student.rollNumber : undefined,
-      senderAvatar: userRole === 'student' ? 'AP' : 'VS',
+      senderAvatar: userRole === 'student' ? 'AP' : 'FC',
       senderRole: userRole,
       isCurrentUser: true,
       text: inputText.trim() || undefined,
@@ -313,7 +754,7 @@ export default function ClassRoomChatPage() {
             githubUrl: projectGithub,
             liveUrl: projectLive.trim() || undefined,
             photoUrls: projectPhotos,
-            astPlagScore: 2.8,
+            astPlagScore: 2.4,
             status: 'SUBMITTED',
           }
         : undefined,
@@ -323,7 +764,7 @@ export default function ClassRoomChatPage() {
 
     setMessages((prev) => ({
       ...prev,
-      [activeRoomId]: [...(prev[activeRoomId] || []), newMsg],
+      [selectedClassId]: [...(prev[selectedClassId] || []), newMsg],
     }));
 
     setInputText('');
@@ -333,22 +774,23 @@ export default function ClassRoomChatPage() {
     setProjectLive('');
     toast(
       attachProjectOpen
-        ? 'Project submitted to class chat room! Plagiarism check passed.'
-        : 'Message sent to class room',
+        ? 'Project proof submitted to class chat! AST check passed.'
+        : 'Message sent to class',
       'success'
     );
   };
 
-  // Handle Teacher Review Action
+  // Teacher Review Action on student projects
   const handleTeacherReview = (msgId: string, status: 'APPROVED' | 'NEEDS_REVISION') => {
+    if (!selectedClassId) return;
     const feedback =
       status === 'APPROVED'
-        ? 'Approved during lab verification. AST verified.'
-        : 'Missing Docker container spec or documentation. Please resubmit.';
+        ? 'Verified in laboratory evaluation. AST verified & clean commits.'
+        : 'Missing required configuration file or unit tests. Please update.';
 
     setMessages((prev) => ({
       ...prev,
-      [activeRoomId]: (prev[activeRoomId] || []).map((m) =>
+      [selectedClassId]: (prev[selectedClassId] || []).map((m) =>
         m.id === msgId && m.project
           ? {
               ...m,
@@ -363,930 +805,1008 @@ export default function ClassRoomChatPage() {
       ),
     }));
 
-    toast(`Project ${status === 'APPROVED' ? 'approved' : 'marked for revision'}`, 'info');
+    toast(`Submission ${status === 'APPROVED' ? 'Approved' : 'Marked for Revision'}`, 'info');
   };
 
-  // Handle Teacher Create Room
-  const handleCreateRoom = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newRoomName.trim() || !newRoomCode.trim()) {
-      toast('Please enter room name and subject code', 'error');
-      return;
-    }
-
-    const newRoom: ClassRoom = {
-      id: `room-${Date.now()}`,
-      name: `${newRoomName} - ${newRoomSection}`,
-      code: newRoomCode.toUpperCase(),
-      teacher: userRole === 'teacher' ? 'Prof. V. Sharma' : 'Faculty In-Charge',
-      semester: 'Semester 6',
-      section: newRoomSection,
-      activeAssignment: newRoomAssignment || 'Lab Project 1',
-      deadline: newRoomDeadline,
-      enrolledCount: 38,
-      verifiedCount: 0,
-      avatarBg: 'bg-[#0969da]',
-    };
-
-    setRooms((prev) => [newRoom, ...prev]);
-    setActiveRoomId(newRoom.id);
-    setCreateRoomOpen(false);
-    setNewRoomName('');
-    setNewRoomCode('');
-    setNewRoomAssignment('');
-
-    // Welcome message in new room
-    setMessages((prev) => ({
-      ...prev,
-      [newRoom.id]: [
-        {
-          id: `msg-${Date.now()}`,
-          roomId: newRoom.id,
-          senderName: newRoom.teacher,
-          senderAvatar: 'TC',
-          senderRole: 'teacher',
-          text: `Welcome to ${newRoom.name}! The room is now active. Students can submit their project proofs directly here.`,
-          timestamp: 'Just now',
-          reactions: [{ emoji: '👋', count: 1 }],
-        },
-      ],
-    }));
-
-    toast(`Class room ${newRoom.name} created!`, 'success');
+  // Teacher Attendance status toggle for a student
+  const handleToggleAttendance = (studentId: string, newStatus: 'present' | 'absent' | 'late') => {
+    if (!selectedClassId) return;
+    setClasses((prev) =>
+      prev.map((c) =>
+        c.id === selectedClassId
+          ? {
+              ...c,
+              students: c.students.map((s) =>
+                s.id === studentId ? { ...s, attendance: newStatus } : s
+              ),
+            }
+          : c
+      )
+    );
+    toast('Attendance updated', 'success');
   };
 
-  return (
-    <div className="max-w-[1536px] mx-auto p-2 sm:p-4 lg:p-6 text-ink animate-fade-in">
-      {/* Outer Floating Web App Window (Inspired by the chat reference layout) */}
-      <div className="min-h-[calc(100vh-6rem)] rounded-2xl border border-line bg-surface shadow-sm overflow-hidden flex flex-col transition-all">
-        {/* Top Control Bar: Room Info & Role Toggle */}
-        <div className="px-4 py-2.5 border-b border-line bg-surface2/40 flex items-center justify-between gap-3 text-xs">
-          <div className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full bg-[#1a7f37]" />
-            <span className="font-bold text-ink">KIET Class Project Network</span>
-            <span className="text-muted/60">•</span>
-            <span className="text-muted">Strict Project Submission & Faculty Review Engine</span>
+  // Mark all students present in Today section
+  const handleMarkAllPresent = () => {
+    if (!selectedClassId) return;
+    setClasses((prev) =>
+      prev.map((c) =>
+        c.id === selectedClassId
+          ? {
+              ...c,
+              students: c.students.map((s) => ({ ...s, attendance: 'present' })),
+            }
+          : c
+      )
+    );
+    toast('All students marked present for today', 'success');
+  };
+
+  // =========================================================================
+  // VIEW 1: "MY SEM CLASSES" HUB
+  // =========================================================================
+  if (!selectedClassId || !currentClass) {
+    return (
+      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 animate-fade-in text-ink">
+        {/* Top Header & Role Switcher */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-line">
+          <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#dafbe1] text-[#1a7f37] border border-[#4ac26b]/40">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#1a7f37] animate-pulse" />
+                Semester 6 • 2026 Academic Session
+              </span>
+              <span className="text-xs text-muted font-medium">CSE 3A Section</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-ink flex items-center gap-3">
+              <BookOpen className="h-7 w-7 text-[#0969da]" />
+              <span>My Sem Classes</span>
+            </h1>
+            <p className="text-sm text-muted mt-1 max-w-2xl">
+              Select any of your active semester laboratory classes to enter the live classroom chat,
+              review lecture notes, and track upcoming class test assessments.
+            </p>
           </div>
 
-          <div className="flex items-center gap-2">
-            <span className="text-muted font-medium hidden sm:inline">Role:</span>
+          {/* Role Toggle Switcher */}
+          <div className="flex items-center gap-2.5 self-start sm:self-center bg-surface2/80 p-1.5 rounded-xl border border-line">
+            <span className="text-xs font-semibold text-muted px-2">Role:</span>
             <button
               onClick={() => {
-                const next = userRole === 'student' ? 'teacher' : 'student';
-                setUserRole(next);
-                toast(`Switched to ${next === 'teacher' ? 'Teacher / Faculty Mode' : 'Student Mode'}`, 'info');
+                setUserRole('student');
+                toast('Switched to Student View', 'info');
               }}
-              className="inline-flex items-center gap-1.5 rounded-md border border-line bg-surface hover:bg-surface2 px-2.5 py-1 text-xs font-semibold text-ink transition-all shadow-2xs"
+              className={cn(
+                'px-3 py-1.5 rounded-lg text-xs font-bold transition-all',
+                userRole === 'student'
+                  ? 'bg-surface text-ink shadow-xs border border-line'
+                  : 'text-muted hover:text-ink'
+              )}
             >
-              <span>{userRole === 'student' ? '👨‍🎓 Student Mode (Arpit)' : '👨‍🏫 Teacher Mode (Prof. Sharma)'}</span>
-              <span className="text-[10px] uppercase font-mono font-bold text-[#0969da] bg-[#ddf4ff] border border-[#54aeff]/40 px-1 rounded">
-                Toggle
-              </span>
+              👨‍🎓 Student View
+            </button>
+            <button
+              onClick={() => {
+                setUserRole('teacher');
+                toast('Switched to Teacher / Faculty View', 'info');
+              }}
+              className={cn(
+                'px-3 py-1.5 rounded-lg text-xs font-bold transition-all',
+                userRole === 'teacher'
+                  ? 'bg-[#0969da] text-white shadow-xs'
+                  : 'text-muted hover:text-ink'
+              )}
+            >
+              👨‍🏫 Teacher View
             </button>
           </div>
         </div>
 
-        {/* 3-Column Chat App Layout */}
-        <div className="flex-1 flex overflow-hidden min-h-[720px]">
-          {/* ========================================================= */}
-          {/* COLUMN 1: Rooms / Channels Sidebar (~300px) */}
-          {/* ========================================================= */}
-          <aside
-            className={cn(
-              'w-full md:w-[280px] sm:md:w-[310px] shrink-0 border-r border-line bg-surface flex flex-col justify-between',
-              mobileTab !== 'rooms' ? 'hidden md:flex' : 'flex'
-            )}
-          >
-            <div>
-              {/* Header: Rooms title + "+ Create Room" Button */}
-              <div className="p-3.5 border-b border-line flex items-center justify-between gap-2">
-                <div>
-                  <h2 className="font-bold text-sm text-ink flex items-center gap-1.5">
-                    <MessageSquare className="h-4 w-4 text-[#0969da]" />
-                    <span>Class Rooms</span>
-                  </h2>
-                  <p className="text-[11px] text-muted font-medium">Lab project submission feeds</p>
-                </div>
+        {/* Filter and Search Bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="relative w-full sm:w-96">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
+            <input
+              type="text"
+              placeholder="Search by class name, subject code, or faculty..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full h-10 rounded-xl bg-surface border border-line pl-9 pr-4 text-xs font-medium text-ink placeholder:text-muted outline-none focus:border-[#0969da] transition-all shadow-2xs"
+            />
+          </div>
 
-                {/* Teacher "+ Create Room" button */}
-                <button
-                  onClick={() => setCreateRoomOpen(true)}
-                  className="rounded-lg bg-[#0969da] hover:bg-[#0854b0] text-white px-2.5 py-1 text-xs font-bold transition-all shadow-2xs flex items-center gap-1 active:scale-95"
-                  title="Teachers: Create a new classroom"
-                >
-                  <Plus className="h-3.5 w-3.5" />
-                  <span>New Room</span>
-                </button>
-              </div>
+          <div className="flex items-center gap-2 text-xs font-semibold text-muted self-end sm:self-auto">
+            <span>Showing {filteredClasses.length} active laboratory classes</span>
+          </div>
+        </div>
 
-              {/* Search Rooms Input */}
-              <div className="p-3 border-b border-line/60">
-                <div className="relative">
-                  <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted" />
-                  <input
-                    type="text"
-                    placeholder="Search labs, subject code..."
-                    value={searchRoom}
-                    onChange={(e) => setSearchRoom(e.target.value)}
-                    className="w-full h-8 rounded-lg bg-surface2/70 border border-line/80 pl-8 pr-3 text-xs font-medium text-ink placeholder:text-muted outline-none focus:border-[#0969da] shadow-2xs"
-                  />
-                </div>
-              </div>
-
-              {/* Channels List */}
-              <div className="p-2 space-y-1 overflow-y-auto max-h-[calc(100vh-20rem)]">
-                <div className="px-2 py-1 text-[10.5px] font-bold uppercase tracking-wider text-muted">
-                  Active Rooms ({filteredRooms.length})
-                </div>
-
-                {filteredRooms.map((room) => {
-                  const isActive = room.id === activeRoomId;
-                  const roomMsgList = messages[room.id] || [];
-                  const lastMsg = roomMsgList[roomMsgList.length - 1];
-
-                  return (
+        {/* Classes Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5">
+          {filteredClasses.map((item) => (
+            <div
+              key={item.id}
+              onClick={() => setSelectedClassId(item.id)}
+              className="group relative rounded-2xl border border-line bg-surface hover:border-[#0969da]/60 transition-all duration-200 p-6 flex flex-col justify-between shadow-xs hover:shadow-md cursor-pointer"
+            >
+              <div>
+                {/* Header: Short Name badge + Subject Code + Students */}
+                <div className="flex items-start justify-between gap-2 mb-3">
+                  <div className="flex items-center gap-2.5">
                     <div
-                      key={room.id}
-                      onClick={() => {
-                        setActiveRoomId(room.id);
-                        setMobileTab('chat');
-                      }}
                       className={cn(
-                        'w-full p-2.5 rounded-xl border text-left cursor-pointer transition-all flex items-start gap-2.5',
-                        isActive
-                          ? 'bg-[#ddf4ff]/50 border-[#0969da]/40 shadow-2xs'
-                          : 'bg-surface hover:bg-surface2/60 border-transparent'
+                        'h-11 w-11 rounded-xl flex items-center justify-center font-extrabold text-sm border shadow-2xs',
+                        item.accentBg,
+                        item.accentColor,
+                        'border-black/5'
                       )}
                     >
-                      <div className={cn('h-8 w-8 rounded-lg text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-2xs', room.avatarBg)}>
-                        {room.code.slice(0, 3)}
-                      </div>
-
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center justify-between gap-1">
-                          <p className="font-bold text-xs text-ink truncate">{room.name}</p>
-                          <span className="text-[10px] font-mono text-muted shrink-0">{room.code}</span>
-                        </div>
-                        <p className="text-[11px] text-muted truncate mt-0.5 font-medium">
-                          {lastMsg ? `${lastMsg.senderName}: ${lastMsg.project ? `📦 ${lastMsg.project.title}` : lastMsg.text}` : room.activeAssignment}
-                        </p>
-                        <div className="flex items-center justify-between mt-1 text-[10px] text-muted">
-                          <span className="font-semibold text-[#1a7f37]">
-                            {room.verifiedCount}/{room.enrolledCount} Verified
-                          </span>
-                          <span className="font-mono">Due {room.deadline}</span>
-                        </div>
-                      </div>
+                      {item.shortName.substring(0, 3).toUpperCase()}
                     </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Bottom Current User Card */}
-            <div className="p-3 border-t border-line bg-surface2/30">
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2 min-w-0">
-                  <div className="h-8 w-8 rounded-full bg-[#0969da] text-white flex items-center justify-center font-bold text-xs shrink-0">
-                    {userRole === 'student' ? 'AP' : 'VS'}
+                    <div>
+                      <h2 className="text-xl font-bold text-ink group-hover:text-[#0969da] transition-colors flex items-center gap-2">
+                        <span>{item.shortName}</span>
+                        <ChevronRight className="h-4 w-4 text-muted group-hover:translate-x-1 transition-transform" />
+                      </h2>
+                      <span className="text-xs font-mono font-semibold text-muted block">
+                        {item.code} • {item.semester}
+                      </span>
+                    </div>
                   </div>
-                  <div className="min-w-0">
-                    <p className="font-bold text-xs text-ink truncate">
-                      {userRole === 'student' ? 'Arpit Prajapati' : 'Prof. V. Sharma'}
-                    </p>
-                    <p className="text-[10.5px] text-muted truncate font-mono">
-                      {userRole === 'student' ? 'CSE-3A · 2100290100045' : 'Lab In-Charge · CSE Dept'}
-                    </p>
+
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-surface2 border border-line text-ink">
+                    <Users className="h-3.5 w-3.5 text-[#0969da]" />
+                    <span>{item.totalStudents} enrolled</span>
+                  </span>
+                </div>
+
+                <p className="text-xs text-muted font-medium line-clamp-1 mb-4">
+                  {item.fullName}
+                </p>
+
+                {/* Faculty & Timing Info */}
+                <div className="rounded-xl bg-surface2/60 border border-line/60 p-3 mb-4 space-y-1.5 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted">Faculty In-Charge:</span>
+                    <strong className="text-ink font-semibold">{item.teacher}</strong>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted">Lab Schedule:</span>
+                    <span className="text-ink font-mono text-[11px]">{item.timing}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted">Location:</span>
+                    <span className="text-ink font-medium">{item.labRoom}</span>
                   </div>
                 </div>
 
-                <span className="h-2 w-2 rounded-full bg-[#1a7f37] shrink-0" title="Online" />
+                {/* Today's Topic Banner */}
+                <div className="p-2.5 rounded-lg bg-[#ddf4ff]/40 border border-[#54aeff]/30 text-xs flex items-center gap-2 mb-4">
+                  <Flame className="h-4 w-4 text-[#0969da] shrink-0" />
+                  <div className="truncate">
+                    <span className="font-bold text-[#0969da] mr-1.5">Today:</span>
+                    <span className="text-ink font-medium truncate">{item.todayTopic}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom Quick Stats & Enter CTA */}
+              <div className="pt-4 border-t border-line flex items-center justify-between text-xs">
+                <div className="flex items-center gap-3">
+                  <span className="flex items-center gap-1 text-muted">
+                    <FileText className="h-3.5 w-3.5 text-[#0969da]" />
+                    <span>{item.notesCount} Notes</span>
+                  </span>
+                  <span className="text-muted/60">•</span>
+                  <span className="flex items-center gap-1 text-muted">
+                    <Timer className="h-3.5 w-3.5 text-[#cf222e]" />
+                    <span>{item.upcomingTestsCount} Upcoming Tests</span>
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#0969da] group-hover:bg-[#0854b0] text-white px-3.5 py-1.5 text-xs font-bold transition-all shadow-xs"
+                >
+                  <span>Enter Class</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </button>
               </div>
             </div>
-          </aside>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
-          {/* ========================================================= */}
-          {/* COLUMN 2: Main Interactive Chat Room Canvas */}
-          {/* ========================================================= */}
-          <main
-            className={cn(
-              'flex-1 flex flex-col justify-between overflow-hidden bg-bg/40',
-              mobileTab !== 'chat' ? 'hidden md:flex' : 'flex'
-            )}
+  // =========================================================================
+  // VIEW 2: INSIDE SELECTED CLASS (3:4 SPLIT VIEW)
+  // ~75% Class Room Chat + ~25% Student (Notes & Tests) or Teacher (Today Stats)
+  // =========================================================================
+  const activeStudentsToday = currentClass.students.filter((s) => s.attendance === 'present').length;
+  const absentStudentsToday = currentClass.students.filter((s) => s.attendance === 'absent').length;
+
+  return (
+    <div className="max-w-[1536px] mx-auto p-2 sm:p-4 lg:p-6 text-ink animate-fade-in">
+      {/* Top Breadcrumb & Navigation Bar */}
+      <div className="mb-4 flex flex-col md:flex-row md:items-center justify-between gap-3 bg-surface p-3 sm:p-4 rounded-2xl border border-line shadow-2xs">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setSelectedClassId(null)}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface hover:bg-surface2 px-3 py-1.5 text-xs font-bold text-ink transition-colors shadow-2xs"
+            title="Return to My Sem Classes"
           >
-            {/* Room Header */}
-            <header className="p-3 sm:p-4 border-b border-line bg-surface flex items-center justify-between gap-2.5 sm:gap-3 shadow-2xs">
-              <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-                {/* Mobile Back Button to Rooms */}
-                <button
-                  type="button"
-                  onClick={() => setMobileTab('rooms')}
-                  className="md:hidden p-1.5 rounded-md border border-line bg-surface hover:bg-surface2 text-xs font-semibold text-ink flex items-center gap-1 shrink-0"
-                >
-                  <ArrowLeft className="h-3.5 w-3.5" />
-                  <span className="text-[11px]">Rooms</span>
-                </button>
+            <ArrowLeft className="h-3.5 w-3.5" />
+            <span>My Sem Classes</span>
+          </button>
 
-                <div className={cn('h-9 w-9 sm:h-10 sm:w-10 rounded-xl text-white flex items-center justify-center font-extrabold text-xs sm:text-sm shadow-2xs shrink-0', activeRoom.avatarBg)}>
-                  {activeRoom.code.slice(0, 3)}
-                </div>
-                <div className="min-w-0">
-                  <div className="flex items-center gap-1.5 sm:gap-2">
-                    <h1 className="font-bold text-xs sm:text-base text-ink tracking-tight truncate">
-                      {activeRoom.name}
-                    </h1>
-                    <span className="rounded-md bg-surface2 border border-line px-1.5 py-0.2 text-[10px] font-mono font-bold text-muted shrink-0">
-                      {activeRoom.code}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 text-[11px] sm:text-xs text-muted mt-0.5 truncate">
-                    <span className="truncate">Teacher: <strong className="text-ink font-semibold">{activeRoom.teacher}</strong></span>
-                    <span className="opacity-40 hidden sm:inline">•</span>
-                    <span className="hidden sm:inline">{activeRoom.enrolledCount} Students Enrolled</span>
-                  </div>
-                </div>
+          <div className="h-4 w-px bg-line hidden sm:block" />
+
+          <div className="flex items-center gap-2">
+            <span
+              className={cn(
+                'h-7 w-7 rounded-lg flex items-center justify-center font-bold text-xs',
+                currentClass.accentBg,
+                currentClass.accentColor
+              )}
+            >
+              {currentClass.shortName.substring(0, 2)}
+            </span>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="font-extrabold text-sm sm:text-base text-ink">
+                  {currentClass.shortName}
+                </h1>
+                <span className="text-xs font-mono font-semibold text-muted">
+                  ({currentClass.code})
+                </span>
+                <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold text-[#1a7f37] bg-[#dafbe1] px-2 py-0.5 rounded-full border border-[#4ac26b]/40">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#1a7f37]" />
+                  Live Lab Active
+                </span>
               </div>
+              <p className="text-[11px] text-muted font-medium hidden sm:block">
+                {currentClass.teacher} • {currentClass.section} • {currentClass.labRoom}
+              </p>
+            </div>
+          </div>
+        </div>
 
-              {/* Actions on Header */}
-              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                {/* Mobile Dossier Toggle */}
-                <button
-                  type="button"
-                  onClick={() => setMobileTab(mobileTab === 'dossier' ? 'chat' : 'dossier')}
-                  className="xl:hidden p-1.5 rounded-lg border border-line bg-surface hover:bg-surface2 text-xs font-semibold text-ink"
-                  title="Room Dossier"
-                >
-                  <Info className="h-4 w-4 text-[#0969da]" />
-                </button>
+        {/* Role Toggle Switcher */}
+        <div className="flex items-center gap-2 self-start md:self-center">
+          <span className="text-xs font-semibold text-muted">Active Role:</span>
+          <button
+            onClick={() => {
+              const next = userRole === 'student' ? 'teacher' : 'student';
+              setUserRole(next);
+              toast(`Switched to ${next === 'student' ? 'Student View' : 'Teacher View'}`, 'info');
+            }}
+            className="inline-flex items-center gap-2 rounded-lg border border-line bg-surface hover:bg-surface2 px-3 py-1.5 text-xs font-bold text-ink transition-all shadow-2xs"
+          >
+            <span>{userRole === 'student' ? '👨‍🎓 Student Mode (Arpit)' : '👨‍🏫 Teacher Mode (Faculty)'}</span>
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#0969da] bg-[#ddf4ff] border border-[#54aeff]/40 px-1.5 py-0.5 rounded">
+              Switch
+            </span>
+          </button>
+        </div>
+      </div>
 
-                {/* Desktop Dossier Toggle */}
-                <button
-                  onClick={() => setShowRightSidebar(!showRightSidebar)}
+      {/* 3:4 SPLIT WORKSPACE */}
+      {/* Grid: 8 Cols (Chat) : 4 Cols (Sidebar) on LG, or 9 Cols : 3 Cols on XL */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start min-h-[calc(100vh-12rem)]">
+        {/* ========================================================= */}
+        {/* SECTION 1: CLASS ROOM CHAT (3:4 ratio ~ 70-75% width) */}
+        {/* ========================================================= */}
+        <div className="lg:col-span-8 xl:col-span-9 rounded-2xl border border-line bg-surface shadow-2xs overflow-hidden flex flex-col h-[780px]">
+          {/* Chat Header */}
+          <div className="px-4 py-3 border-b border-line bg-surface2/40 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <MessageSquare className="h-4 w-4 text-[#0969da]" />
+              <span className="font-extrabold text-xs sm:text-sm text-ink">
+                Classroom Project & Code Stream
+              </span>
+              <span className="text-xs text-muted">• {currentMessages.length} Messages</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] text-muted font-medium hidden sm:inline">
+                AST Plagiarism Verification:
+              </span>
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#1a7f37] bg-[#dafbe1] px-2 py-0.5 rounded-full border border-[#4ac26b]/40">
+                <ShieldCheck className="h-3.5 w-3.5" />
+                Active & Enforced
+              </span>
+            </div>
+          </div>
+
+          {/* Messages Stream */}
+          <div className="flex-1 p-4 sm:p-5 overflow-y-auto space-y-5 bg-surface/50">
+            {currentMessages.map((msg) => {
+              const isTeacher = msg.senderRole === 'teacher';
+
+              return (
+                <div
+                  key={msg.id}
                   className={cn(
-                    'hidden xl:inline-flex h-8 px-2.5 rounded-lg border border-line text-xs font-semibold items-center gap-1.5 transition-all shadow-2xs',
-                    showRightSidebar ? 'bg-[#ddf4ff] text-[#0969da] border-[#0969da]/40' : 'bg-surface hover:bg-surface2 text-muted hover:text-ink'
+                    'flex gap-3 group animate-fade-in',
+                    msg.isCurrentUser ? 'flex-row-reverse' : 'flex-row'
                   )}
                 >
-                  <Info className="h-3.5 w-3.5" />
-                  <span>Room Dossier</span>
-                </button>
-              </div>
-            </header>
-
-            {/* Active Assignment Notice Banner */}
-            <div className="p-3 sm:p-3.5 bg-surface border-b border-line flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs">
-              <div className="flex items-center gap-2 min-w-0">
-                <span className="rounded-full bg-[#ddf4ff] text-[#0969da] border border-[#54aeff]/40 px-2 py-0.5 font-bold font-mono text-[10px] shrink-0">
-                  Active Task
-                </span>
-                <span className="font-semibold text-ink truncate">
-                  {activeRoom.activeAssignment}
-                </span>
-                <span className="text-muted shrink-0 hidden md:inline">
-                  (Deadline: {activeRoom.deadline})
-                </span>
-              </div>
-
-              <button
-                onClick={() => setAttachProjectOpen(true)}
-                className="rounded-lg bg-[#0969da] hover:bg-[#0854b0] text-white px-3 py-1 text-xs font-bold transition-all shadow-2xs active:scale-95 flex items-center gap-1.5 self-start sm:self-auto shrink-0"
-              >
-                <FolderGit2 className="h-3.5 w-3.5" />
-                <span>Submit My Project Here</span>
-              </button>
-            </div>
-
-            {/* Chat Stream (Messages + Rich Project Cards) */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5">
-              {roomMessages.map((msg) => {
-                const isApproved = msg.project?.status === 'APPROVED';
-                const isNeedsRevision = msg.project?.status === 'NEEDS_REVISION';
-
-                return (
+                  {/* Avatar */}
                   <div
-                    key={msg.id}
                     className={cn(
-                      'flex gap-3 items-start transition-all',
-                      msg.isCurrentUser ? 'flex-row-reverse' : 'flex-row'
+                      'h-9 w-9 rounded-full flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs border',
+                      isTeacher
+                        ? 'bg-[#0969da] text-white border-[#0969da]'
+                        : msg.isCurrentUser
+                        ? 'bg-[#1a7f37] text-white border-[#1a7f37]'
+                        : 'bg-surface2 text-ink border-line'
                     )}
                   >
-                    {/* Avatar */}
+                    {msg.senderAvatar}
+                  </div>
+
+                  {/* Message Bubble Container */}
+                  <div
+                    className={cn(
+                      'max-w-[92%] sm:max-w-[85%] space-y-1.5',
+                      msg.isCurrentUser ? 'items-end' : 'items-start'
+                    )}
+                  >
+                    {/* Header info */}
                     <div
                       className={cn(
-                        'h-9 w-9 rounded-full flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs ring-2 ring-surface',
-                        msg.senderRole === 'teacher'
-                          ? 'bg-[#1a7f37] text-white'
-                          : msg.isCurrentUser
-                          ? 'bg-[#0969da] text-white'
-                          : 'bg-surface2 border border-line text-ink'
+                        'flex items-center gap-2 text-xs',
+                        msg.isCurrentUser ? 'justify-end' : 'justify-start'
                       )}
                     >
-                      {msg.senderAvatar}
+                      <span className="font-bold text-ink">{msg.senderName}</span>
+                      {msg.senderRoll && (
+                        <span className="text-[10px] font-mono text-muted">({msg.senderRoll})</span>
+                      )}
+                      {isTeacher && (
+                        <span className="text-[10px] font-bold text-[#0969da] bg-[#ddf4ff] border border-[#54aeff]/40 px-1.5 rounded">
+                          Faculty
+                        </span>
+                      )}
+                      <span className="text-[10.5px] text-muted">{msg.timestamp}</span>
                     </div>
 
-                    {/* Chat Bubble / Project Card Container */}
-                    <div className={cn('max-w-[92%] sm:max-w-[580px] space-y-1.5')}>
-                      {/* Sender Meta */}
+                    {/* Text Message Content */}
+                    {msg.text && (
                       <div
                         className={cn(
-                          'flex items-center gap-2 text-xs',
+                          'p-3.5 rounded-2xl text-xs sm:text-[13px] leading-relaxed shadow-2xs border',
+                          msg.isCurrentUser
+                            ? 'bg-[#0969da] text-white border-[#0969da]'
+                            : isTeacher
+                            ? 'bg-surface2/90 text-ink border-line'
+                            : 'bg-surface text-ink border-line'
+                        )}
+                      >
+                        {msg.text}
+                      </div>
+                    )}
+
+                    {/* Interactive Project Submission Card */}
+                    {msg.project && (
+                      <div className="rounded-2xl border border-line bg-surface p-4 space-y-3 shadow-xs">
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <span className="text-[10.5px] font-mono font-bold uppercase tracking-wider text-[#0969da] block">
+                              Project Submission Proof
+                            </span>
+                            <h3 className="font-bold text-sm text-ink mt-0.5">
+                              {msg.project.title}
+                            </h3>
+                          </div>
+
+                          {/* Plagiarism Badge */}
+                          <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-[#dafbe1] border border-[#4ac26b]/40 text-[#1a7f37] text-xs font-mono font-bold">
+                            <ShieldCheck className="h-3.5 w-3.5" />
+                            <span>AST Plag: {msg.project.astPlagScore}%</span>
+                          </div>
+                        </div>
+
+                        {/* Screenshot previews */}
+                        {msg.project.photoUrls && msg.project.photoUrls.length > 0 && (
+                          <div className="grid grid-cols-2 gap-2 pt-1">
+                            {msg.project.photoUrls.map((url, pIdx) => (
+                              <button
+                                key={pIdx}
+                                type="button"
+                                onClick={() => setSelectedPhoto(url)}
+                                className="relative rounded-lg overflow-hidden border border-line h-28 group/img bg-surface2 block w-full"
+                              >
+                                <img
+                                  src={url}
+                                  alt="Project proof screenshot"
+                                  className="w-full h-full object-cover group-hover/img:scale-105 transition-transform"
+                                />
+                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 flex items-center justify-center transition-opacity text-white text-xs font-bold gap-1">
+                                  <Eye className="h-3.5 w-3.5" />
+                                  <span>Inspect</span>
+                                </div>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Links: GitHub & Live Demo */}
+                        <div className="flex flex-wrap items-center gap-2 pt-1">
+                          <a
+                            href={msg.project.githubUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-line bg-surface2 hover:bg-surface text-ink text-xs font-mono font-semibold transition-colors"
+                          >
+                            <FolderGit2 className="h-3.5 w-3.5 text-[#0969da]" />
+                            <span>GitHub Repo</span>
+                            <ExternalLink className="h-3 w-3 text-muted" />
+                          </a>
+
+                          {msg.project.liveUrl && (
+                            <a
+                              href={msg.project.liveUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-line bg-surface2 hover:bg-surface text-ink text-xs font-mono font-semibold transition-colors"
+                            >
+                              <ExternalLink className="h-3.5 w-3.5 text-[#1a7f37]" />
+                              <span>Live Demo</span>
+                            </a>
+                          )}
+                        </div>
+
+                        {/* Status, Feedback & Grade */}
+                        <div className="pt-2 border-t border-line/60 flex items-center justify-between text-xs">
+                          <div className="flex items-center gap-2">
+                            <span className="text-muted font-medium">Status:</span>
+                            <span
+                              className={cn(
+                                'px-2 py-0.5 rounded-full font-bold text-[11px] border',
+                                msg.project.status === 'APPROVED'
+                                  ? 'bg-[#dafbe1] text-[#1a7f37] border-[#4ac26b]/40'
+                                  : msg.project.status === 'NEEDS_REVISION'
+                                  ? 'bg-[#ffebe9] text-[#cf222e] border-[#ff8182]/40'
+                                  : 'bg-[#fff8c5] text-[#9a6700] border-[#d4a72c]/40'
+                              )}
+                            >
+                              {msg.project.status}
+                            </span>
+                          </div>
+
+                          {msg.project.grade && (
+                            <div className="flex items-center gap-1 font-bold text-ink">
+                              <Award className="h-3.5 w-3.5 text-[#0969da]" />
+                              <span>Grade: {msg.project.grade}/10</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {msg.project.teacherFeedback && (
+                          <div className="p-2.5 rounded-lg bg-surface2/60 border border-line/60 text-xs text-muted space-y-1">
+                            <strong className="text-ink font-semibold block">Faculty Review:</strong>
+                            <p>{msg.project.teacherFeedback}</p>
+                          </div>
+                        )}
+
+                        {/* Teacher Moderation Actions (Visible if in Teacher Mode) */}
+                        {userRole === 'teacher' && msg.project.status !== 'APPROVED' && (
+                          <div className="pt-2 border-t border-line/60 flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => handleTeacherReview(msg.id, 'APPROVED')}
+                              className="px-3 py-1 rounded-lg bg-[#1a7f37] hover:bg-[#146c2e] text-white text-xs font-bold transition-colors flex items-center gap-1"
+                            >
+                              <Check className="h-3 w-3" />
+                              <span>Approve Project</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleTeacherReview(msg.id, 'NEEDS_REVISION')}
+                              className="px-3 py-1 rounded-lg border border-[#cf222e]/40 text-[#cf222e] hover:bg-[#ffebe9] text-xs font-bold transition-colors"
+                            >
+                              Request Revision
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Emoji Reactions Bar */}
+                    {msg.reactions && msg.reactions.length > 0 && (
+                      <div
+                        className={cn(
+                          'flex items-center gap-1.5 pt-0.5',
                           msg.isCurrentUser ? 'justify-end' : 'justify-start'
                         )}
                       >
-                        <span className="font-bold text-ink">{msg.senderName}</span>
-                        {msg.senderRole === 'teacher' && (
-                          <span className="text-[10px] font-bold text-[#1a7f37] bg-[#dafbe1] border border-[#4ac26b]/40 px-1.5 py-0.2 rounded">
-                            Teacher
-                          </span>
-                        )}
-                        {msg.isCurrentUser && (
-                          <span className="text-[10px] font-bold text-[#0969da] bg-[#ddf4ff] border border-[#54aeff]/40 px-1.5 py-0.2 rounded">
-                            You
-                          </span>
-                        )}
-                        <span className="text-[11px] text-muted">{msg.timestamp}</span>
-                      </div>
-
-                      {/* Optional Chat Text Comment */}
-                      {msg.text && (
-                        <div
-                          className={cn(
-                            'p-3 rounded-2xl text-xs sm:text-[13px] leading-relaxed shadow-2xs',
-                            msg.isCurrentUser
-                              ? 'bg-[#0969da] text-white rounded-tr-xs'
-                              : 'bg-surface border border-line text-ink rounded-tl-xs'
-                          )}
-                        >
-                          {msg.text}
-                        </div>
-                      )}
-
-                      {/* Rich Project Submission Card (When student submits project proof!) */}
-                      {msg.project && (
-                        <div className="rounded-2xl border border-line bg-surface p-4 sm:p-5 shadow-xs space-y-3.5">
-                          {/* Card Header: Title & Verification Status */}
-                          <div className="flex items-start justify-between gap-2.5 pb-2.5 border-b border-line/60">
-                            <div>
-                              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted block">
-                                Project Proof Submission
-                              </span>
-                              <h3 className="font-extrabold text-sm sm:text-base text-ink tracking-tight mt-0.5">
-                                {msg.project.title}
-                              </h3>
-                            </div>
-
-                            {/* Status Badge */}
-                            <div className="shrink-0">
-                              {isApproved && (
-                                <span className="inline-flex items-center gap-1 rounded-full bg-[#dafbe1] px-2.5 py-0.5 text-xs font-bold text-[#1a7f37] border border-[#4ac26b]/40">
-                                  <CheckCircle2 className="h-3.5 w-3.5" />
-                                  <span>Approved {msg.project.grade ? `(${msg.project.grade}/10)` : ''}</span>
-                                </span>
-                              )}
-                              {isNeedsRevision && (
-                                <span className="inline-flex items-center gap-1 rounded-full bg-[#fff8c5] px-2.5 py-0.5 text-xs font-bold text-[#9a6700] border border-[#d4a72c]/40">
-                                  <RefreshCw className="h-3 w-3" />
-                                  <span>Needs Revision</span>
-                                </span>
-                              )}
-                              {msg.project.status === 'SUBMITTED' && (
-                                <span className="inline-flex items-center gap-1 rounded-full bg-[#ddf4ff] px-2.5 py-0.5 text-xs font-bold text-[#0969da] border border-[#54aeff]/40">
-                                  <Clock className="h-3 w-3" />
-                                  <span>Awaiting Review</span>
-                                </span>
-                              )}
-                            </div>
-                          </div>
-
-                          {/* Screenshots Preview Gallery */}
-                          {msg.project.photoUrls.length > 0 && (
-                            <div className="grid grid-cols-2 gap-2">
-                              {msg.project.photoUrls.map((url, i) => (
-                                <div
-                                  key={i}
-                                  onClick={() => setSelectedPhoto(url)}
-                                  className="group relative h-28 sm:h-32 rounded-xl overflow-hidden border border-line bg-surface2 cursor-pointer shadow-2xs"
-                                >
-                                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                                  <img
-                                    src={url}
-                                    alt="Screenshot proof"
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                  />
-                                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold gap-1">
-                                    <ExternalLink className="h-3.5 w-3.5" />
-                                    <span>Expand</span>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-
-                          {/* Links: GitHub & Live Demo & AST */}
-                          <div className="flex flex-wrap items-center gap-2 text-xs">
-                            <a
-                              href={msg.project.githubUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface2/60 hover:bg-surface2 px-2.5 py-1 font-semibold text-ink transition-all shadow-2xs"
-                            >
-                              <Code2 className="h-3.5 w-3.5 text-[#0969da]" />
-                              <span className="font-mono text-[11px] truncate max-w-[200px]">
-                                {msg.project.githubUrl.replace('https://github.com/', '')}
-                              </span>
-                              <ArrowUpRight className="h-3 w-3 text-muted" />
-                            </a>
-
-                            {msg.project.liveUrl && (
-                              <a
-                                href={msg.project.liveUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface2/60 hover:bg-surface2 px-2.5 py-1 font-semibold text-ink transition-all shadow-2xs"
-                              >
-                                <Globe className="h-3.5 w-3.5 text-[#1a7f37]" />
-                                <span className="font-mono text-[11px]">Live Demo</span>
-                                <ArrowUpRight className="h-3 w-3 text-muted" />
-                              </a>
+                        {msg.reactions.map((r, ri) => (
+                          <span
+                            key={ri}
+                            className={cn(
+                              'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold border shadow-2xs',
+                              r.reacted
+                                ? 'bg-[#ddf4ff] border-[#0969da]/40 text-[#0969da]'
+                                : 'bg-surface border-line text-muted'
                             )}
-
-                            <span className="inline-flex items-center gap-1 rounded-md bg-surface2 px-2 py-0.5 text-[10.5px] font-mono text-muted border border-line">
-                              AST: {msg.project.astPlagScore}% Similarity
-                            </span>
-                          </div>
-
-                          {/* Teacher Feedback Box */}
-                          {msg.project.teacherFeedback && (
-                            <div className="rounded-lg bg-surface2/60 border border-line p-3 space-y-1">
-                              <span className="text-[11px] font-bold text-ink flex items-center gap-1.5">
-                                <Award className="h-3.5 w-3.5 text-[#1a7f37]" />
-                                <span>Teacher Feedback & Marks:</span>
-                              </span>
-                              <p className="text-xs text-muted italic">
-                                &ldquo;{msg.project.teacherFeedback}&rdquo;
-                              </p>
-                            </div>
-                          )}
-
-                          {/* Teacher Review Buttons (Visible when viewing in Teacher Mode) */}
-                          {userRole === 'teacher' && msg.project.status !== 'APPROVED' && (
-                            <div className="pt-2 border-t border-line/60 flex items-center gap-2">
-                              <button
-                                onClick={() => handleTeacherReview(msg.id, 'APPROVED')}
-                                className="px-3 py-1 rounded-lg bg-[#1f883d] hover:bg-[#1a7f37] text-white text-xs font-bold transition-all shadow-2xs flex items-center gap-1 active:scale-95"
-                              >
-                                <Check className="h-3.5 w-3.5" />
-                                <span>Approve (Grade: 9.5)</span>
-                              </button>
-                              <button
-                                onClick={() => handleTeacherReview(msg.id, 'NEEDS_REVISION')}
-                                className="px-3 py-1 rounded-lg bg-[#fff8c5] hover:bg-[#fae78b] text-[#9a6700] border border-[#d4a72c]/40 text-xs font-bold transition-all shadow-2xs flex items-center gap-1 active:scale-95"
-                              >
-                                <RefreshCw className="h-3.5 w-3.5" />
-                                <span>Request Revision</span>
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      {/* Emoji Reactions Bar */}
-                      {msg.reactions && msg.reactions.length > 0 && (
-                        <div
-                          className={cn(
-                            'flex items-center gap-1.5 pt-0.5',
-                            msg.isCurrentUser ? 'justify-end' : 'justify-start'
-                          )}
-                        >
-                          {msg.reactions.map((r, ri) => (
-                            <span
-                              key={ri}
-                              className={cn(
-                                'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold border shadow-2xs',
-                                r.reacted
-                                  ? 'bg-[#ddf4ff] border-[#0969da]/40 text-[#0969da]'
-                                  : 'bg-surface border-line text-muted'
-                              )}
-                            >
-                              <span>{r.emoji}</span>
-                              <span className="text-[11px] font-mono">{r.count}</span>
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-              <div ref={chatBottomRef} />
-            </div>
-
-            {/* ========================================================= */}
-            {/* Interactive Bottom Chat Input & Project Drop Area */}
-            {/* ========================================================= */}
-            <div className="p-3 sm:p-4 border-t border-line bg-surface">
-              {/* Expandable Project Proof Drawer */}
-              {attachProjectOpen && (
-                <div className="mb-3 p-4 rounded-xl border border-[#0969da]/40 bg-[#ddf4ff]/20 space-y-3 animate-fade-in">
-                  <div className="flex items-center justify-between pb-2 border-b border-line/60">
-                    <span className="font-bold text-xs text-ink flex items-center gap-1.5">
-                      <FolderGit2 className="h-4 w-4 text-[#0969da]" />
-                      <span>Attach Project Proof to Message</span>
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => setAttachProjectOpen(false)}
-                      className="text-muted hover:text-ink text-xs p-1"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="text-[11px] font-bold text-ink block mb-1">
-                        Project Title <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="e.g. Distributed Task Queue with Redis"
-                        value={projectTitle}
-                        onChange={(e) => setProjectTitle(e.target.value)}
-                        className="w-full h-8 rounded-lg bg-surface border border-line px-2.5 text-xs text-ink placeholder:text-muted outline-none focus:border-[#0969da]"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="text-[11px] font-bold text-ink block mb-1">
-                        GitHub Repository URL <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="url"
-                        placeholder="https://github.com/username/repo"
-                        value={projectGithub}
-                        onChange={(e) => setProjectGithub(e.target.value)}
-                        className="w-full h-8 rounded-lg bg-surface border border-line px-2.5 text-xs font-mono text-ink placeholder:text-muted outline-none focus:border-[#0969da]"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-[11px] font-bold text-ink block mb-1">
-                      Live Hosted Demo URL <span className="text-muted font-normal">(Optional)</span>
-                    </label>
-                    <input
-                      type="url"
-                      placeholder="https://my-project.render.com"
-                      value={projectLive}
-                      onChange={(e) => setProjectLive(e.target.value)}
-                      className="w-full h-8 rounded-lg bg-surface border border-line px-2.5 text-xs font-mono text-ink placeholder:text-muted outline-none focus:border-[#0969da]"
-                    />
-                  </div>
-
-                  {/* Screenshots preview */}
-                  <div>
-                    <span className="text-[11px] font-bold text-ink block mb-1">
-                      Attached Screenshots (2 pre-loaded from repository build):
-                    </span>
-                    <div className="grid grid-cols-4 gap-2">
-                      {projectPhotos.map((p, idx) => (
-                        <div key={idx} className="relative h-14 rounded-lg overflow-hidden border border-line bg-surface2">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={p} alt="proof" className="w-full h-full object-cover" />
-                        </div>
-                      ))}
-                    </div>
+                          >
+                            <span>{r.emoji}</span>
+                            <span className="text-[11px] font-mono">{r.count}</span>
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
-              )}
+              );
+            })}
+            <div ref={chatBottomRef} />
+          </div>
 
-              {/* Chat Form Bar */}
-              <form onSubmit={handleSendMessage} className="flex items-center gap-2">
-                {/* Toggle Attach Project Button */}
-                <button
-                  type="button"
-                  onClick={() => setAttachProjectOpen(!attachProjectOpen)}
-                  className={cn(
-                    'h-10 px-3 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-all shadow-2xs shrink-0',
-                    attachProjectOpen
-                      ? 'bg-[#0969da] text-white border-[#0969da]'
-                      : 'bg-surface2 hover:bg-surface border-line text-ink'
-                  )}
-                  title="Attach Project Proof Card"
-                >
-                  <FolderGit2 className="h-4 w-4" />
-                  <span className="hidden sm:inline">Attach Project</span>
-                </button>
-
-                {/* Text Message Input */}
-                <div className="relative flex-1">
-                  <input
-                    type="text"
-                    placeholder={
-                      attachProjectOpen
-                        ? 'Add comments to your project submission...'
-                        : 'Write message or question to class room...'
-                    }
-                    value={inputText}
-                    onChange={(e) => setInputText(e.target.value)}
-                    className="w-full h-10 rounded-xl bg-surface2 border border-line px-3.5 text-xs text-ink placeholder:text-muted outline-none focus:border-[#0969da] shadow-2xs transition-colors"
-                  />
-                </div>
-
-                {/* Send Button */}
-                <button
-                  type="submit"
-                  className="h-10 px-4 rounded-xl bg-[#0969da] hover:bg-[#0854b0] text-white text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5 active:scale-95 shrink-0"
-                >
-                  <Send className="h-3.5 w-3.5" />
-                  <span className="hidden sm:inline">Send</span>
-                </button>
-              </form>
-            </div>
-          </main>
-
-          {/* ========================================================= */}
-          {/* COLUMN 3: Right Sidebar (Room Dossier & Lab Specs) */}
-          {/* ========================================================= */}
-          {(showRightSidebar || mobileTab === 'dossier') && (
-            <aside
-              className={cn(
-                'w-full xl:w-[310px] shrink-0 border-l border-line bg-surface flex flex-col justify-between overflow-y-auto animate-fade-in',
-                mobileTab === 'dossier' ? 'flex' : 'hidden xl:flex'
-              )}
-            >
-              <div className="p-4 space-y-5">
-                {/* Dossier Header */}
-                <div className="flex items-center justify-between pb-3 border-b border-line/60">
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setMobileTab('chat')}
-                      className="xl:hidden p-1 rounded-md border border-line text-xs font-semibold text-ink flex items-center gap-1 cursor-pointer"
-                    >
-                      <ArrowLeft className="h-3.5 w-3.5" />
-                      <span>Chat</span>
-                    </button>
-                    <h3 className="font-bold text-xs uppercase tracking-wider text-muted">
-                      Room Dossier
-                    </h3>
-                  </div>
+          {/* Bottom Chat Input & Project Drop Drawer */}
+          <div className="p-3 sm:p-4 border-t border-line bg-surface">
+            {/* Expandable Project Attachment Drawer */}
+            {attachProjectOpen && (
+              <div className="mb-3 p-4 rounded-xl border border-[#0969da]/40 bg-[#ddf4ff]/20 space-y-3 animate-fade-in text-ink">
+                <div className="flex items-center justify-between pb-2 border-b border-line/60">
+                  <span className="font-bold text-xs flex items-center gap-1.5 text-ink">
+                    <FolderGit2 className="h-4 w-4 text-[#0969da]" />
+                    <span>Attach Project Card & Verification Links</span>
+                  </span>
                   <button
-                    onClick={() => {
-                      setShowRightSidebar(false);
-                      setMobileTab('chat');
-                    }}
-                    className="text-muted hover:text-ink text-xs p-1 cursor-pointer"
+                    type="button"
+                    onClick={() => setAttachProjectOpen(false)}
+                    className="text-muted hover:text-ink text-xs p-1"
                   >
                     <X className="h-4 w-4" />
                   </button>
                 </div>
 
-                {/* Room Specs */}
-                <div className="space-y-2 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <span className="text-muted text-[11px] block">Subject & Section</span>
-                    <strong className="text-ink font-bold">{activeRoom.name}</strong>
-                  </div>
-                  <div>
-                    <span className="text-muted text-[11px] block">Subject Code</span>
-                    <strong className="text-ink font-mono">{activeRoom.code}</strong>
-                  </div>
-                  <div>
-                    <span className="text-muted text-[11px] block">Teacher In-Charge</span>
-                    <strong className="text-ink">{activeRoom.teacher}</strong>
-                  </div>
-                </div>
-
-                {/* Progress Card */}
-                <div className="rounded-xl border border-line bg-surface2/40 p-3 space-y-2">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-semibold text-ink">Verification Index</span>
-                    <span className="font-mono font-bold text-[#1a7f37]">
-                      {activeRoom.verifiedCount}/{activeRoom.enrolledCount}
-                    </span>
-                  </div>
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-surface2 border border-line">
-                    <div
-                      className="h-full rounded-full bg-[#1a7f37]"
-                      style={{ width: `${(activeRoom.verifiedCount / activeRoom.enrolledCount) * 100}%` }}
+                    <label className="text-[11px] font-bold text-ink block mb-1">
+                      Project Title <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Distributed Task Queue with Redis"
+                      value={projectTitle}
+                      onChange={(e) => setProjectTitle(e.target.value)}
+                      className="w-full h-8 rounded-lg bg-surface border border-line px-2.5 text-xs text-ink placeholder:text-muted outline-none focus:border-[#0969da]"
                     />
                   </div>
-                  <p className="text-[10.5px] text-muted">
-                    All marksheets and project hashes verified by KIET TPO AST audit.
-                  </p>
+
+                  <div>
+                    <label className="text-[11px] font-bold text-ink block mb-1">
+                      GitHub Repository URL <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="url"
+                      placeholder="https://github.com/username/repo"
+                      value={projectGithub}
+                      onChange={(e) => setProjectGithub(e.target.value)}
+                      className="w-full h-8 rounded-lg bg-surface border border-line px-2.5 text-xs font-mono text-ink placeholder:text-muted outline-none focus:border-[#0969da]"
+                    />
+                  </div>
                 </div>
 
-                {/* Enrolled Students Quick List */}
                 <div>
-                  <span className="text-xs font-bold text-ink block mb-2">
-                    Enrolled Students ({activeRoom.enrolledCount})
-                  </span>
-                  <div className="space-y-1.5 text-xs">
-                    {[
-                      { name: 'Arpit Prajapati', roll: '2100290100045', verified: true },
-                      { name: 'Rahul Sharma', roll: '2100290120045', verified: true },
-                      { name: 'Priya Verma', roll: '2100290120089', verified: false },
-                      { name: 'Devansh Saxena', roll: '2100290120038', verified: true },
-                    ].map((s, idx) => (
-                      <div
-                        key={idx}
-                        className="p-1.5 rounded-lg hover:bg-surface2 flex items-center justify-between transition-colors"
-                      >
-                        <div className="truncate">
-                          <p className="font-semibold text-ink truncate text-[11.5px]">{s.name}</p>
-                          <p className="text-[10px] font-mono text-muted">{s.roll}</p>
-                        </div>
-                        {s.verified ? (
-                          <span className="text-[10px] font-bold text-[#1a7f37] bg-[#dafbe1] px-1.5 py-0.2 rounded border border-[#4ac26b]/40">
-                            Verified
-                          </span>
-                        ) : (
-                          <span className="text-[10px] font-bold text-[#9a6700] bg-[#fff8c5] px-1.5 py-0.2 rounded border border-[#d4a72c]/40">
-                            Pending
-                          </span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Lab Files */}
-                <div className="pt-2 border-t border-line/60">
-                  <span className="text-xs font-bold text-ink block mb-2">
-                    Lab Manuals & Resources
-                  </span>
-                  <div className="space-y-1 text-xs">
-                    <button
-                      onClick={() => toast('Lab Manual downloaded', 'success')}
-                      className="w-full p-2 rounded-lg hover:bg-surface2 text-left flex items-center justify-between text-ink transition-colors"
-                    >
-                      <div className="flex items-center gap-2 truncate">
-                        <FileText className="h-3.5 w-3.5 text-[#0969da]" />
-                        <span className="truncate font-medium text-[11.5px]">Lab Manual Spec.pdf</span>
-                      </div>
-                      <span className="text-[10px] font-mono text-muted">4.2 MB</span>
-                    </button>
-
-                    <button
-                      onClick={() => toast('Opening Docker Swarm Spec', 'info')}
-                      className="w-full p-2 rounded-lg hover:bg-surface2 text-left flex items-center justify-between text-ink transition-colors"
-                    >
-                      <div className="flex items-center gap-2 truncate">
-                        <FileCode className="h-3.5 w-3.5 text-[#cf222e]" />
-                        <span className="truncate font-medium text-[11.5px]">Docker Spec.yml</span>
-                      </div>
-                      <span className="text-[10px] font-mono text-muted">12 KB</span>
-                    </button>
-                  </div>
+                  <label className="text-[11px] font-bold text-ink block mb-1">
+                    Live Demo URL <span className="text-muted font-normal">(Optional)</span>
+                  </label>
+                  <input
+                    type="url"
+                    placeholder="https://project.render.com"
+                    value={projectLive}
+                    onChange={(e) => setProjectLive(e.target.value)}
+                    className="w-full h-8 rounded-lg bg-surface border border-line px-2.5 text-xs font-mono text-ink placeholder:text-muted outline-none focus:border-[#0969da]"
+                  />
                 </div>
               </div>
-            </aside>
+            )}
+
+            {/* Input Action Form */}
+            <form onSubmit={handleSendMessage} className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setAttachProjectOpen(!attachProjectOpen)}
+                className={cn(
+                  'h-9 px-3 rounded-lg border text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 shadow-2xs',
+                  attachProjectOpen
+                    ? 'bg-[#0969da] text-white border-[#0969da]'
+                    : 'bg-surface2 hover:bg-surface border-line text-ink'
+                )}
+                title="Attach GitHub Project Proof"
+              >
+                <Plus className="h-4 w-4" />
+                <span className="hidden sm:inline">Attach Project</span>
+              </button>
+
+              <input
+                type="text"
+                placeholder={
+                  attachProjectOpen
+                    ? 'Add brief notes about your project architecture...'
+                    : 'Type a message to class or discuss code...'
+                }
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                className="flex-1 h-9 rounded-lg bg-surface2/60 border border-line px-3 text-xs text-ink placeholder:text-muted outline-none focus:border-[#0969da] transition-colors"
+              />
+
+              <button
+                type="submit"
+                disabled={!inputText.trim() && !attachProjectOpen}
+                className="h-9 px-4 rounded-lg bg-[#0969da] hover:bg-[#0854b0] disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-bold transition-colors flex items-center gap-1.5 shrink-0 shadow-2xs"
+              >
+                <span>Send</span>
+                <Send className="h-3.5 w-3.5" />
+              </button>
+            </form>
+          </div>
+        </div>
+
+        {/* ========================================================= */}
+        {/* SECTION 2: SIDE PANEL (~25% / remaining width) */}
+        {/* STUDENT VIEW: [Class Notes & Class Tests] */}
+        {/* TEACHER VIEW: ["Today" Live Class & Attendance Activity Metrics] */}
+        {/* ========================================================= */}
+        <div className="lg:col-span-4 xl:col-span-3 rounded-2xl border border-line bg-surface shadow-2xs overflow-hidden flex flex-col h-[780px]">
+          {/* ------------------------------------------------------------- */}
+          {/* STUDENT SIDEBAR: [Class Notes] & [Class Tests] */}
+          {/* ------------------------------------------------------------- */}
+          {userRole === 'student' ? (
+            <div className="flex flex-col h-full">
+              {/* Tab Switcher: Class Notes vs Class Tests */}
+              <div className="p-2.5 border-b border-line bg-surface2/50 flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => setStudentSideTab('notes')}
+                  className={cn(
+                    'flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-2xs',
+                    studentSideTab === 'notes'
+                      ? 'bg-surface text-ink border border-line'
+                      : 'text-muted hover:text-ink'
+                  )}
+                >
+                  <FileText className="h-3.5 w-3.5 text-[#0969da]" />
+                  <span>Class Notes ({currentClass.notes.length})</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setStudentSideTab('tests')}
+                  className={cn(
+                    'flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-2xs',
+                    studentSideTab === 'tests'
+                      ? 'bg-surface text-ink border border-line'
+                      : 'text-muted hover:text-ink'
+                  )}
+                >
+                  <Timer className="h-3.5 w-3.5 text-[#cf222e]" />
+                  <span>Class Tests ({currentClass.tests.length})</span>
+                </button>
+              </div>
+
+              {/* Tab 1: Class Notes Content */}
+              {studentSideTab === 'notes' && (
+                <div className="flex-1 p-3.5 overflow-y-auto space-y-3">
+                  <div className="flex items-center justify-between pb-1">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-muted">
+                      Lecture Material & Handouts
+                    </span>
+                    <span className="text-[10px] text-muted font-mono">
+                      Faculty Verified
+                    </span>
+                  </div>
+
+                  {currentClass.notes.map((note) => (
+                    <div
+                      key={note.id}
+                      className="p-3 rounded-xl border border-line bg-surface2/40 hover:bg-surface2 transition-colors space-y-2 group"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={cn(
+                              'p-1.5 rounded-lg border text-xs font-bold shrink-0',
+                              note.fileType === 'pdf'
+                                ? 'bg-[#ffebe9] text-[#cf222e] border-[#ff8182]/40'
+                                : note.fileType === 'slides'
+                                ? 'bg-[#fff8c5] text-[#9a6700] border-[#d4a72c]/40'
+                                : 'bg-[#ddf4ff] text-[#0969da] border-[#54aeff]/40'
+                            )}
+                          >
+                            <FileCode className="h-4 w-4" />
+                          </span>
+                          <div>
+                            <span className="text-[10px] font-bold text-[#0969da] uppercase block">
+                              {note.unit}
+                            </span>
+                            <h4 className="font-bold text-xs text-ink leading-snug">
+                              {note.title}
+                            </h4>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between text-[11px] text-muted pt-1 border-t border-line/60">
+                        <span>{note.fileSize} • {note.date}</span>
+                        <button
+                          type="button"
+                          onClick={() => toast(`Downloading ${note.title}...`, 'success')}
+                          className="inline-flex items-center gap-1 text-[11px] font-bold text-[#0969da] hover:underline"
+                        >
+                          <Download className="h-3 w-3" />
+                          <span>PDF</span>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Tab 2: Class Tests Content */}
+              {studentSideTab === 'tests' && (
+                <div className="flex-1 p-3.5 overflow-y-auto space-y-3">
+                  <div className="flex items-center justify-between pb-1">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-muted">
+                      Continuous Evaluations & Quizzes
+                    </span>
+                    <span className="text-[10px] text-muted font-mono">
+                      Strict Anti-Cheating
+                    </span>
+                  </div>
+
+                  {currentClass.tests.map((test) => (
+                    <div
+                      key={test.id}
+                      className="p-3.5 rounded-xl border border-line bg-surface2/40 hover:bg-surface2 transition-colors space-y-2.5"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-[#cf222e] block">
+                            {test.unit}
+                          </span>
+                          <h4 className="font-bold text-xs text-ink">{test.title}</h4>
+                        </div>
+
+                        <span
+                          className={cn(
+                            'px-2 py-0.5 rounded-full text-[10px] font-bold border shrink-0',
+                            test.status === 'completed'
+                              ? 'bg-[#dafbe1] text-[#1a7f37] border-[#4ac26b]/40'
+                              : 'bg-[#ddf4ff] text-[#0969da] border-[#54aeff]/40'
+                          )}
+                        >
+                          {test.status === 'completed' ? 'Completed' : 'Upcoming'}
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-1.5 text-[11px] text-muted bg-surface/70 p-2 rounded-lg border border-line/60">
+                        <div>
+                          <span className="block text-[10px]">Date & Time</span>
+                          <strong className="text-ink font-semibold">{test.date}</strong>
+                        </div>
+                        <div>
+                          <span className="block text-[10px]">Duration</span>
+                          <strong className="text-ink font-semibold">{test.duration}</strong>
+                        </div>
+                      </div>
+
+                      {/* Score or Syllabus Topics */}
+                      {test.status === 'completed' && test.studentScore !== undefined ? (
+                        <div className="flex items-center justify-between p-2 rounded-lg bg-[#dafbe1]/60 border border-[#4ac26b]/30 text-xs">
+                          <span className="font-medium text-[#1a7f37]">Your Score:</span>
+                          <strong className="font-bold text-[#1a7f37]">
+                            {test.studentScore} / {test.maxMarks} Marks
+                          </strong>
+                        </div>
+                      ) : (
+                        <div className="space-y-1">
+                          <span className="text-[10.5px] font-semibold text-muted block">
+                            Syllabus Topics:
+                          </span>
+                          <div className="flex flex-wrap gap-1">
+                            {test.topics.map((t, ti) => (
+                              <span
+                                key={ti}
+                                className="px-1.5 py-0.2 rounded bg-surface border border-line text-[10px] text-ink"
+                              >
+                                {t}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {test.status === 'upcoming' && (
+                        <button
+                          type="button"
+                          onClick={() => toast('Test portal will open 10 mins before schedule', 'info')}
+                          className="w-full py-1.5 rounded-lg bg-surface border border-line hover:border-[#0969da] text-ink text-xs font-bold transition-all text-center block"
+                        >
+                          View Test Syllabus & Instructions
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            // -------------------------------------------------------------
+            // TEACHER SIDEBAR: "TODAY" (Live Class & Attendance Metrics)
+            // -------------------------------------------------------------
+            <div className="flex flex-col h-full">
+              {/* Header: "Today" Live Activity Overview */}
+              <div className="p-3.5 border-b border-line bg-surface2/60">
+                <div className="flex items-center justify-between mb-1">
+                  <div className="flex items-center gap-1.5">
+                    <Radio className="h-4 w-4 text-[#1a7f37] animate-pulse" />
+                    <h3 className="font-extrabold text-xs sm:text-sm text-ink">
+                      Today's Live Class Activity
+                    </h3>
+                  </div>
+                  <span className="text-[10.5px] font-mono font-bold text-[#1a7f37] bg-[#dafbe1] px-2 py-0.5 rounded-full border border-[#4ac26b]/40">
+                    Live Session
+                  </span>
+                </div>
+                <p className="text-[11px] text-muted">
+                  Real-time student attendance & active project turn-ins
+                </p>
+              </div>
+
+              {/* Today's KPI Counters */}
+              <div className="p-3 border-b border-line bg-surface grid grid-cols-3 gap-2 text-center">
+                <div className="p-2 rounded-xl bg-surface2/60 border border-line/60">
+                  <span className="text-[10px] font-semibold text-muted block">Enrolled</span>
+                  <strong className="text-sm font-extrabold text-ink font-mono">
+                    {currentClass.totalStudents}
+                  </strong>
+                </div>
+
+                <div className="p-2 rounded-xl bg-[#dafbe1]/40 border border-[#4ac26b]/30">
+                  <span className="text-[10px] font-semibold text-[#1a7f37] block">Active Now</span>
+                  <strong className="text-sm font-extrabold text-[#1a7f37] font-mono">
+                    {activeStudentsToday}
+                  </strong>
+                </div>
+
+                <div className="p-2 rounded-xl bg-[#ffebe9]/40 border border-[#ff8182]/30">
+                  <span className="text-[10px] font-semibold text-[#cf222e] block">Absent</span>
+                  <strong className="text-sm font-extrabold text-[#cf222e] font-mono">
+                    {absentStudentsToday}
+                  </strong>
+                </div>
+              </div>
+
+              {/* Quick Teacher Actions */}
+              <div className="p-2.5 border-b border-line bg-surface2/30 flex items-center justify-between gap-2">
+                <button
+                  type="button"
+                  onClick={handleMarkAllPresent}
+                  className="flex-1 py-1 px-2 rounded-lg bg-surface border border-line hover:border-[#1a7f37] text-ink text-xs font-bold transition-all shadow-2xs flex items-center justify-center gap-1"
+                >
+                  <UserCheck className="h-3.5 w-3.5 text-[#1a7f37]" />
+                  <span>Mark All Present</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => toast('Exporting Today’s Attendance to CSV...', 'success')}
+                  className="py-1 px-2.5 rounded-lg bg-surface border border-line hover:bg-surface2 text-muted hover:text-ink text-xs font-semibold transition-colors flex items-center gap-1 shadow-2xs"
+                  title="Export Attendance Sheet"
+                >
+                  <Download className="h-3.5 w-3.5" />
+                  <span>Export</span>
+                </button>
+              </div>
+
+              {/* Today's Student Roster List */}
+              <div className="flex-1 p-3 overflow-y-auto space-y-2">
+                <div className="flex items-center justify-between pb-1">
+                  <span className="text-[10.5px] font-bold uppercase tracking-wider text-muted">
+                    Student Roster ({currentClass.students.length})
+                  </span>
+                  <span className="text-[10px] text-muted">Click badge to toggle</span>
+                </div>
+
+                {currentClass.students.map((st) => (
+                  <div
+                    key={st.id}
+                    className="p-2.5 rounded-xl border border-line bg-surface hover:bg-surface2/40 transition-colors space-y-1.5"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 truncate">
+                        <div className="relative">
+                          <div className="h-7 w-7 rounded-full bg-surface2 border border-line flex items-center justify-center font-bold text-[11px] text-ink">
+                            {st.avatar}
+                          </div>
+                          {st.isActiveNow ? (
+                            <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[#1a7f37] border-2 border-surface" />
+                          ) : (
+                            <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-muted/40 border-2 border-surface" />
+                          )}
+                        </div>
+
+                        <div className="truncate">
+                          <h4 className="font-bold text-xs text-ink truncate leading-tight">
+                            {st.name}
+                          </h4>
+                          <span className="text-[10px] font-mono text-muted block">
+                            {st.roll}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Attendance Toggle Button */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const nextStatus: Record<'present' | 'absent' | 'late', 'present' | 'absent' | 'late'> = {
+                            present: 'late',
+                            late: 'absent',
+                            absent: 'present',
+                          };
+                          handleToggleAttendance(st.id, nextStatus[st.attendance]);
+                        }}
+                        className={cn(
+                          'px-2 py-0.5 rounded-full text-[10.5px] font-bold border transition-all cursor-pointer shadow-2xs',
+                          st.attendance === 'present'
+                            ? 'bg-[#dafbe1] text-[#1a7f37] border-[#4ac26b]/40'
+                            : st.attendance === 'late'
+                            ? 'bg-[#fff8c5] text-[#9a6700] border-[#d4a72c]/40'
+                            : 'bg-[#ffebe9] text-[#cf222e] border-[#ff8182]/40'
+                        )}
+                        title="Click to cycle Present -> Late -> Absent"
+                      >
+                        {st.attendance === 'present'
+                          ? 'Present'
+                          : st.attendance === 'late'
+                          ? 'Late'
+                          : 'Absent'}
+                      </button>
+                    </div>
+
+                    {/* Today Submission Status */}
+                    {st.submittedToday && (
+                      <div className="p-1.5 rounded-md bg-[#ddf4ff]/50 border border-[#54aeff]/30 text-[10.5px] flex items-center justify-between">
+                        <span className="text-[#0969da] font-medium truncate">
+                          Submitted: {st.submittedToday.title}
+                        </span>
+                        <span className="font-mono text-muted text-[10px] shrink-0 ml-1">
+                          {st.submittedToday.time}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
         </div>
       </div>
 
-      {/* ========================================================= */}
-      {/* MODAL: Teachers Create Classroom Modal */}
-      {/* ========================================================= */}
-      {createRoomOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
-          <div className="w-full max-w-md rounded-2xl border border-line bg-surface p-5 sm:p-6 shadow-xl space-y-4 animate-scale-up text-ink">
-            <div className="flex items-start justify-between border-b border-line pb-3">
-              <div>
-                <span className="text-[10.5px] font-mono font-bold uppercase tracking-wider text-[#0969da] block">
-                  Teacher Action
-                </span>
-                <h3 className="font-extrabold text-base text-ink tracking-tight mt-0.5">
-                  Create New Class Project Room
-                </h3>
-                <p className="text-xs text-muted mt-0.5">
-                  Setup a submission chat room for your students.
-                </p>
-              </div>
-              <button
-                onClick={() => setCreateRoomOpen(false)}
-                className="text-muted hover:text-ink transition-colors p-1"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleCreateRoom} className="space-y-3.5">
-              <div>
-                <label className="text-xs font-bold text-ink block mb-1">
-                  Class / Lab Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Distributed Systems Lab"
-                  value={newRoomName}
-                  onChange={(e) => setNewRoomName(e.target.value)}
-                  className="w-full h-9 rounded-lg bg-surface2 border border-line px-3 text-xs text-ink placeholder:text-muted outline-none focus:border-[#0969da]"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-xs font-bold text-ink block mb-1">
-                    Subject Code <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. KCS-602"
-                    value={newRoomCode}
-                    onChange={(e) => setNewRoomCode(e.target.value)}
-                    className="w-full h-9 rounded-lg bg-surface2 border border-line px-3 text-xs font-mono uppercase text-ink placeholder:text-muted outline-none focus:border-[#0969da]"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-xs font-bold text-ink block mb-1">
-                    Section
-                  </label>
-                  <select
-                    value={newRoomSection}
-                    onChange={(e) => setNewRoomSection(e.target.value)}
-                    className="w-full h-9 rounded-lg bg-surface2 border border-line px-3 text-xs text-ink outline-none focus:border-[#0969da]"
-                  >
-                    <option value="Section 3A">Section 3A</option>
-                    <option value="Section 3B">Section 3B</option>
-                    <option value="Section 3C">Section 3C</option>
-                    <option value="Section 4A">Section 4A</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="text-xs font-bold text-ink block mb-1">
-                  Active Lab Project / Task Brief
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Mini Project 1: Dockerized REST API with Redis"
-                  value={newRoomAssignment}
-                  onChange={(e) => setNewRoomAssignment(e.target.value)}
-                  className="w-full h-9 rounded-lg bg-surface2 border border-line px-3 text-xs text-ink placeholder:text-muted outline-none focus:border-[#0969da]"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs font-bold text-ink block mb-1">
-                  Submission Deadline
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. 15 Nov 2026"
-                  value={newRoomDeadline}
-                  onChange={(e) => setNewRoomDeadline(e.target.value)}
-                  className="w-full h-9 rounded-lg bg-surface2 border border-line px-3 text-xs text-ink placeholder:text-muted outline-none focus:border-[#0969da]"
-                />
-              </div>
-
-              <div className="pt-2 border-t border-line flex items-center justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setCreateRoomOpen(false)}
-                  className="px-3 py-1.5 rounded-lg border border-line text-xs font-bold text-muted hover:text-ink transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-1.5 rounded-lg bg-[#0969da] hover:bg-[#0854b0] text-white text-xs font-bold transition-all shadow-2xs active:scale-95 flex items-center gap-1.5"
-                >
-                  <Plus className="h-3.5 w-3.5" />
-                  <span>Create Class Room</span>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* ========================================================= */}
-      {/* Lightbox Screenshot Zoom Modal */}
-      {/* ========================================================= */}
+      {/* Modal: Zoom Image Viewer */}
       {selectedPhoto && (
         <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-fade-in"
           onClick={() => setSelectedPhoto(null)}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs cursor-zoom-out animate-fade-in"
         >
-          <div className="relative max-w-4xl max-h-[90vh] rounded-2xl overflow-hidden border border-white/20 shadow-2xl">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={selectedPhoto}
-              alt="Expanded proof"
-              className="w-full h-full object-contain max-h-[85vh]"
-            />
+          <div className="relative max-w-4xl max-h-[90vh] rounded-2xl overflow-hidden border border-white/20 bg-surface shadow-2xl">
             <button
               onClick={() => setSelectedPhoto(null)}
-              className="absolute top-3 right-3 h-8 w-8 rounded-full bg-black/70 text-white flex items-center justify-center hover:bg-black transition-colors"
+              className="absolute top-3 right-3 p-1.5 rounded-full bg-black/60 text-white hover:bg-black transition-colors z-10"
             >
-              <X className="h-4 w-4" />
+              <X className="h-5 w-5" />
             </button>
+            <img
+              src={selectedPhoto}
+              alt="Inspected screenshot"
+              className="w-full h-full object-contain"
+            />
           </div>
         </div>
       )}
