@@ -129,7 +129,7 @@ export function FeedNavbar() {
   );
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-surface border-b border-line transition-colors">
+    <header className="sticky top-0 z-50 w-full glass-nav shadow-xs transition-colors">
       <div className="max-w-[1440px] mx-auto h-[56px] sm:h-[60px] px-3 sm:px-6 flex items-center justify-between gap-2 lg:gap-4">
         {/* Left: Brand Logo + GitHub-style Search Bar */}
         <div className="flex items-center gap-3 lg:gap-5 min-w-0 shrink-0">

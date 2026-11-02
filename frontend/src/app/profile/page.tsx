@@ -114,121 +114,129 @@ export default function OverviewPage() {
   ].filter((s) => s.href) as { href: string; icon: React.ReactNode; label: string; handle: string }[];
 
   return (
-    <div
-      className="min-h-screen pb-16 animate-fade-in relative"
-      style={{
-        backgroundImage: "url('/profile-bg.png')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
-        backgroundRepeat: 'no-repeat',
-      }}
-    >
-      {/* Dark scrim */}
-      <div className="absolute inset-0 bg-black/55 backdrop-blur-[2px] pointer-events-none" aria-hidden />
+    <div className="min-h-screen pb-16 animate-fade-in relative overflow-x-hidden">
 
+      {/* ── Background: true horizontally rotated (landscape) vortex image ── */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 z-0"
+        style={{
+          backgroundImage: "url('/profile-bg.png')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      />
+      {/* Dark glassmorphic scrim on top of bg */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 z-0 bg-black/55 backdrop-blur-[1px]"
+      />
+
+      {/* ── All UI above the bg ── */}
       <div className="relative z-10">
-        {/* Subnav */}
-        <div className="bg-white/5 backdrop-blur-md border-b border-white/10">
-          <ProfileSubnav />
-        </div>
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-6">
 
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-6">
+          {/* ════════════════════════════════════
+              HORIZONTAL PROFILE HERO BANNER
+          ════════════════════════════════════ */}
+          <div className="rounded-2xl border border-white/[0.14] bg-white/[0.07] backdrop-blur-2xl shadow-[0_8px_48px_rgba(0,0,0,0.45)] overflow-hidden">
 
-          {/* ── HORIZONTAL PROFILE HERO BANNER ── */}
-          <div className="rounded-2xl border border-white/15 bg-white/[0.08] backdrop-blur-xl shadow-2xl p-6">
-            {/* Top row: Avatar + Identity + Actions */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+            {/* Top strip: avatar | name & meta | actions */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 px-7 pt-7 pb-5">
+
               {/* Avatar */}
-              <div className="relative shrink-0">
+              <div className="relative shrink-0 self-start sm:self-center">
                 <Avatar
                   name={student.name}
                   src={student.avatarUrl}
-                  size={96}
-                  className="ring-4 ring-white/20 shadow-lg text-2xl border border-white/10"
+                  size={100}
+                  className="ring-[3px] ring-white/25 shadow-xl text-2xl border border-white/10 rounded-full"
                 />
                 <span
-                  className="absolute bottom-0.5 right-0.5 grid h-6 w-6 place-items-center rounded-full bg-[#1a7f37] text-white shadow-sm ring-2 ring-black/40"
+                  className="absolute -bottom-1 -right-1 grid h-[26px] w-[26px] place-items-center rounded-full bg-[#238636] text-white shadow ring-2 ring-black/50"
                   title="TPO Verified Student Identity"
                 >
-                  <CheckCircle2 className="h-3.5 w-3.5" />
+                  <CheckCircle2 className="h-[14px] w-[14px]" />
                 </span>
               </div>
 
-              {/* Name + meta */}
-              <div className="flex-1 min-w-0">
-                <div className="flex flex-wrap items-center gap-2 mb-1">
-                  <h1 className="text-2xl font-bold tracking-tight text-white font-sans drop-shadow">
+              {/* Identity block */}
+              <div className="flex-1 min-w-0 space-y-2">
+                {/* Name + badges inline */}
+                <div className="flex flex-wrap items-center gap-2">
+                  <h1 className="text-[1.6rem] font-extrabold tracking-tight text-white leading-none">
                     {student.name}
                   </h1>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[#1a7f37]/30 px-2.5 py-0.5 text-[11px] font-semibold text-[#4ac26b] border border-[#4ac26b]/30">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[#238636]/25 px-2.5 py-[3px] text-[11px] font-semibold text-[#3fb950] border border-[#3fb950]/30">
                     <CheckCircle2 className="h-3 w-3" />
                     TPO Verified
                   </span>
-                  <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-[11px] font-medium text-white/60 border border-white/10">
-                    0 Active Backlogs
+                  <span className="rounded-full bg-white/[0.08] px-2.5 py-[3px] text-[11px] font-medium text-white/55 border border-white/10">
+                    {backlogs.active} Active Backlogs
                   </span>
                 </div>
 
-                <p className="text-sm font-mono text-white/55 mb-3">
-                  @{student.githubHandle || 'student'} · PRN: {student.rollNumber}
+                {/* Handle + PRN */}
+                <p className="text-[13px] font-mono text-white/50 leading-none">
+                  @{student.githubHandle || 'student'}
+                  <span className="mx-2 text-white/20">·</span>
+                  PRN: {student.rollNumber}
                 </p>
 
-                {/* Inline meta pills */}
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-white/65">
-                  <span className="flex items-center gap-1.5">
-                    <Building2 className="h-3.5 w-3.5 text-white/35 shrink-0" />
+                {/* Meta pills row */}
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 pt-0.5">
+                  <span className="flex items-center gap-1.5 text-[12.5px] text-white/60">
+                    <Building2 className="h-3.5 w-3.5 text-white/30 shrink-0" />
                     KIET Group of Institutions
                   </span>
-                  <span className="flex items-center gap-1.5">
-                    <GraduationCap className="h-3.5 w-3.5 text-white/35 shrink-0" />
+                  <span className="flex items-center gap-1.5 text-[12.5px] text-white/60">
+                    <GraduationCap className="h-3.5 w-3.5 text-white/30 shrink-0" />
                     B.Tech · {student.branch} · Sem {student.currentSemester}
                   </span>
-                  <span className="flex items-center gap-1.5">
-                    <Calendar className="h-3.5 w-3.5 text-white/35 shrink-0" />
+                  <span className="flex items-center gap-1.5 text-[12.5px] text-white/60">
+                    <Calendar className="h-3.5 w-3.5 text-white/30 shrink-0" />
                     Batch {student.batchYear}
                   </span>
-                  <span className="flex items-center gap-1.5">
-                    <Mail className="h-3.5 w-3.5 text-white/35 shrink-0" />
-                    <span className="font-mono truncate max-w-[220px]">{student.email}</span>
+                  <span className="flex items-center gap-1.5 text-[12.5px] text-white/60">
+                    <Mail className="h-3.5 w-3.5 text-white/30 shrink-0" />
+                    <span className="font-mono truncate max-w-[230px]">{student.email}</span>
                   </span>
                 </div>
               </div>
 
-              {/* Action buttons — far right */}
-              <div className="flex items-center gap-2 shrink-0">
+              {/* Action buttons — right edge */}
+              <div className="flex flex-row sm:flex-col items-center gap-2 shrink-0 self-start sm:self-center">
                 <Link
                   href="/settings"
-                  className="inline-flex items-center gap-1.5 rounded-md border border-white/15 bg-white/10 hover:bg-white/20 px-3 py-1.5 text-xs font-semibold text-white transition-all active:scale-[.98] backdrop-blur-sm shadow"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.14] bg-white/[0.09] hover:bg-white/[0.16] px-3.5 py-1.5 text-xs font-semibold text-white transition-colors backdrop-blur-sm shadow-sm whitespace-nowrap"
                 >
-                  <Pencil className="h-3.5 w-3.5 text-white/60" />
+                  <Pencil className="h-3.5 w-3.5 text-white/55" />
                   Edit profile
                 </Link>
                 <button
                   onClick={handleCopyEmail}
-                  className="inline-flex items-center gap-1.5 rounded-md border border-white/15 bg-white/10 hover:bg-white/20 px-3 py-1.5 text-xs font-semibold text-white transition-all active:scale-[.98] backdrop-blur-sm shadow"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.14] bg-white/[0.09] hover:bg-white/[0.16] px-3.5 py-1.5 text-xs font-semibold text-white transition-colors backdrop-blur-sm shadow-sm whitespace-nowrap"
                 >
-                  <Copy className="h-3.5 w-3.5 text-white/60" />
+                  <Copy className="h-3.5 w-3.5 text-white/55" />
                   {copied ? 'Copied!' : 'Copy email'}
                 </button>
               </div>
             </div>
 
             {/* Divider */}
-            <div className="border-t border-white/10 my-4" />
+            <div className="mx-7 border-t border-white/[0.08]" />
 
-            {/* Bottom row: Bio + Socials + Trust */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              {/* Bio */}
+            {/* Bottom strip: bio | social links | trust */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-7 py-4">
               {student.bio ? (
-                <p className="text-[13px] leading-relaxed text-white/70 max-w-2xl">
+                <p className="text-[13px] leading-relaxed text-white/65 max-w-xl flex-1">
                   {student.bio}
                 </p>
               ) : (
-                <span className="text-xs text-white/35 italic">No bio added yet.</span>
+                <p className="text-xs text-white/30 italic flex-1">No bio added — edit profile to add one.</p>
               )}
 
-              {/* Social links + trust card */}
               <div className="flex flex-wrap items-center gap-1.5 shrink-0">
                 {socials.map((s) => (
                   <a
@@ -236,22 +244,24 @@ export default function OverviewPage() {
                     href={s.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-md border border-white/15 bg-white/10 hover:bg-white/20 px-2.5 py-1 text-xs font-semibold text-white/80 transition-all backdrop-blur-sm shadow-sm"
+                    className="inline-flex items-center gap-1.5 rounded-md border border-white/[0.13] bg-white/[0.08] hover:bg-white/[0.15] px-2.5 py-[5px] text-[11.5px] font-semibold text-white/75 transition-colors backdrop-blur-sm"
                     title={s.handle ? `${s.label} (${s.handle})` : s.label}
                   >
                     <span className="text-[#58a6ff]">{s.icon}</span>
-                    <span className="text-[11.5px]">{s.label}</span>
+                    {s.label}
                   </a>
                 ))}
-                <div className="opacity-75 ml-1">
+                <div className="opacity-70 ml-0.5">
                   <TrustCard compact />
                 </div>
               </div>
             </div>
           </div>
 
-          {/* ── KPI STATS ROW ── */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+          {/* ════════════════════════════════════
+              KPI STATS — 4 across
+          ════════════════════════════════════ */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <Stat
               label="Cumulative CGPA"
               value={cgpa ? cgpa.toFixed(2) : '—'}
@@ -268,7 +278,7 @@ export default function OverviewPage() {
             />
             <Stat
               label="Coding Streak"
-              value={`${Math.max(ghStats.current, lcStats.current)} days`}
+              value={`${Math.max(ghStats.current, lcStats.current)}d`}
               sub={`Longest ${Math.max(ghStats.longest, lcStats.longest)}d`}
               icon={<Flame className="h-4 w-4" />}
               tone="warn"
@@ -282,19 +292,21 @@ export default function OverviewPage() {
             />
           </div>
 
-          {/* ── PINNED REPOSITORIES ── */}
-          <section className="rounded-2xl border border-white/12 bg-white/[0.07] backdrop-blur-xl shadow-xl p-5 space-y-3">
+          {/* ════════════════════════════════════
+              PINNED REPOSITORIES
+          ════════════════════════════════════ */}
+          <section className="rounded-2xl border border-white/[0.1] bg-white/[0.06] backdrop-blur-xl shadow-xl p-6 space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-white flex items-center gap-2">
                 Pinned Repositories
-                <span className="text-xs text-white/50 font-normal">({student.projects.length} verified)</span>
+                <span className="text-xs text-white/45 font-normal">· {student.projects.length} verified</span>
               </h2>
               <Link href="/projects" className="text-xs font-medium text-[#58a6ff] hover:underline inline-flex items-center gap-1">
-                Manage all projects <ArrowRight className="h-3 w-3" />
+                Manage all <ArrowRight className="h-3 w-3" />
               </Link>
             </div>
             {student.projects.length ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {student.projects.map((project, i) => (
                   <ProjectCard key={project.id} project={project} index={i} />
                 ))}
@@ -309,35 +321,37 @@ export default function OverviewPage() {
             )}
           </section>
 
-          {/* ── GITHUB HEATMAP ── */}
-          <section className="rounded-2xl border border-white/12 bg-white/[0.07] backdrop-blur-xl shadow-xl p-5 space-y-4">
+          {/* ════════════════════════════════════
+              GITHUB ACTIVITY HEATMAP
+          ════════════════════════════════════ */}
+          <section className="rounded-2xl border border-white/[0.1] bg-white/[0.06] backdrop-blur-xl shadow-xl p-6 space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <div className="flex items-center gap-2.5">
-                <GithubIcon className="h-4 w-4 text-[#58a6ff]" />
+              <div className="flex items-center gap-3">
+                <GithubIcon className="h-4 w-4 text-[#58a6ff] shrink-0" />
                 <div>
-                  <h3 className="text-sm font-bold text-white">
-                    {student.codingStats?.github?.totalContributions ?? 0} verified contributions in past year
+                  <h3 className="text-sm font-bold text-white leading-tight">
+                    {student.codingStats?.github?.totalContributions ?? 0} contributions in the last year
                   </h3>
-                  <p className="text-xs text-white/50">
-                    Synced nightly via KIET TPO webhooks · Last update {formatDateTime(student.lastStatsSync)}
+                  <p className="text-xs text-white/45 mt-0.5">
+                    Synced nightly via KIET TPO · Last: {formatDateTime(student.lastStatsSync)}
                   </p>
                 </div>
               </div>
-              <Link href="/coding" className="text-xs font-medium text-[#58a6ff] hover:underline self-start sm:self-auto">
-                Detailed metrics &rarr;
+              <Link href="/coding" className="text-xs font-medium text-[#58a6ff] hover:underline shrink-0">
+                Detailed metrics →
               </Link>
             </div>
             {gh.length ? (
               <>
-                <div className="pt-1 overflow-x-auto">
+                <div className="overflow-x-auto">
                   <Heatmap days={gh} tone="github" unit="contributions" />
                 </div>
-                <div className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs">
-                  <span className="text-white/60 font-medium truncate">
-                    <span className="font-semibold text-white">Latest commit: </span>
+                <div className="flex items-center justify-between rounded-lg border border-white/[0.09] bg-white/[0.04] px-4 py-2 text-xs">
+                  <span className="text-white/55 truncate">
+                    <span className="font-semibold text-white/80">Latest commit: </span>
                     {student.codingStats?.github?.latestActivity}
                   </span>
-                  <span className="text-[10px] font-mono font-bold text-[#58a6ff] bg-[#58a6ff]/10 border border-[#58a6ff]/30 px-2 py-0.5 rounded-md shrink-0">
+                  <span className="ml-3 shrink-0 text-[10px] font-mono font-bold text-[#58a6ff] bg-[#58a6ff]/10 border border-[#58a6ff]/25 px-2 py-0.5 rounded">
                     main
                   </span>
                 </div>
@@ -352,17 +366,19 @@ export default function OverviewPage() {
             )}
           </section>
 
-          {/* ── LEETCODE HEATMAP ── */}
-          <section className="rounded-2xl border border-white/12 bg-white/[0.07] backdrop-blur-xl shadow-xl p-5 space-y-4">
+          {/* ════════════════════════════════════
+              LEETCODE HEATMAP
+          ════════════════════════════════════ */}
+          <section className="rounded-2xl border border-white/[0.1] bg-white/[0.06] backdrop-blur-xl shadow-xl p-6 space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <div className="flex items-center gap-2.5">
-                <Code2 className="h-4 w-4 text-[#ffa116]" />
+              <div className="flex items-center gap-3">
+                <Code2 className="h-4 w-4 text-[#ffa116] shrink-0" />
                 <div>
-                  <h3 className="text-sm font-bold text-white">
-                    LeetCode Problem Solving ({lcStats.active} active practice days)
+                  <h3 className="text-sm font-bold text-white leading-tight">
+                    LeetCode — {lcStats.active} active practice days
                   </h3>
-                  <p className="text-xs text-white/50">
-                    Current streak: {lcStats.current} days · Longest streak: {lcStats.longest} days
+                  <p className="text-xs text-white/45 mt-0.5">
+                    Current streak: {lcStats.current}d · Longest: {lcStats.longest}d
                   </p>
                 </div>
               </div>
@@ -371,7 +387,7 @@ export default function OverviewPage() {
                   href={`https://leetcode.com/u/${student.leetcodeHandle}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs font-medium text-[#58a6ff] hover:underline inline-flex items-center gap-1 self-start sm:self-auto"
+                  className="text-xs font-medium text-[#58a6ff] hover:underline inline-flex items-center gap-1 shrink-0"
                 >
                   @{student.leetcodeHandle} <ExternalLink className="h-3 w-3" />
                 </a>
@@ -379,15 +395,15 @@ export default function OverviewPage() {
             </div>
             {lc.length ? (
               <>
-                <div className="pt-1 overflow-x-auto">
+                <div className="overflow-x-auto">
                   <Heatmap days={lc} tone="leetcode" unit="submissions" />
                 </div>
-                <div className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs">
-                  <span className="text-white/60 font-medium truncate">
-                    <span className="font-semibold text-white">Recent solution: </span>
+                <div className="flex items-center justify-between rounded-lg border border-white/[0.09] bg-white/[0.04] px-4 py-2 text-xs">
+                  <span className="text-white/55 truncate">
+                    <span className="font-semibold text-white/80">Recent solution: </span>
                     {student.codingStats?.leetcode?.latestActivity}
                   </span>
-                  <span className="text-[10px] font-mono font-bold text-[#ffa116] bg-[#ffa116]/10 border border-[#ffa116]/30 px-2 py-0.5 rounded-md shrink-0">
+                  <span className="ml-3 shrink-0 text-[10px] font-mono font-bold text-[#ffa116] bg-[#ffa116]/10 border border-[#ffa116]/25 px-2 py-0.5 rounded">
                     Accepted
                   </span>
                 </div>
@@ -402,59 +418,63 @@ export default function OverviewPage() {
             )}
           </section>
 
-          {/* ── SGPA + ENDORSEMENTS ROW ── */}
+          {/* ════════════════════════════════════
+              SGPA CHART + ENDORSEMENTS (2-col)
+          ════════════════════════════════════ */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-4">
-            {/* SGPA Trajectory */}
-            <div className="rounded-2xl border border-white/12 bg-white/[0.07] backdrop-blur-xl shadow-xl p-5 flex flex-col">
+            {/* SGPA */}
+            <div className="rounded-2xl border border-white/[0.1] bg-white/[0.06] backdrop-blur-xl shadow-xl p-6">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <GraduationCap className="h-4 w-4 text-[#58a6ff]" />
                   <h3 className="text-sm font-bold text-white">SGPA Trajectory</h3>
                 </div>
                 <Link href="/academics" className="text-xs font-medium text-[#58a6ff] hover:underline">
-                  All semesters &rarr;
+                  All semesters →
                 </Link>
               </div>
-              <p className="text-xs text-white/50 mb-3">
-                Consistent cumulative record across {student.academics.length} semesters.
+              <p className="text-xs text-white/45 mb-4">
+                {student.academics.length} semesters · cumulative record
               </p>
               <SgpaChart semesters={student.academics} cgpa={cgpa} height={140} compact />
             </div>
 
-            {/* Faculty Endorsements */}
-            <div className="rounded-2xl border border-white/12 bg-white/[0.07] backdrop-blur-xl shadow-xl p-5 flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <BadgeCheck className="h-4 w-4 text-[#4ac26b]" />
-                    <h3 className="text-sm font-bold text-white">Faculty Endorsements</h3>
-                  </div>
-                  <Link href="/badges" className="text-xs font-medium text-[#58a6ff] hover:underline">
-                    Catalog &rarr;
-                  </Link>
+            {/* Endorsements */}
+            <div className="rounded-2xl border border-white/[0.1] bg-white/[0.06] backdrop-blur-xl shadow-xl p-6 flex flex-col">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <BadgeCheck className="h-4 w-4 text-[#3fb950]" />
+                  <h3 className="text-sm font-bold text-white">Faculty Endorsements</h3>
                 </div>
+                <Link href="/badges" className="text-xs font-medium text-[#58a6ff] hover:underline">
+                  Catalog →
+                </Link>
+              </div>
+
+              <div className="flex-1">
                 {approved.length ? (
                   <ul className="space-y-2">
                     {approved.map((b) => {
                       const badge = catalog.find((c) => c.id === b.badgeId);
                       if (!badge) return null;
                       return (
-                        <li key={b.id} className="flex items-center gap-2.5 rounded-lg border border-white/10 bg-white/5 p-2 hover:bg-white/10 transition-all">
-                          <BadgeIcon iconUrl={badge.iconUrl} className="!h-8 !w-8 rounded-md shrink-0" />
+                        <li key={b.id} className="flex items-center gap-3 rounded-xl border border-white/[0.08] bg-white/[0.04] p-2.5 hover:bg-white/[0.08] transition-colors">
+                          <BadgeIcon iconUrl={badge.iconUrl} className="!h-9 !w-9 rounded-lg shrink-0" />
                           <div className="min-w-0 flex-1">
                             <p className="truncate text-xs font-bold text-white">{badge.title}</p>
-                            <p className="text-[10.5px] text-white/50 font-medium">Verified {formatDate(b.verifiedAt)}</p>
+                            <p className="text-[10.5px] text-white/45 mt-0.5">Verified {formatDate(b.verifiedAt)}</p>
                           </div>
                         </li>
                       );
                     })}
                   </ul>
                 ) : (
-                  <p className="text-xs text-white/50">No faculty badges endorsed yet.</p>
+                  <p className="text-xs text-white/40 mt-1">No faculty badges endorsed yet.</p>
                 )}
               </div>
-              <div className="mt-4 pt-3 border-t border-white/10">
-                <Link href="/certifications" className="flex items-center justify-between text-xs font-medium text-white/50 hover:text-white">
+
+              <div className="mt-4 pt-3 border-t border-white/[0.08]">
+                <Link href="/certifications" className="flex items-center justify-between text-xs font-medium text-white/45 hover:text-white/80 transition-colors">
                   <span>{student.certifications.length} verified professional certifications</span>
                   <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
