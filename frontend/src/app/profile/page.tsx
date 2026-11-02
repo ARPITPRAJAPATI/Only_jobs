@@ -4,9 +4,7 @@ import Link from 'next/link';
 import {
   Activity,
   ArrowRight,
-  Award,
   BadgeCheck,
-  BookOpen,
   Building2,
   Calendar,
   CheckCircle2,
@@ -18,19 +16,18 @@ import {
   GraduationCap,
   Mail,
   Pencil,
-  ShieldCheck,
 } from 'lucide-react';
 import { useState } from 'react';
-import { ProfileSubnav } from '@/components/ProfileSubnav';
 import { Avatar } from '@/components/Avatar';
 import { BadgeIcon } from '@/components/BadgeIcon';
-import { GithubIcon, LinkedinIcon, XIcon } from '@/components/BrandIcons';
+import { GithubIcon } from '@/components/BrandIcons';
 import { Heatmap } from '@/components/Heatmap';
 import { ProjectCard } from '@/components/ProjectCard';
 import { SgpaChart } from '@/components/SgpaChart';
 import { useStudent } from '@/components/store';
 import { useToast } from '@/components/toast';
-import { TrustCard } from '@/components/TrustCard';
+import { RotatingArcNavbar } from '@/components/RotatingArcNavbar';
+import { ProfileSocialCard } from '@/components/ProfileSocialCard';
 import { EmptyState, Stat } from '@/components/ui';
 import {
   MAX_PROJECTS,
@@ -68,51 +65,6 @@ export default function OverviewPage() {
     }
   };
 
-  const socials = [
-    {
-      href: student.githubHandle && `https://github.com/${student.githubHandle}`,
-      icon: <GithubIcon className="h-3.5 w-3.5" />,
-      label: 'GitHub',
-      handle: student.githubHandle ? `@${student.githubHandle}` : '',
-    },
-    {
-      href: student.leetcodeHandle && `https://leetcode.com/u/${student.leetcodeHandle}`,
-      icon: <Code2 className="h-3.5 w-3.5" />,
-      label: 'LeetCode',
-      handle: student.leetcodeHandle ? `@${student.leetcodeHandle}` : '',
-    },
-    {
-      href: student.codeforcesHandle && `https://codeforces.com/profile/${student.codeforcesHandle}`,
-      icon: <Code2 className="h-3.5 w-3.5" />,
-      label: 'Codeforces',
-      handle: student.codeforcesHandle ? `@${student.codeforcesHandle}` : '',
-    },
-    {
-      href: student.codechefHandle && `https://www.codechef.com/users/${student.codechefHandle}`,
-      icon: <Code2 className="h-3.5 w-3.5" />,
-      label: 'CodeChef',
-      handle: student.codechefHandle ? `@${student.codechefHandle}` : '',
-    },
-    {
-      href: student.gfgHandle && `https://www.geeksforgeeks.org/user/${student.gfgHandle}`,
-      icon: <Code2 className="h-3.5 w-3.5" />,
-      label: 'GeeksforGeeks',
-      handle: student.gfgHandle ? `@${student.gfgHandle}` : '',
-    },
-    {
-      href: student.linkedinUrl,
-      icon: <LinkedinIcon className="h-3.5 w-3.5" />,
-      label: 'LinkedIn',
-      handle: 'LinkedIn',
-    },
-    {
-      href: student.xUrl,
-      icon: <XIcon className="h-3 w-3" />,
-      label: 'X',
-      handle: student.xUrl?.split('/').pop() ? `@${student.xUrl.split('/').pop()}` : 'X',
-    },
-  ].filter((s) => s.href) as { href: string; icon: React.ReactNode; label: string; handle: string }[];
-
   return (
     <div className="min-h-screen pb-16 animate-fade-in relative overflow-x-hidden">
 
@@ -140,8 +92,10 @@ export default function OverviewPage() {
           {/* ════════════════════════════════════
               HORIZONTAL PROFILE HERO BANNER
           ════════════════════════════════════ */}
-          <div className="rounded-2xl border border-white/[0.14] bg-white/[0.07] backdrop-blur-2xl shadow-[0_8px_48px_rgba(0,0,0,0.45)] overflow-hidden">
-
+          <div
+            id="overview"
+            className="rounded-2xl border border-white/[0.14] bg-white/[0.07] backdrop-blur-2xl shadow-[0_8px_48px_rgba(0,0,0,0.45)] overflow-hidden"
+          >
             {/* Top strip: avatar | name & meta | actions */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 px-7 pt-7 pb-5">
 
@@ -227,33 +181,35 @@ export default function OverviewPage() {
             {/* Divider */}
             <div className="mx-7 border-t border-white/[0.08]" />
 
-            {/* Bottom strip: bio | social links | trust */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-7 py-4">
-              {student.bio ? (
-                <p className="text-[13px] leading-relaxed text-white/65 max-w-xl flex-1">
-                  {student.bio}
-                </p>
-              ) : (
-                <p className="text-xs text-white/30 italic flex-1">No bio added — edit profile to add one.</p>
-              )}
+            {/* ── Lower Section: Arc Navigation (attached in corner) | Normal Bio (middle) | SOCIAL Card (right) ── */}
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-6 pl-0 pr-6 sm:pr-7 py-2 min-h-[300px]">
+              {/* Left: Arc Navigation attached in the very left corner */}
+              <div className="w-full lg:w-[320px] shrink-0 h-[300px] flex items-center justify-start overflow-hidden">
+                <RotatingArcNavbar />
+              </div>
 
-              <div className="flex flex-wrap items-center gap-1.5 shrink-0">
-                {socials.map((s) => (
-                  <a
-                    key={s.label}
-                    href={s.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-md border border-white/[0.13] bg-white/[0.08] hover:bg-white/[0.15] px-2.5 py-[5px] text-[11.5px] font-semibold text-white/75 transition-colors backdrop-blur-sm"
-                    title={s.handle ? `${s.label} (${s.handle})` : s.label}
-                  >
-                    <span className="text-[#58a6ff]">{s.icon}</span>
-                    {s.label}
-                  </a>
-                ))}
-                <div className="opacity-70 ml-0.5">
-                  <TrustCard compact />
+              {/* Middle: Normal Bio (unboxed, clean typography) */}
+              <div className="flex-1 min-w-0 max-w-xl py-2 px-1 lg:px-4 lg:-translate-x-3">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-white/40">Bio</span>
+                  <span className="h-1 w-1 rounded-full bg-white/20" />
+                  <span className="text-[10.5px] text-[#3fb950] font-semibold flex items-center gap-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#3fb950] animate-pulse" />
+                    Open to Opportunities
+                  </span>
                 </div>
+                {student.bio ? (
+                  <p className="text-[13.5px] leading-relaxed text-white/75 font-normal">
+                    {student.bio}
+                  </p>
+                ) : (
+                  <p className="text-xs text-white/30 italic">No bio added — edit profile to add one.</p>
+                )}
+              </div>
+
+              {/* Right: SOCIAL Card (replaces Audit Index) */}
+              <div className="w-full lg:w-[320px] shrink-0 flex items-center justify-end">
+                <ProfileSocialCard />
               </div>
             </div>
           </div>
@@ -295,7 +251,10 @@ export default function OverviewPage() {
           {/* ════════════════════════════════════
               PINNED REPOSITORIES
           ════════════════════════════════════ */}
-          <section className="rounded-2xl border border-white/[0.1] bg-white/[0.06] backdrop-blur-xl shadow-xl p-6 space-y-4">
+          <section
+            id="projects"
+            className="scroll-mt-8 rounded-2xl border border-white/[0.1] bg-white/[0.06] backdrop-blur-xl shadow-xl p-6 space-y-4"
+          >
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-white flex items-center gap-2">
                 Pinned Repositories
@@ -324,7 +283,10 @@ export default function OverviewPage() {
           {/* ════════════════════════════════════
               GITHUB ACTIVITY HEATMAP
           ════════════════════════════════════ */}
-          <section className="rounded-2xl border border-white/[0.1] bg-white/[0.06] backdrop-blur-xl shadow-xl p-6 space-y-4">
+          <section
+            id="coding"
+            className="scroll-mt-8 rounded-2xl border border-white/[0.1] bg-white/[0.06] backdrop-blur-xl shadow-xl p-6 space-y-4"
+          >
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div className="flex items-center gap-3">
                 <GithubIcon className="h-4 w-4 text-[#58a6ff] shrink-0" />
@@ -369,7 +331,10 @@ export default function OverviewPage() {
           {/* ════════════════════════════════════
               LEETCODE HEATMAP
           ════════════════════════════════════ */}
-          <section className="rounded-2xl border border-white/[0.1] bg-white/[0.06] backdrop-blur-xl shadow-xl p-6 space-y-4">
+          <section
+            id="coding-leetcode"
+            className="scroll-mt-8 rounded-2xl border border-white/[0.1] bg-white/[0.06] backdrop-blur-xl shadow-xl p-6 space-y-4"
+          >
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div className="flex items-center gap-3">
                 <Code2 className="h-4 w-4 text-[#ffa116] shrink-0" />
@@ -423,7 +388,10 @@ export default function OverviewPage() {
           ════════════════════════════════════ */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-4">
             {/* SGPA */}
-            <div className="rounded-2xl border border-white/[0.1] bg-white/[0.06] backdrop-blur-xl shadow-xl p-6">
+            <div
+              id="academics"
+              className="scroll-mt-8 rounded-2xl border border-white/[0.1] bg-white/[0.06] backdrop-blur-xl shadow-xl p-6"
+            >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <GraduationCap className="h-4 w-4 text-[#58a6ff]" />
@@ -440,7 +408,10 @@ export default function OverviewPage() {
             </div>
 
             {/* Endorsements */}
-            <div className="rounded-2xl border border-white/[0.1] bg-white/[0.06] backdrop-blur-xl shadow-xl p-6 flex flex-col">
+            <div
+              id="badges"
+              className="scroll-mt-8 rounded-2xl border border-white/[0.1] bg-white/[0.06] backdrop-blur-xl shadow-xl p-6 flex flex-col"
+            >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <BadgeCheck className="h-4 w-4 text-[#3fb950]" />
@@ -473,7 +444,7 @@ export default function OverviewPage() {
                 )}
               </div>
 
-              <div className="mt-4 pt-3 border-t border-white/[0.08]">
+              <div id="certifications" className="mt-4 pt-3 border-t border-white/[0.08]">
                 <Link href="/certifications" className="flex items-center justify-between text-xs font-medium text-white/45 hover:text-white/80 transition-colors">
                   <span>{student.certifications.length} verified professional certifications</span>
                   <ArrowRight className="h-3.5 w-3.5" />
