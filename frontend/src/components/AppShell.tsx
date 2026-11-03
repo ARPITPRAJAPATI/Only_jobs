@@ -41,11 +41,42 @@ export function AppShell({ children }: { children: ReactNode }) {
     pathname.startsWith('/coding') ||
     pathname.startsWith('/settings')
   ) {
+    const isProfileSection = [
+      '/projects',
+      '/academics',
+      '/coding',
+      '/badges',
+      '/certifications',
+      '/settings',
+    ].some((route) => pathname.startsWith(route));
+
     return (
       <div className="min-h-screen bg-bg text-ink flex flex-col transition-colors">
         <FeedNavbar />
         <FrozenBanner />
-        <main className="flex-1 min-w-0">{children}</main>
+        <main className="relative flex-1 min-w-0">
+          {isProfileSection && (
+            <>
+              <div
+                aria-hidden
+                className="pointer-events-none fixed inset-0 z-0"
+                style={{
+                  backgroundImage: "url('/profile-bg.png')",
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat',
+                }}
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none fixed inset-0 z-0 bg-black/55 backdrop-blur-[1px]"
+              />
+            </>
+          )}
+          <div className={isProfileSection ? 'relative z-10 profile-section-content' : undefined}>
+            {children}
+          </div>
+        </main>
       </div>
     );
   }

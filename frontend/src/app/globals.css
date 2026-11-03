@@ -206,3 +206,41 @@
     border-color: rgba(var(--line), 0.45) !important;
   }
 }
+
+.profile-section-content {
+  --ink: 240 246 252;
+  --muted: 139 148 158;
+  --line: 255 255 255;
+  --surface: 22 27 34;
+  --surface2: 33 38 45;
+  min-height: calc(100vh - 7rem);
+  color: rgb(var(--ink));
+}
+
+.profile-section-content .bg-surface {
+  background-color: rgb(var(--surface) / 0.9);
+  border-color: rgb(255 255 255 / 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.profile-section-content .card {
+  background-color: rgb(255 255 255 / 0.06);
+  border-color: rgb(255 255 255 / 0.1);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.profile-section-content .bg-surface2 {
+  background-color: rgb(255 255 255 / 0.04);
+}
+
+.profile-section-content .input {
+  background-color: rgb(255 255 255 / 0.06);
+  border-color: rgb(255 255 255 / 0.16);
+  color: rgb(var(--ink));
+}
+
+.profile-section-content .input::placeholder {
+  color: rgb(var(--muted) / 0.7);
+}
