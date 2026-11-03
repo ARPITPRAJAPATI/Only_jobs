@@ -1,0 +1,128 @@
+generator client {
+    provider = "prisma-client"
+    output   = "../src/generated/prisma"
+}
+
+datasource db {
+    provider = "postgresql"
+}
+
+model Student {
+    id          String  @id @default(uuid())
+    name        String
+    email       String  @unique
+    collegeName String
+    rollNumber  String  @unique
+    libraryId   String? @unique
+    course      String
+    branch      String
+    batch       Int
+
+    createdAt       DateTime         @default(now())
+    updatedAt       DateTime         @updatedAt
+    studentProfile  StudentProfile?
+    academicRecords AcademicRecord[]
+    projects        Project[]
+    certifications  Certification[]
+    studentBadges   StudentBadge[]
+}
+
+model StudentProfile {
+    id        String @id @default(uuid())
+    studentId String @unique
+
+    student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+    username  String  @unique
+    bio       String?
+    avatarUrl String?
+
+    githubUrl     String?
+    linkedinUrl   String?
+    leetcodeUrl   String?
+    codeforcesUrl String?
+    codechefUrl   String?
+    xUrl          String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model AcademicRecord {
+    id        String @id @default(uuid())
+    studentId String
+
+    student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+    semester Int
+    sgpa     Float
+    cgpa     Float
+    backlogs Int   @default(0)
+
+    isVerified Boolean   @default(false)
+    verifiedAt DateTime?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([studentId, semester])
+}
+
+model Project {
+    id        String @id @default(uuid())
+    studentId String
+
+    student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+    title       String
+    tagline     String?
+    description String
+    githubUrl   String?
+    demoUrl     String?
+    techStack   String[]
+
+    isPinned   Boolean   @default(false)
+    isVerified Boolean   @default(false)
+    verifiedAt DateTime?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Certification {
+    id        String @id @default(uuid())
+    studentId String
+
+    student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+    title          String
+    issuer         String
+    credentialId   String?
+    credentialUrl  String?
+    certificateUrl String?
+
+    issuedAt  DateTime?
+    expiresAt DateTime?
+
+    isVerified Boolean   @default(false)
+    verifiedAt DateTime?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model StudentBadge {
+    id        String @id @default(uuid())
+    studentId String
+
+    student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+    title       String
+    description String?
+    imageUrl    String?
+
+    awardedBy String?
+    awardedAt DateTime @default(now())
+
+    createdAt DateTime @default(now())
+}
