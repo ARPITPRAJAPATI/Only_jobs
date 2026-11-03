@@ -13,7 +13,7 @@ export const registerStudent = async (req, res) => {
             batch,
         } = req.body;
 
-        // 1. Basic validation
+        // Basic validation
         if (!name || !email || !rollNumber || !collegeName || !course || !branch || !batch) {
             return res.status(400).json({
                 success: false,
@@ -21,7 +21,7 @@ export const registerStudent = async (req, res) => {
             });
         }
 
-        // 2. Create student
+        // Create student
         const student = await prisma.student.create({
             data: {
                 name,
@@ -31,7 +31,7 @@ export const registerStudent = async (req, res) => {
                 libraryId,
                 course,
                 branch,
-                batch,
+                batch: Number(batch),
             },
         });
 
@@ -44,7 +44,6 @@ export const registerStudent = async (req, res) => {
     } catch (error) {
         console.error("Student registration error:", error);
 
-        // 3. Handle duplicate fields
         if (error.code === "P2002") {
             const field = error.meta?.target?.[0] || "Field";
 
@@ -57,6 +56,67 @@ export const registerStudent = async (req, res) => {
         return res.status(500).json({
             success: false,
             message: "Student registration failed",
+        });
+    }
+};
+
+// Aggregated Full Student Profile (All 5 modules in 1 call)
+export const getFullStudentProfile = async (req, res) => {
+    try {
+        const { identifier } = req.params; // Can be studentId OR rollNumber
+
+        const student = await prisma.student.findFirst({
+            where: {
+                OR: [
+                    { id: identifier },
+                    { rollNumber: identifier },
+                ],
+            },
+            include: {
+                studentProfile: true,
+                academicRecords: {
+                    orderBy: {
+                        semester: "asc",
+                    },
+                },
+                projects: {
+                    orderBy: [
+                        { isPinned: "desc" },
+                        { createdAt: "desc" },
+                    ],
+                },
+                certifications: {
+                    orderBy: {
+                        createdAt: "desc",
+                    },
+                },
+                studentBadges: {
+                    orderBy: {
+                        awardedAt: "desc",
+                    },
+                },
+            },
+        });
+
+        if (!student) {
+            return res.status(404).json({
+                success: false,
+                message: "Student not found",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Full student profile fetched successfully",
+            data: student,
+        });
+
+    } catch (error) {
+        console.error("Get full student profile error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Failed to fetch full student profile",
         });
     }
 };
