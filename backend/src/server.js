@@ -2,6 +2,8 @@ import express from "express";
 import "dotenv/config";
 import studentRoutes from "./routes/student.routes.js";
 import profileRoutes from "./routes/profile.routes.js";
+import academicRoutes from "./routes/academic.routes.js";
+import projectRoutes from "./routes/project.routes.js";
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -19,6 +21,8 @@ app.get("/health", (req, res) => {
 // Student routes
 app.use("/api/students", studentRoutes);
 app.use("/api/profiles", profileRoutes);
+app.use("/api/academics", academicRoutes);
+app.use("/api/projects", projectRoutes);
 
 // Start server
 app.listen(PORT, () => {
