@@ -218,29 +218,51 @@
 }
 
 .profile-section-content .bg-surface {
-  background-color: rgb(var(--surface) / 0.9);
+  background-color: rgb(var(--surface) / 0.88);
   border-color: rgb(255 255 255 / 0.1);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
-.profile-section-content .card {
-  background-color: rgb(255 255 255 / 0.06);
-  border-color: rgb(255 255 255 / 0.1);
+.profile-section-content .profile-glass-panel {
+  background-color: rgb(255 255 255 / 0.07);
+  border-color: rgb(255 255 255 / 0.14);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
+  box-shadow: 0 8px 48px rgb(0 0 0 / 0.45);
+}
+
+.profile-section-content .profile-glass-stat,
+.profile-section-content .profile-glass-tile,
+.profile-overview-content .profile-glass-stat {
+  background-color: rgb(var(--surface) / 0.9);
+  border-color: rgb(255 255 255 / 0.1);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 .profile-section-content .bg-surface2 {
-  background-color: rgb(255 255 255 / 0.04);
+  background-color: rgb(var(--surface2) / 0.58);
 }
 
 .profile-section-content .input {
-  background-color: rgb(255 255 255 / 0.06);
-  border-color: rgb(255 255 255 / 0.16);
+  background-color: rgb(var(--surface2) / 0.55);
+  border-color: rgb(255 255 255 / 0.14);
   color: rgb(var(--ink));
 }
 
 .profile-section-content .input::placeholder {
   color: rgb(var(--muted) / 0.7);
+}
+
+.profile-section-content [class~="bg-[#ddf4ff]"] {
+  background-color: rgb(88 166 255 / 0.14);
+  border-color: rgb(88 166 255 / 0.28);
+  color: #79c0ff;
+}
+
+.profile-section-content [class~="bg-[#dafbe1]"] {
+  background-color: rgb(46 160 67 / 0.14);
+  border-color: rgb(46 160 67 / 0.28);
+  color: #56d364;
 }
