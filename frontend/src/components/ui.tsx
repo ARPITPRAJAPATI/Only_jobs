@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 /* ---------- Card ---------- */
 export function Card({ className, children, ...rest }: { className?: string; children: ReactNode } & React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn('card', className)} {...rest}>
+    <div className={cn('card profile-glass-panel', className)} {...rest}>
       {children}
     </div>
   );
@@ -191,7 +191,7 @@ export function Stat({ label, value, sub, icon, tone = 'accent' }: { label: stri
   }[tone];
 
   return (
-    <div className="card !p-4 sm:!p-5 flex flex-col justify-between group hover:border-black/15 transition-all">
+    <div className="card profile-glass-stat !p-4 sm:!p-5 flex flex-col justify-between group hover:border-black/15 transition-all">
       <div className="flex items-center justify-between gap-2">
         <p className="text-[11px] font-bold tracking-wider uppercase text-muted">{label}</p>
         {icon && <span className={cn('shrink-0 opacity-80 group-hover:opacity-100 transition-opacity', toneIconColor)}>{icon}</span>}

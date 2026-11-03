@@ -10,7 +10,7 @@ import type { ReactNode } from 'react';
 export function ProjectCard({ project, index = 0, actions }: { project: Project; index?: number; actions?: ReactNode }) {
   const v = projectVerification(project);
   return (
-    <div className="group relative flex flex-col justify-between rounded-2xl border border-line/80 bg-surface p-5 shadow-2xs transition-all hover:border-black/20 hover:shadow-xs">
+    <div className="profile-glass-tile group relative flex flex-col justify-between rounded-2xl border border-line/80 bg-surface p-5 shadow-2xs transition-all hover:border-black/20 hover:shadow-xs">
       <div>
         {/* Top Header: Verification + Plagiarism Audit */}
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">

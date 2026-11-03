@@ -217,7 +217,7 @@ export default function OverviewPage() {
           {/* ════════════════════════════════════
               KPI STATS — 4 across
           ════════════════════════════════════ */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="profile-overview-content grid grid-cols-2 sm:grid-cols-4 gap-3">
             <Stat
               label="Cumulative CGPA"
               value={cgpa ? cgpa.toFixed(2) : '—'}
