@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { ArrowDownWideNarrow, BarChart3, Bookmark, Heart, ImagePlus, MessageCircle, MoreHorizontal, Send, ShieldCheck } from 'lucide-react';
 import { useStudent } from '@/components/store';
 import { trustBreakdown } from '@/lib/utils';
 
@@ -72,7 +73,7 @@ export default function FeedPage() {
         email: student.email || 'arpit.prajapati@kiet.edu',
         role: 'B.Tech CSE · Sem 7',
         dept: 'Cloud & Systems Lab',
-        avatarUrl: '/feed_cover.jpg',
+        avatarUrl: student.avatarUrl || undefined,
         initials: student.name.split(' ').map((n) => n[0]).join('').slice(0, 2),
         time: '15m ago',
         verifiedType: 'student',
@@ -142,6 +143,8 @@ export default function FeedPage() {
   const [postText, setPostText] = useState('');
   const [dailyQuota, setDailyQuota] = useState(2);
   const [commentInputs, setCommentInputs] = useState<Record<string, string>>({});
+  const [sortOrder, setSortOrder] = useState<'recent' | 'popular'>('recent');
+  const visiblePosts = sortOrder === 'popular' ? [...posts].sort((a, b) => b.likes - a.likes) : posts;
 
   // Follow states
   const [followedState, setFollowedState] = useState<Record<string, boolean>>({
@@ -214,20 +217,10 @@ export default function FeedPage() {
             
             {/* Card 1: Student Identity */}
             <div className="bg-surface rounded-2xl overflow-hidden border border-line shadow-xs">
-              {/* Cover Banner */}
-              <div className="h-[76px] w-full relative overflow-hidden bg-surface2">
-                <Image
-                  src="/feed_cover.jpg"
-                  alt="Cover"
-                  fill
-                  className="object-cover opacity-70"
-                />
-              </div>
-
               {/* Profile Body */}
-              <div className="px-5 pb-5 text-center">
+              <div className="px-5 pt-5 pb-5 text-center">
                 {/* Avatar */}
-                <div className="-mt-9 mx-auto w-[62px] h-[62px] rounded-full ring-[3px] ring-surface overflow-hidden bg-surface2 text-ink border border-line flex items-center justify-center shadow-xs">
+                <div className="mx-auto w-[62px] h-[62px] rounded-full ring-[3px] ring-surface overflow-hidden bg-surface2 text-ink border border-line flex items-center justify-center shadow-xs">
                   <span className="font-extrabold text-[18px] text-ink">
                     {student.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
                   </span>
@@ -267,224 +260,127 @@ export default function FeedPage() {
               </div>
             </div>
 
-            {/* Card 2: Campus Shortcuts */}
-            <div className="bg-surface rounded-2xl p-4 border border-line shadow-xs">
-              <div className="flex items-center justify-between mb-3 px-1">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-muted">
-                  Campus Circles
-                </span>
-                <Link href="/profile" className="text-[11px] font-semibold text-[#0969da] hover:underline">
-                  View all
-                </Link>
-              </div>
-
-              <div className="space-y-1">
-                <div className="flex items-center justify-between p-2 rounded-xl hover:bg-surface2 transition-colors cursor-pointer group">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <span className="w-7 h-7 rounded-lg bg-[#ddf4ff] text-[#0969da] border border-[#54aeff]/30 flex items-center justify-center text-xs font-bold shrink-0">
-                      ☁
-                    </span>
-                    <span className="text-[13px] font-medium text-ink group-hover:text-[#0969da] truncate">
-                      DevOps & Cloud Lab
-                    </span>
-                  </div>
-                  <span className="text-[11px] text-muted shrink-0">148</span>
-                </div>
-
-                <div className="flex items-center justify-between p-2 rounded-xl hover:bg-surface2 transition-colors cursor-pointer group">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <span className="w-7 h-7 rounded-lg bg-[#dafbe1] text-[#1a7f37] border border-[#4ac26b]/30 flex items-center justify-center text-xs font-bold shrink-0">
-                      ⚡
-                    </span>
-                    <span className="text-[13px] font-medium text-ink group-hover:text-[#1a7f37] truncate">
-                      Innogeeks Society
-                    </span>
-                  </div>
-                  <span className="text-[11px] text-muted shrink-0">210</span>
-                </div>
-
-                <div className="flex items-center justify-between p-2 rounded-xl hover:bg-surface2 transition-colors cursor-pointer group">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <span className="w-7 h-7 rounded-lg bg-[#fff8c5] text-[#9a6700] border border-[#d4a72c]/30 flex items-center justify-center text-xs font-bold shrink-0">
-                      🎯
-                    </span>
-                    <span className="text-[13px] font-medium text-ink group-hover:text-[#9a6700] truncate">
-                      Placement Cell (CRPC)
-                    </span>
-                  </div>
-                  <span className="text-[11px] text-muted shrink-0">Official</span>
-                </div>
-
-                <div className="flex items-center justify-between p-2 rounded-xl hover:bg-surface2 transition-colors cursor-pointer group">
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <span className="w-7 h-7 rounded-lg bg-[#fbefff] text-[#8250df] border border-[#d2a8ff]/30 flex items-center justify-center text-xs font-bold shrink-0">
-                      ◈
-                    </span>
-                    <span className="text-[13px] font-medium text-ink group-hover:text-[#8250df] truncate">
-                      AI & ML Research Group
-                    </span>
-                  </div>
-                  <span className="text-[11px] text-muted shrink-0">94</span>
-                </div>
-              </div>
-            </div>
-
           </aside>
 
           {/* ============================================================ */}
           {/* ── CENTER COLUMN: Composer & Feed ── */}
           {/* ============================================================ */}
-          <main className="lg:col-span-6 space-y-4">
+          <main className="lg:col-span-6 space-y-3.5">
             
             {/* Post Composer */}
-            <div className="bg-surface rounded-2xl p-4 border border-line shadow-xs">
+            <div className="bg-surface rounded-xl p-3.5 sm:p-4 border border-line shadow-xs">
               <form onSubmit={handleCreatePost}>
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-[#1f2328] text-white flex items-center justify-center font-bold text-xs shrink-0 border border-line">
+                  <div className="w-9 h-9 rounded-full bg-surface2 text-ink flex items-center justify-center font-semibold text-xs shrink-0 border border-line">
                     {student.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
                   </div>
                   
                   <input
                     type="text"
-                    placeholder="Share a project, achievement or doubt with KIET..."
+                    placeholder="Share a project, achievement, or update…"
                     value={postText}
                     onChange={(e) => setPostText(e.target.value)}
-                    className="w-full bg-surface2 hover:bg-surface2/80 focus:bg-surface rounded-xl px-4 py-2 text-[13.5px] text-ink placeholder-muted outline-none border border-line focus:border-[#0969da] transition-colors"
+                    className="w-full bg-surface2/70 hover:bg-surface2 focus:bg-surface rounded-full px-4 py-2.5 text-sm text-ink placeholder-muted outline-none border border-transparent focus:border-line focus:ring-2 focus:ring-accent/15 transition-colors"
                   />
                 </div>
 
-                <div className="mt-3 pt-3 border-t border-line/60 flex items-center justify-between text-xs text-muted">
-                  <div className="flex items-center gap-4 font-medium">
-                    <button type="button" className="hover:text-ink flex items-center gap-1.5 transition-colors">
-                      <svg className="w-4 h-4 text-[#1a7f37]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <rect x="3" y="3" width="18" height="18" rx="2" />
-                        <circle cx="8.5" cy="8.5" r="1.5" />
-                        <polyline points="21 15 16 10 5 21" />
-                      </svg>
-                      <span>Media</span>
+                <div className="mt-3 flex items-center justify-between gap-3 border-t border-line/70 pt-3 text-xs text-muted">
+                  <div className="flex min-w-0 items-center gap-1 sm:gap-2">
+                    <button type="button" className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-2 font-medium transition-colors hover:bg-surface2 hover:text-ink">
+                      <ImagePlus className="h-4 w-4 text-accent" />
+                      <span>Photo</span>
                     </button>
-
-                    <button type="button" className="hover:text-ink flex items-center gap-1.5 transition-colors">
-                      <svg className="w-4 h-4 text-[#0969da]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <line x1="18" y1="20" x2="18" y2="10" />
-                        <line x1="12" y1="20" x2="12" y2="4" />
-                        <line x1="6" y1="20" x2="6" y2="14" />
-                      </svg>
+                    <button type="button" className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-2 font-medium transition-colors hover:bg-surface2 hover:text-ink">
+                      <BarChart3 className="h-4 w-4 text-muted" />
                       <span>Poll</span>
                     </button>
-
-                    <span className="text-muted">
-                      {dailyQuota}/3 daily posts
-                    </span>
+                    <span className="hidden text-[11px] text-muted sm:inline">{dailyQuota}/3 posts left today</span>
                   </div>
 
                   <button
                     type="submit"
                     disabled={!postText.trim()}
-                    className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-                      postText.trim()
-                        ? 'bg-[#1f883d] hover:bg-[#1a7f37] text-white cursor-pointer shadow-xs'
-                        : 'bg-surface2 text-muted border border-line cursor-not-allowed'
-                    }`}
+                    className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-ink px-3.5 py-2 text-xs font-semibold text-surface transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
                   >
-                    Post
+                    Share update <Send className="h-3.5 w-3.5" />
                   </button>
                 </div>
               </form>
             </div>
 
+            <div className="flex items-center justify-between border-b border-line/70 px-1 pb-2 text-xs">
+              <span className="text-muted">{posts.length} campus updates</span>
+              <label className="inline-flex items-center gap-2 text-muted">
+                <ArrowDownWideNarrow className="h-3.5 w-3.5" />
+                <span>Sort by</span>
+                <select
+                  value={sortOrder}
+                  onChange={(event) => setSortOrder(event.target.value as 'recent' | 'popular')}
+                  className="cursor-pointer bg-transparent font-semibold text-ink outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+                  aria-label="Sort campus updates"
+                >
+                  <option value="recent">Recent</option>
+                  <option value="popular">Most liked</option>
+                </select>
+              </label>
+            </div>
+
             {/* Posts Feed */}
-            {posts.map((post) => {
+            {visiblePosts.map((post) => {
               const isDeanNotice = post.id === 'dean-notice';
               return (
                 <article
                   key={post.id}
-                  className={`bg-surface rounded-2xl p-5 border shadow-xs space-y-3.5 transition-all ${
+                  className={`overflow-hidden bg-surface rounded-xl border shadow-xs transition-shadow hover:shadow-sm ${
                     isDeanNotice
-                      ? 'border-[#d4a72c]/50 bg-[#fff8c5]/10'
+                      ? 'border-[#d4a72c]/40'
                       : 'border-line'
                   }`}
                 >
-                  {/* Post Header: Clean, Human, Anti-Slop */}
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-start gap-3 min-w-0">
-                      {/* Avatar */}
-                      <div className="w-10 h-10 rounded-full bg-[#1f2328] text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5 border border-line">
-                        {post.author.initials}
-                      </div>
-
-                      {/* Author Details */}
-                      <div className="min-w-0 flex-1">
-                        {/* Line 1: Name + Email + Verified */}
-                        <div className="flex items-baseline gap-2 flex-wrap">
-                          <h4 className="font-bold text-[14.5px] text-ink leading-none">
-                            {post.author.name}
-                          </h4>
-
-                          {post.author.verifiedType === 'student' && (
-                            <span className="text-[#0969da] text-xs font-bold leading-none" title="Verified KIET Student">
-                              ✓
-                            </span>
-                          )}
-
-                          {isDeanNotice && (
-                            <span className="text-[10px] uppercase font-bold tracking-wider text-[#9a6700] bg-[#fff8c5] border border-[#d4a72c]/40 px-2 py-0.5 rounded leading-none">
-                              Pinned Circular
-                            </span>
-                          )}
-
-                          {/* Clean email text (No ugly bubble pill) */}
-                          <span className="text-[12px] text-muted font-mono">
-                            {post.author.email}
-                          </span>
-                        </div>
-
-                        {/* Line 2: Role · Badges · Time */}
-                        <div className="mt-1 flex items-center gap-2 text-[12px] text-muted flex-wrap">
-                          <span>{post.author.role}</span>
-                          <span className="text-muted/60">•</span>
-                          <span>{post.author.time}</span>
-
-                          {/* Subtle, refined badge chips */}
-                          {post.author.badges && post.author.badges.length > 0 && (
-                            <>
-                              <span className="text-muted/60">•</span>
-                              <div className="inline-flex items-center gap-1.5 flex-wrap">
-                                {post.author.badges.map((b) => (
-                                  <span
-                                    key={b}
-                                    className="text-[11px] font-medium text-ink bg-surface2 border border-line px-2 py-0.5 rounded-md"
-                                  >
-                                    {b}
-                                  </span>
-                                ))}
-                              </div>
-                            </>
+                  <div className="space-y-3.5 p-4 sm:p-5">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex min-w-0 items-center gap-3">
+                        <div className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-full border border-line bg-surface2 text-xs font-semibold text-ink">
+                          {post.author.avatarUrl ? (
+                            <Image src={post.author.avatarUrl} alt="" width={40} height={40} className="h-full w-full object-cover" />
+                          ) : (
+                            post.author.initials
                           )}
                         </div>
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
+                            <h4 className="text-sm font-semibold leading-tight text-ink">{post.author.name}</h4>
+                            {post.author.verifiedType !== 'student' && (
+                              <ShieldCheck className="h-3.5 w-3.5 text-accent" aria-label="Verified campus account" />
+                            )}
+                            {isDeanNotice && (
+                              <span className="rounded border border-[#d4a72c]/40 bg-[#fff8c5]/60 px-1.5 py-0.5 text-[10px] font-medium text-[#9a6700]">
+                                Official notice
+                              </span>
+                            )}
+                          </div>
+                          <p className="mt-0.5 truncate text-xs text-muted">
+                            {post.author.role} <span aria-hidden>·</span> {post.author.time}
+                          </p>
+                        </div>
                       </div>
+
+                      <button type="button" aria-label="More post options" className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-muted transition-colors hover:bg-surface2 hover:text-ink">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </button>
                     </div>
-
-                    {/* Context menu */}
-                    <button className="text-muted hover:text-ink p-1 rounded-lg">
-                      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                        <circle cx="12" cy="5" r="1.5" />
-                        <circle cx="12" cy="12" r="1.5" />
-                        <circle cx="12" cy="19" r="1.5" />
-                      </svg>
-                    </button>
                   </div>
 
                   {/* Post Content */}
-                  <div className="text-[14px] text-ink leading-relaxed">
+                  <div className="px-4 pb-4 text-[13px] leading-relaxed text-ink sm:px-5 sm:pb-5">
                     <p>{post.content}</p>
 
                     {post.hashtags && (
-                      <div className="mt-2 flex flex-wrap gap-1.5">
+                      <div className="mt-1.5 flex flex-wrap gap-x-1.5 gap-y-0.5">
                         {post.hashtags.map((tag) => (
                           <span
                             key={tag}
-                            className="text-[12px] font-medium text-[#0969da] hover:underline cursor-pointer"
+                            className="text-xs font-medium text-accent hover:underline"
                           >
                             #{tag}
                           </span>
@@ -495,25 +391,19 @@ export default function FeedPage() {
 
                   {/* Media */}
                   {post.image && (
-                    <div className="rounded-xl overflow-hidden relative w-full h-[260px] sm:h-[300px] bg-surface2 border border-line">
+                    <div className="relative aspect-[16/10] w-full overflow-hidden bg-surface2">
                       <Image
                         src={post.image}
-                        alt="Post media"
+                        alt={post.imageTag || 'Campus post image'}
                         fill
                         className="object-cover"
-                        priority
                       />
-                      {post.imageTag && (
-                        <span className="absolute bottom-2.5 left-2.5 bg-black/75 backdrop-blur-sm text-white text-[11px] font-medium px-2.5 py-0.5 rounded-md">
-                          {post.imageTag}
-                        </span>
-                      )}
                     </div>
                   )}
 
                   {/* Project Repo Card */}
                   {post.projectLink && (
-                    <div className="p-3 bg-surface2 rounded-xl border border-line flex items-center justify-between gap-3 text-xs">
+                    <div className="mx-4 mt-4 flex items-center justify-between gap-3 rounded-lg border border-line bg-surface2/60 p-3 text-xs sm:mx-5">
                       <div className="flex items-center gap-2 min-w-0">
                         <span className="text-muted font-mono">github.com/{post.projectLink.repo}</span>
                         <a
@@ -537,71 +427,75 @@ export default function FeedPage() {
                   )}
 
                   {/* Actions Bar */}
-                  <div className="pt-2 flex items-center justify-between text-xs font-semibold text-muted border-t border-line/60">
-                    <div className="flex items-center gap-5">
+                  <div className="mx-4 mt-3 flex items-center justify-between border-t border-line/70 py-2.5 text-xs text-muted sm:mx-5">
+                    <div className="flex items-center gap-4">
                       <button
+                        type="button"
+                        aria-label={`${post.isLiked ? 'Unlike' : 'Like'} post (${post.likes})`}
+                        aria-pressed={Boolean(post.isLiked)}
                         onClick={() => toggleLike(post.id)}
-                        className={`flex items-center gap-1.5 transition-colors cursor-pointer ${
+                        className={`inline-flex items-center gap-1.5 transition-colors ${
                           post.isLiked ? 'text-[#cf222e]' : 'hover:text-ink'
                         }`}
                       >
-                        <svg
-                          className={`w-4 h-4 ${post.isLiked ? 'fill-[#cf222e]' : 'fill-none stroke-current'}`}
-                          viewBox="0 0 24 24"
-                          strokeWidth="2"
-                        >
-                          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                        </svg>
+                        <Heart className={`h-4 w-4 ${post.isLiked ? 'fill-current' : ''}`} />
                         <span>{post.likes}</span>
                       </button>
 
-                      <button className="flex items-center gap-1.5 hover:text-ink transition-colors cursor-pointer">
-                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-                        </svg>
+                      <button
+                        type="button"
+                        aria-label={`Write a comment (${post.comments})`}
+                        onClick={() => document.getElementById(`comment-${post.id}`)?.focus()}
+                        className="inline-flex items-center gap-1.5 transition-colors hover:text-ink"
+                      >
+                        <MessageCircle className="h-4 w-4" />
                         <span>{post.comments}</span>
                       </button>
 
                       <button
+                        type="button"
+                        aria-label={`${post.isSaved ? 'Unsave' : 'Save'} post (${post.saves})`}
+                        aria-pressed={Boolean(post.isSaved)}
                         onClick={() => toggleSave(post.id)}
-                        className={`flex items-center gap-1.5 transition-colors cursor-pointer ${
-                          post.isSaved ? 'text-[#0969da]' : 'hover:text-ink'
+                        className={`inline-flex items-center gap-1.5 transition-colors ${
+                          post.isSaved ? 'text-accent' : 'hover:text-ink'
                         }`}
                       >
-                        <svg
-                          className={`w-4 h-4 ${post.isSaved ? 'fill-[#0969da]' : 'fill-none stroke-current'}`}
-                          viewBox="0 0 24 24"
-                          strokeWidth="2"
-                        >
-                          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-                        </svg>
+                        <Bookmark className={`h-4 w-4 ${post.isSaved ? 'fill-current' : ''}`} />
                         <span>{post.saves}</span>
                       </button>
                     </div>
 
-                    <span className="text-[11px] text-muted">
-                      KIET Verified Feed
+                    <span className="inline-flex items-center gap-1 text-[11px] text-muted">
+                      <ShieldCheck className="h-3.5 w-3.5 text-good" />
+                      KIET verified
                     </span>
                   </div>
 
                   {/* Quick comment box */}
-                  <div className="pt-1 flex items-center gap-2">
+                  <div className="mx-4 flex items-center gap-2 pb-4 sm:mx-5 sm:pb-5">
+                    <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-surface2 text-[10px] font-semibold text-muted">
+                      {student.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
+                    </div>
                     <input
+                      id={`comment-${post.id}`}
                       type="text"
-                      placeholder="Write a comment..."
+                      placeholder="Write a comment"
                       value={commentInputs[post.id] || ''}
                       onChange={(e) => setCommentInputs({ ...commentInputs, [post.id]: e.target.value })}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') handleAddComment(post.id);
                       }}
-                      className="flex-1 bg-surface2 focus:bg-surface rounded-lg px-3 py-1.5 text-xs text-ink placeholder-muted outline-none border border-line focus:border-[#0969da] transition-colors"
+                      className="min-w-0 flex-1 rounded-full border border-line/70 bg-surface2/60 px-4 py-2 text-xs text-ink outline-none transition-colors placeholder:text-muted focus:border-accent/50 focus:bg-surface"
                     />
                     {commentInputs[post.id]?.trim() && (
                       <button
+                        type="button"
+                        aria-label="Send comment"
                         onClick={() => handleAddComment(post.id)}
-                        className="text-xs font-semibold text-[#0969da] hover:underline px-1 cursor-pointer"
+                        className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-accent transition-colors hover:bg-accent/10"
                       >
-                        Send
+                        <Send className="h-4 w-4" />
                       </button>
                     )}
                   </div>

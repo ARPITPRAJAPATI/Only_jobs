@@ -24,18 +24,18 @@ export default function ProjectsPage() {
       <PageGrid>
       <Card className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#ddf4ff] text-[#0969da] border border-[#54aeff]/40">
+          <span className="grid h-9 w-9 place-items-center rounded-xl bg-white/[0.08] text-[#58a6ff] border border-white/[0.1]">
             <Pin className="h-4 w-4" />
           </span>
           <div>
-            <h2 className="text-base font-bold tracking-tight text-ink">Pinned Projects</h2>
-            <p className="text-xs text-muted font-medium">Max {MAX_PROJECTS} showcase projects — each audited with AST plagiarism checks.</p>
+            <h2 className="text-base font-bold tracking-tight text-white">Pinned Projects</h2>
+            <p className="text-xs text-white/50 font-medium">Max {MAX_PROJECTS} showcase projects — each audited with AST plagiarism checks.</p>
           </div>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-1" aria-label={`${count} of ${MAX_PROJECTS} slots used`}>
             {Array.from({ length: MAX_PROJECTS }, (_, i) => (
-              <span key={i} className={cn('h-2 w-5 rounded-full transition-all', i < count ? 'bg-[#0969da]' : 'bg-line')} />
+              <span key={i} className={cn('h-2 w-5 rounded-full transition-all', i < count ? 'bg-[#58a6ff]' : 'bg-white/15')} />
             ))}
             <Chip tone={full ? 'warn' : 'accent'} className="ml-2 font-mono">
               {count}/{MAX_PROJECTS}
@@ -79,7 +79,7 @@ export default function ProjectsPage() {
       )}
 
       <Card>
-        <h3 className="h-section mb-3">Verification pipeline</h3>
+        <h3 className="text-base font-bold tracking-tight text-white mb-3">Verification pipeline</h3>
         <div className="flex flex-col gap-3 text-sm sm:flex-row sm:items-center">
           {[
             ['Unverified', 'Freshly pinned — visible but unmarked.'],
@@ -87,11 +87,11 @@ export default function ProjectsPage() {
             ['Teacher approved', 'A faculty member reviewed and vouched for it.'],
           ].map(([t, d], i, arr) => (
             <div key={t} className="flex flex-1 items-center gap-3">
-              <div className="flex-1 rounded-2xl bg-surface2 p-4">
-                <p className="font-semibold">{t}</p>
-                <p className="text-xs text-muted">{d}</p>
+              <div className="flex-1 rounded-2xl border border-white/[0.08] bg-white/[0.04] p-4">
+                <p className="font-semibold text-white">{t}</p>
+                <p className="text-xs text-white/50 mt-0.5">{d}</p>
               </div>
-              {i < arr.length - 1 && <span className="hidden text-muted sm:block">→</span>}
+              {i < arr.length - 1 && <span className="hidden text-white/40 sm:block">→</span>}
             </div>
           ))}
         </div>

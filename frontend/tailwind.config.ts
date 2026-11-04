@@ -28,7 +28,7 @@ const config: Config = {
         bad: token('bad'),
       },
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+        sans: ['var(--font-inter)', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
       },
       boxShadow: {
         '2xs': '0 1px 2px 0 rgba(0, 0, 0, 0.04)',

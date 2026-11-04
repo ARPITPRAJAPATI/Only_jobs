@@ -4,10 +4,16 @@ import { useEffect, type ButtonHTMLAttributes, type ReactNode } from 'react';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-/* ---------- Card ---------- */
+/* ---------- Card (Signature /profile Translucent Glass Container) ---------- */
 export function Card({ className, children, ...rest }: { className?: string; children: ReactNode } & React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn('card profile-glass-panel', className)} {...rest}>
+    <div
+      className={cn(
+        'card profile-glass-panel rounded-2xl border border-white/[0.1] bg-white/[0.06] backdrop-blur-xl shadow-xl transition-all',
+        className
+      )}
+      {...rest}
+    >
       {children}
     </div>
   );
@@ -17,10 +23,14 @@ export function CardHeader({ title, subtitle, action, icon }: { title: string; s
   return (
     <div className="mb-4 flex items-start justify-between gap-3">
       <div className="flex min-w-0 items-center gap-3">
-        {icon && <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-accentSoft text-accent">{icon}</span>}
+        {icon && (
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-white/[0.08] text-[#58a6ff] border border-white/[0.1]">
+            {icon}
+          </span>
+        )}
         <div className="min-w-0">
-          <h2 className="h-section truncate">{title}</h2>
-          {subtitle && <p className="mt-0.5 text-xs text-muted">{subtitle}</p>}
+          <h2 className="text-base font-bold tracking-tight text-white truncate">{title}</h2>
+          {subtitle && <p className="mt-0.5 text-xs text-white/50 font-medium">{subtitle}</p>}
         </div>
       </div>
       {action}
@@ -31,11 +41,11 @@ export function CardHeader({ title, subtitle, action, icon }: { title: string; s
 /* ---------- Chip ---------- */
 export type Tone = 'neutral' | 'accent' | 'good' | 'warn' | 'bad';
 const toneCls: Record<Tone, string> = {
-  neutral: 'bg-[#f6f8fa] text-[#656d76] border border-[#d0d7de]',
-  accent: 'bg-[#ddf4ff] text-[#0969da] border border-[#54aeff]/40',
-  good: 'bg-[#dafbe1] text-[#1a7f37] border border-[#4ac26b]/40',
-  warn: 'bg-[#fff8c5] text-[#9a6700] border border-[#d4a72c]/40',
-  bad: 'bg-[#ffebe9] text-[#cf222e] border border-[#ff8182]/40',
+  neutral: 'bg-white/[0.08] text-white/75 border border-white/[0.14]',
+  accent: 'bg-[#58a6ff]/15 text-[#79c0ff] border border-[#58a6ff]/30',
+  good: 'bg-[#3fb950]/15 text-[#56d364] border border-[#3fb950]/30',
+  warn: 'bg-[#d29922]/15 text-[#e3b341] border border-[#d29922]/30',
+  bad: 'bg-[#f85149]/15 text-[#f85149] border border-[#f85149]/30',
 };
 
 export function Chip({ tone = 'neutral', icon, children, className }: { tone?: Tone; icon?: ReactNode; children: ReactNode; className?: string }) {
@@ -50,10 +60,10 @@ export function Chip({ tone = 'neutral', icon, children, className }: { tone?: T
 /* ---------- Button ---------- */
 type Variant = 'primary' | 'secondary' | 'ghost' | 'danger';
 const variantCls: Record<Variant, string> = {
-  primary: 'bg-[#1f883d] text-white hover:bg-[#1a7f37] border border-[#1b1f24]/15 shadow-2xs active:scale-[.98]',
-  secondary: 'bg-[#f6f8fa] text-[#1f2328] hover:bg-[#eaeef2] border border-[#d0d7de] active:scale-[.98]',
-  ghost: 'text-[#656d76] hover:bg-[#f6f8fa] hover:text-[#1f2328] active:scale-[.98]',
-  danger: 'bg-[#f6f8fa] text-[#cf222e] border border-[#d0d7de] hover:bg-[#ffebe9] active:scale-[.98]',
+  primary: 'border border-white/20 bg-white text-black shadow-xs hover:bg-white/90',
+  secondary: 'border border-white/[0.14] bg-white/[0.08] text-white shadow-2xs hover:bg-white/[0.14]',
+  ghost: 'text-white/60 hover:bg-white/[0.08] hover:text-white',
+  danger: 'border border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20',
 };
 
 export function Button({
@@ -66,8 +76,8 @@ export function Button({
     <button
       {...rest}
       className={cn(
-        'inline-flex items-center justify-center gap-2 rounded-xl font-bold transition-all disabled:pointer-events-none disabled:opacity-50',
-        size === 'sm' ? 'px-3.5 py-1.5 text-xs' : 'px-4 py-2 text-[13px]',
+        'inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#58a6ff]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50',
+        size === 'sm' ? 'px-3 py-1.5 text-[13px]' : 'px-4 py-2.5 text-sm',
         variantCls[variant],
         className,
       )}
@@ -79,7 +89,10 @@ export function IconButton({ className, ...rest }: ButtonHTMLAttributes<HTMLButt
   return (
     <button
       {...rest}
-      className={cn('grid h-8 w-8 place-items-center rounded-lg text-muted transition hover:bg-surface2 hover:text-ink disabled:opacity-40', className)}
+      className={cn(
+        'grid h-9 w-9 place-items-center rounded-lg border border-transparent text-white/60 transition-colors hover:border-white/[0.12] hover:bg-white/[0.08] hover:text-white disabled:cursor-not-allowed disabled:opacity-40',
+        className
+      )}
     />
   );
 }
@@ -115,18 +128,18 @@ export function Modal({
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 grid place-items-center p-3 sm:p-6" role="dialog" aria-modal="true" aria-label={title}>
-      <div className="absolute inset-0 animate-fade-in bg-ink/50 backdrop-blur-sm" onClick={onClose} />
-      <div className={cn('relative flex max-h-[92vh] w-full animate-fade-up flex-col rounded-2xl bg-surface border border-line shadow-2xl', wide ? 'max-w-3xl' : 'max-w-lg')}>
-        <div className="flex items-start justify-between gap-4 border-b border-line px-6 py-4">
+      <div className="absolute inset-0 animate-fade-in bg-black/65 backdrop-blur-md" onClick={onClose} />
+      <div className={cn('relative flex max-h-[92vh] w-full animate-fade-up flex-col rounded-2xl bg-[#0d1117] border border-white/[0.14] shadow-2xl backdrop-blur-2xl text-white', wide ? 'max-w-3xl' : 'max-w-lg')}>
+        <div className="flex items-start justify-between gap-4 border-b border-white/[0.1] px-6 py-4">
           <div>
-            <h3 className="text-lg font-bold tracking-tight text-ink">{title}</h3>
-            {description && <p className="mt-0.5 text-xs text-muted font-medium">{description}</p>}
+            <h3 className="text-lg font-bold tracking-tight text-white">{title}</h3>
+            {description && <p className="mt-0.5 text-xs text-white/50 font-medium">{description}</p>}
           </div>
           <IconButton onClick={onClose} aria-label="Close">
             <X className="h-4 w-4" />
           </IconButton>
         </div>
-        <div className="overflow-y-auto px-6 py-5">{children}</div>
+        <div className="overflow-y-auto px-6 py-5 text-white">{children}</div>
       </div>
     </div>
   );
@@ -136,9 +149,9 @@ export function Modal({
 export function Field({ label, hint, error, children }: { label: string; hint?: string; error?: string; children: ReactNode }) {
   return (
     <div>
-      <label className="label">{label}</label>
+      <label className="mb-1.5 block text-xs font-medium text-white/60">{label}</label>
       {children}
-      {error ? <p className="mt-1 text-xs text-bad">{error}</p> : hint ? <p className="mt-1 text-xs text-muted">{hint}</p> : null}
+      {error ? <p className="mt-1 text-xs text-red-400">{error}</p> : hint ? <p className="mt-1 text-xs text-white/45">{hint}</p> : null}
     </div>
   );
 }
@@ -163,7 +176,7 @@ export function ProgressRing({
   return (
     <div className="relative shrink-0" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={stroke} style={{ stroke: 'rgb(var(--line) / .9)' }} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" strokeWidth={stroke} className="stroke-white/10" />
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -181,24 +194,24 @@ export function ProgressRing({
   );
 }
 
-/* ---------- Stat tile (Typography-led, anti-slop) ---------- */
+/* ---------- Stat tile (Signature /profile Translucent Glass Card) ---------- */
 export function Stat({ label, value, sub, icon, tone = 'accent' }: { label: string; value: ReactNode; sub?: ReactNode; icon?: ReactNode; tone?: 'accent' | 'accent2' | 'good' | 'warn' }) {
   const toneIconColor = {
-    accent: 'text-[#0969da]',
-    accent2: 'text-[#656d76]',
-    good: 'text-[#1a7f37]',
-    warn: 'text-[#9a6700]',
+    accent: 'text-[#58a6ff]',
+    accent2: 'text-white/60',
+    good: 'text-[#3fb950]',
+    warn: 'text-[#d29922]',
   }[tone];
 
   return (
-    <div className="card profile-glass-stat !p-4 sm:!p-5 flex flex-col justify-between group hover:border-black/15 transition-all">
+    <div className="card profile-glass-stat rounded-2xl border border-white/[0.1] bg-white/[0.06] backdrop-blur-xl shadow-xl !p-4 sm:!p-5 flex flex-col justify-between group hover:border-white/[0.18] transition-all">
       <div className="flex items-center justify-between gap-2">
-        <p className="text-[11px] font-bold tracking-wider uppercase text-muted">{label}</p>
+        <p className="text-[11px] font-bold tracking-wider uppercase text-white/45">{label}</p>
         {icon && <span className={cn('shrink-0 opacity-80 group-hover:opacity-100 transition-opacity', toneIconColor)}>{icon}</span>}
       </div>
       <div className="mt-2.5">
-        <p className="text-[26px] font-black leading-tight tracking-tight text-ink font-sans">{value}</p>
-        {sub && <p className="mt-1 text-[12px] font-medium text-muted truncate">{sub}</p>}
+        <p className="text-2xl font-bold leading-tight tracking-tight text-white font-sans">{value}</p>
+        {sub && <p className="mt-1 text-[12px] font-medium text-white/45 truncate">{sub}</p>}
       </div>
     </div>
   );
@@ -206,10 +219,10 @@ export function Stat({ label, value, sub, icon, tone = 'accent' }: { label: stri
 
 export function EmptyState({ icon, title, body, action }: { icon: ReactNode; title: string; body: string; action?: ReactNode }) {
   return (
-    <div className="flex flex-col items-center rounded-2xl border border-dashed border-line/90 bg-surface2/30 px-6 py-10 text-center">
-      <span className="mb-3 grid h-10 w-10 place-items-center rounded-xl bg-surface text-muted border border-line">{icon}</span>
-      <p className="font-bold text-sm text-ink">{title}</p>
-      <p className="mt-1 max-w-sm text-xs text-muted">{body}</p>
+    <div className="flex flex-col items-center rounded-2xl border border-dashed border-white/[0.12] bg-white/[0.03] px-6 py-10 text-center">
+      <span className="mb-3 grid h-10 w-10 place-items-center rounded-xl bg-white/[0.06] text-white/70 border border-white/[0.1]">{icon}</span>
+      <p className="font-bold text-sm text-white">{title}</p>
+      <p className="mt-1 max-w-sm text-xs text-white/50">{body}</p>
       {action && <div className="mt-4">{action}</div>}
     </div>
   );

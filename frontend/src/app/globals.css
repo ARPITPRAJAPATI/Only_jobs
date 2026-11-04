@@ -93,6 +93,12 @@
   html {
     -webkit-text-size-adjust: 100%;
   }
+  button,
+  input,
+  select,
+  textarea {
+    font-family: inherit;
+  }
   body {
     @apply bg-bg font-sans text-ink antialiased;
     transition: background-color 0.25s ease, color 0.25s ease;
@@ -208,61 +214,201 @@
 }
 
 .profile-section-content {
-  --ink: 240 246 252;
+  --ink: 255 255 255;
   --muted: 139 148 158;
   --line: 255 255 255;
-  --surface: 22 27 34;
-  --surface2: 33 38 45;
+  --surface: 255 255 255;
+  --surface2: 255 255 255;
   min-height: calc(100vh - 7rem);
-  color: rgb(var(--ink));
+  color: #ffffff;
 }
 
-.profile-section-content .bg-surface {
-  background-color: rgb(var(--surface) / 0.88);
-  border-color: rgb(255 255 255 / 0.1);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
-
-.profile-section-content .profile-glass-panel {
-  background-color: rgb(255 255 255 / 0.07);
-  border-color: rgb(255 255 255 / 0.14);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  box-shadow: 0 8px 48px rgb(0 0 0 / 0.45);
+/* Glass containers & panels matching /profile */
+.profile-section-content .card,
+.profile-section-content .profile-glass-panel,
+.profile-overview-content .profile-glass-panel {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  backdrop-filter: blur(24px) saturate(125%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(125%) !important;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4) !important;
+  border-radius: 1rem !important;
 }
 
 .profile-section-content .profile-glass-stat,
-.profile-section-content .profile-glass-tile,
 .profile-overview-content .profile-glass-stat {
-  background-color: rgb(var(--surface) / 0.9);
-  border-color: rgb(255 255 255 / 0.1);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  backdrop-filter: blur(24px) saturate(125%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(125%) !important;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4) !important;
+  border-radius: 1rem !important;
 }
 
-.profile-section-content .bg-surface2 {
-  background-color: rgb(var(--surface2) / 0.58);
+.profile-section-content .profile-glass-tile,
+.profile-section-content .profile-glass-tile.bg-surface {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
 }
 
+.profile-section-content .profile-glass-tile:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+.profile-section-content .profile-glass-tile.profile-glass-verified {
+  background-color: rgba(46, 160, 67, 0.12) !important;
+  border-color: rgba(63, 185, 80, 0.32) !important;
+}
+
+/* Internal surfaces inside cards */
+.profile-section-content .bg-surface {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.profile-section-content .bg-surface2,
+.profile-section-content [class*="bg-surface2"] {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Dividing lines & tables */
+.profile-section-content .border-line,
+.profile-section-content [class*="border-line"] {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.profile-section-content table tr,
+.profile-section-content table th,
+.profile-section-content table td {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Filter controls */
+.profile-section-content .profile-filter-group {
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+.profile-section-content .profile-filter-option {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.profile-section-content .profile-filter-option:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.profile-section-content .profile-filter-option.is-active {
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.12) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14) !important;
+}
+
+.profile-section-content .profile-filter-option:focus-visible {
+  outline: 2px solid rgba(88, 166, 255, 0.75);
+  outline-offset: 1px;
+}
+
+/* Inputs & Forms */
 .profile-section-content .input {
-  background-color: rgb(var(--surface2) / 0.55);
-  border-color: rgb(255 255 255 / 0.14);
-  color: rgb(var(--ink));
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #ffffff !important;
 }
 
 .profile-section-content .input::placeholder {
-  color: rgb(var(--muted) / 0.7);
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Chip colors on dark glass */
+.profile-section-content [class~="bg-[#f6f8fa]"] {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
 }
 
 .profile-section-content [class~="bg-[#ddf4ff]"] {
-  background-color: rgb(88 166 255 / 0.14);
-  border-color: rgb(88 166 255 / 0.28);
-  color: #79c0ff;
+  background-color: rgba(88, 166, 255, 0.15) !important;
+  border-color: rgba(88, 166, 255, 0.3) !important;
+  color: #79c0ff !important;
 }
 
 .profile-section-content [class~="bg-[#dafbe1]"] {
-  background-color: rgb(46 160 67 / 0.14);
-  border-color: rgb(46 160 67 / 0.28);
-  color: #56d364;
+  background-color: rgba(46, 160, 67, 0.15) !important;
+  border-color: rgba(46, 160, 67, 0.3) !important;
+  color: #56d364 !important;
+}
+
+.profile-section-content [class~="bg-[#fff8c5]"] {
+  background-color: rgba(210, 153, 34, 0.15) !important;
+  border-color: rgba(210, 153, 34, 0.3) !important;
+  color: #e3b341 !important;
+}
+
+.profile-section-content [class~="bg-[#ffebe9]"] {
+  background-color: rgba(248, 81, 73, 0.15) !important;
+  border-color: rgba(248, 81, 73, 0.3) !important;
+  color: #f85149 !important;
+}
+
+/* Empty states */
+.profile-section-content .border-dashed {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.profile-section-content .border-dashed span {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Modals */
+.profile-section-content [role="dialog"] .bg-surface {
+  background-color: rgba(13, 17, 23, 0.94) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+}
+
+.profile-section-content [role="dialog"] .bg-surface2 {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Typography tokens */
+.profile-section-content .text-ink,
+.profile-section-content .h-section,
+.profile-section-content h1,
+.profile-section-content h2,
+.profile-section-content h3 {
+  color: #ffffff !important;
+}
+
+.profile-section-content .text-muted {
+  color: rgba(255, 255, 255, 0.48) !important;
+}
+
+.profile-section-content .text-accent {
+  color: #58a6ff !important;
+}
+
+button[class~="bg-[#1f883d]"],
+a[class~="bg-[#1f883d]"] {
+  background-color: rgb(var(--accent)) !important;
+  border-color: rgb(var(--accent) / 0.8);
+  color: rgb(var(--accent-ink)) !important;
+}
+
+button[class~="bg-[#1f883d]"]:hover,
+a[class~="bg-[#1f883d]"]:hover,
+button[class~="hover:bg-[#1a7f37]"]:hover,
+a[class~="hover:bg-[#1a7f37]"]:hover {
+  background-color: rgb(var(--accent) / 0.88) !important;
 }

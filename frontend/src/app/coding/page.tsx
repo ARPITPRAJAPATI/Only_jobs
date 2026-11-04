@@ -56,24 +56,24 @@ export default function CodingPage() {
             {gh.length ? (
               <>
                 <Heatmap days={gh} tone="github" unit="contributions" />
-                <p className="mt-3 rounded-xl border border-line bg-surface2/60 px-3.5 py-2.5 text-xs text-muted">
-                  <span className="font-semibold text-ink">Latest activity · </span>
+                <p className="mt-3 rounded-xl border border-white/[0.08] bg-white/[0.04] px-3.5 py-2.5 text-xs text-white/55">
+                  <span className="font-semibold text-white">Latest activity · </span>
                   {student.codingStats?.github?.latestActivity}
                 </p>
                 <div className="mt-5">
-                  <p className="mb-3 text-xs font-bold uppercase tracking-wider text-muted">Contributions per month</p>
+                  <p className="mb-3 text-xs font-bold uppercase tracking-wider text-white/45">Contributions per month</p>
                   <div className="flex h-28 items-end gap-2">
                     {bars.map((b, i) => (
                       <div key={i} className="flex flex-1 flex-col items-center justify-end gap-1.5" title={`${b.label}: ${b.value}`}>
-                        <div className={cn('w-full max-w-[28px] rounded-t-md transition-all', i === bars.length - 1 ? 'bg-[#1f883d]' : 'bg-[#1f883d]/35')} style={{ height: `${Math.max(8, (b.value / maxBar) * 84)}px` }} />
-                        <span className="text-[10px] font-bold text-muted">{b.label}</span>
+                        <div className={cn('w-full max-w-[28px] rounded-t-md transition-all', i === bars.length - 1 ? 'bg-[#3fb950]' : 'bg-[#3fb950]/35')} style={{ height: `${Math.max(8, (b.value / maxBar) * 84)}px` }} />
+                        <span className="text-[10px] font-bold text-white/50">{b.label}</span>
                       </div>
                     ))}
                   </div>
                 </div>
               </>
             ) : (
-              <EmptyState icon={<Activity className="h-5 w-5" />} title="No GitHub data" body="Add your handle in Settings. The first sync runs at the next midnight." action={<Link href="/settings" className="text-sm font-semibold text-accent">Open settings</Link>} />
+              <EmptyState icon={<Activity className="h-5 w-5" />} title="No GitHub data" body="Add your handle in Settings. The first sync runs at the next midnight." action={<Link href="/settings" className="text-sm font-semibold text-[#58a6ff] hover:underline">Open settings</Link>} />
             )}
           </Card>
 
@@ -82,13 +82,13 @@ export default function CodingPage() {
             {lc.length ? (
               <>
                 <Heatmap days={lc} tone="leetcode" unit="submissions" />
-                <p className="mt-3 rounded-xl border border-line bg-surface2/60 px-3.5 py-2.5 text-xs text-muted">
-                  <span className="font-semibold text-ink">Latest accepted · </span>
+                <p className="mt-3 rounded-xl border border-white/[0.08] bg-white/[0.04] px-3.5 py-2.5 text-xs text-white/55">
+                  <span className="font-semibold text-white">Latest accepted · </span>
                   {student.codingStats?.leetcode?.latestActivity}
                 </p>
               </>
             ) : (
-              <EmptyState icon={<Code2 className="h-5 w-5" />} title="No LeetCode data" body="Add your LeetCode handle in Settings." action={<Link href="/settings" className="text-sm font-semibold text-accent">Open settings</Link>} />
+              <EmptyState icon={<Code2 className="h-5 w-5" />} title="No LeetCode data" body="Add your LeetCode handle in Settings." action={<Link href="/settings" className="text-sm font-semibold text-[#58a6ff] hover:underline">Open settings</Link>} />
             )}
           </Card>
         </div>
@@ -98,14 +98,14 @@ export default function CodingPage() {
             <CardHeader title="Coding handles" subtitle="Edit in Settings" icon={<Trophy className="h-4 w-4" />} />
             <ul className="space-y-2">
               {handles.map((h) => (
-                <li key={h.name} className="flex items-center gap-3 rounded-xl border border-line/80 bg-surface2/40 p-2.5 transition-all hover:bg-surface2">
-                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-line bg-surface text-[#0969da]">{h.icon}</span>
+                <li key={h.name} className="flex items-center gap-3 rounded-xl border border-white/[0.08] bg-white/[0.04] p-2.5 transition-all hover:bg-white/[0.08] hover:border-white/[0.16]">
+                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg border border-white/[0.1] bg-white/[0.06] text-[#58a6ff]">{h.icon}</span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs font-bold text-ink">{h.name}</p>
-                    <p className="truncate text-[11px] font-mono text-muted">{h.handle ? `@${h.handle}` : 'Not linked'}</p>
+                    <p className="text-xs font-bold text-white">{h.name}</p>
+                    <p className="truncate text-[11px] font-mono text-white/45">{h.handle ? `@${h.handle}` : 'Not linked'}</p>
                   </div>
                   {h.handle ? (
-                    <a href={h.url(h.handle)} target="_blank" rel="noopener noreferrer" aria-label={`Open ${h.name} profile`} className="text-muted hover:text-[#0969da]">
+                    <a href={h.url(h.handle)} target="_blank" rel="noopener noreferrer" aria-label={`Open ${h.name} profile`} className="text-white/50 hover:text-[#58a6ff]">
                       <ExternalLink className="h-3.5 w-3.5" />
                     </a>
                   ) : null}
@@ -117,30 +117,30 @@ export default function CodingPage() {
 
           <Card>
             <CardHeader title="Campus sync architecture" icon={<Server className="h-4 w-4" />} />
-            <div className="mb-4 flex items-center gap-3 rounded-xl border border-[#54aeff]/40 bg-[#ddf4ff] p-3">
-              <CalendarClock className="h-4 w-4 text-[#0969da] shrink-0" />
+            <div className="mb-4 flex items-center gap-3 rounded-xl border border-[#58a6ff]/30 bg-[#58a6ff]/15 p-3">
+              <CalendarClock className="h-4 w-4 text-[#79c0ff] shrink-0" />
               <div className="text-xs">
-                <p className="font-bold text-[#0969da]">Last Synced</p>
-                <p className="text-muted font-medium">{formatDateTime(student.lastStatsSync)} · next at 12:00 AM</p>
+                <p className="font-bold text-[#79c0ff]">Last Synced</p>
+                <p className="text-white/60 font-medium">{formatDateTime(student.lastStatsSync)} · next at 12:00 AM</p>
               </div>
             </div>
-            <ul className="space-y-3 text-xs text-muted">
+            <ul className="space-y-3 text-xs text-white/60">
               <li className="flex gap-3">
-                <Database className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                <Database className="mt-0.5 h-4 w-4 shrink-0 text-[#58a6ff]" />
                 <span>
-                  <b className="text-ink">Zero live API hits.</b> This page reads cached stats from the database, so it loads in under 10 ms.
+                  <b className="text-white">Zero live API hits.</b> This page reads cached stats from the database, so it loads in under 10 ms.
                 </span>
               </li>
               <li className="flex gap-3">
-                <Server className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                <Server className="mt-0.5 h-4 w-4 shrink-0 text-[#58a6ff]" />
                 <span>
-                  <b className="text-ink">Nightly queue.</b> A background worker processes students at a controlled pace to avoid GitHub / LeetCode rate limits.
+                  <b className="text-white">Nightly queue.</b> A background worker processes students at a controlled pace to avoid GitHub / LeetCode rate limits.
                 </span>
               </li>
               <li className="flex gap-3">
-                <Activity className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                <Activity className="mt-0.5 h-4 w-4 shrink-0 text-[#58a6ff]" />
                 <span>
-                  <b className="text-ink">Codeforces, CodeChef & GFG</b> are shown as profile links for now.
+                  <b className="text-white">Codeforces, CodeChef & GFG</b> are shown as profile links for now.
                 </span>
               </li>
             </ul>
