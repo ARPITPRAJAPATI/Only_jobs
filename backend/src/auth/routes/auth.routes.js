@@ -6,8 +6,13 @@ import {
     getMe,
     getMyStaffProfile,
     saveMyStaffProfile,
+    updatePassword,
+    registerStudentAccount,
+
 } from "../controllers/auth.controller.js";
 import { authenticateUser } from "../middlewares/auth.middleware.js";
+import { authorizeRoles } from "../middlewares/role.middleware.js";
+
 const router = Router();
 // register
 router.post("/register", register);
@@ -22,6 +27,7 @@ router.get("/me", authenticateUser, getMe);
 router.get(
     "/staff/profile",
     authenticateUser,
+
     authorizeRoles("DEAN", "TEACHER", "TPO"),
     getMyStaffProfile
 );
@@ -29,7 +35,20 @@ router.get(
 router.put(
     "/staff/profile",
     authenticateUser,
+
     authorizeRoles("DEAN", "TEACHER", "TPO"),
     saveMyStaffProfile
+
+);
+router.patch(
+    "/change-password",
+    authenticateUser,
+    updatePassword
+);
+router.post(
+    "/students/register",
+    authenticateUser,
+    authorizeRoles("ADMIN"),
+    registerStudentAccount
 );
 export default router;

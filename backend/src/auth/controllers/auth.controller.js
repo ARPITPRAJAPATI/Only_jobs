@@ -3,7 +3,9 @@ import { registerStaff } from "../services/staff-registration.service.js";
 import {
     getStaffProfile,
     upsertStaffProfile,
+    changePassword,
 } from "../services/staff-profile.service.js";
+import { provisionStudentAccount } from "../services/student-provisioning.service.js";
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -282,6 +284,130 @@ export const saveMyStaffProfile = async (req, res) => {
 
     } catch (error) {
         console.error("Save staff profile error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+};
+
+export const updatePassword = async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+
+        if (
+            typeof currentPassword !== "string" ||
+            typeof newPassword !== "string" ||
+            !currentPassword ||
+            !newPassword
+        ) {
+            return res.status(400).json({
+                success: false,
+                message: "Current password and new password are required",
+            });
+        }
+
+        if (newPassword.length < 8) {
+            return res.status(400).json({
+                success: false,
+                message: "New password must be at least 8 characters",
+            });
+        }
+
+        const user = await changePassword({
+            userId: req.user.id,
+            currentPassword,
+            newPassword,
+        });
+        res.clearCookie("accessToken", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            path: "/",
+        });
+        return res.status(200).json({
+            success: true,
+            message: "Password changed successfully",
+            data: user,
+        });
+
+    } catch (error) {
+        if (error.message === "INVALID_CURRENT_PASSWORD") {
+            return res.status(400).json({
+                success: false,
+                message: "Current password is incorrect",
+            });
+        }
+
+        if (error.message === "USER_NOT_FOUND") {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            });
+        }
+
+        console.error("Update password error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
+};
+
+export const registerStudentAccount = async (req, res) => {
+    try {
+        const { studentId } = req.body;
+
+        if (typeof studentId !== "string" || !studentId.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: "Student ID is required",
+            });
+        }
+
+        const user = await provisionStudentAccount({
+            studentId: studentId.trim(),
+        });
+
+        return res.status(201).json({
+            success: true,
+            message: "Student account created successfully",
+            data: {
+                user
+            },
+        });
+
+    } catch (error) {
+        if (error.message === "EMAIL_ALREADY_REGISTERED") {
+            return res.status(409).json({
+                success: false,
+                message: "This email is already registered with another account",
+            });
+        }
+        if (error.message === "STUDENT_NOT_FOUND") {
+            return res.status(404).json({
+                success: false,
+                message: "Student record not found",
+            });
+        }
+
+        if (error.message === "ACCOUNT_ALREADY_EXISTS") {
+            return res.status(409).json({
+                success: false,
+                message: "Student account already exists",
+            });
+        }
+
+        if (error.message === "STUDENT_EMAIL_NOT_FOUND") {
+            return res.status(400).json({
+                success: false,
+                message: "Student email is missing",
+            });
+        }
+
+        console.error("Student registration error:", error);
 
         return res.status(500).json({
             success: false,

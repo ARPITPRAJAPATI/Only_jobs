@@ -22,11 +22,12 @@ enum StaffRole {
 }
 
 model User {
-    id           String   @id @default(uuid())
-    email        String   @unique
-    passwordHash String
-    role         UserRole
-    isActive     Boolean  @default(true)
+    id                 String   @id @default(uuid())
+    email              String   @unique
+    passwordHash       String
+    role               UserRole
+    isActive           Boolean  @default(true)
+    mustChangePassword Boolean  @default(false)
 
     student      Student?
     staff        StaffRegistry?

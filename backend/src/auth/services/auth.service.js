@@ -1,6 +1,7 @@
 import prisma from "../../config/prisma.js";
 import { comparePassword } from "../utils/password.util.js";
 import { generateToken } from "../utils/token.util.js";
+import { comparePassword, hashPassword } from "../utils/password.util.js";
 
 export const loginUser = async ({ email, password }) => {
 
@@ -41,6 +42,7 @@ export const loginUser = async ({ email, password }) => {
             id: user.id,
             email: user.email,
             role: user.role,
+            mustChangePassword: user.mustChangePassword,
         },
     };
 };
@@ -55,6 +57,7 @@ export const getCurrentUser = async (userId) => {
             email: true,
             role: true,
             isActive: true,
+            mustChangePassword: true,
         },
     });
 
@@ -66,5 +69,47 @@ export const getCurrentUser = async (userId) => {
         id: user.id,
         email: user.email,
         role: user.role,
+        mustChangePassword: user.mustChangePassword,
     };
+};
+
+export const changePassword = async ({
+    userId,
+    currentPassword,
+    newPassword,
+}) => {
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+    });
+
+    if (!user || !user.isActive) {
+        throw new Error("USER_NOT_FOUND");
+    }
+
+    const isPasswordValid = await comparePassword(
+        currentPassword,
+        user.passwordHash
+    );
+
+    if (!isPasswordValid) {
+        throw new Error("INVALID_CURRENT_PASSWORD");
+    }
+
+    const newPasswordHash = await hashPassword(newPassword);
+
+    const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: {
+            passwordHash: newPasswordHash,
+            mustChangePassword: false,
+        },
+        select: {
+            id: true,
+            email: true,
+            role: true,
+            mustChangePassword: true,
+        },
+    });
+
+    return updatedUser;
 };
