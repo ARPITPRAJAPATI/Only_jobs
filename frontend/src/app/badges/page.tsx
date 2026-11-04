@@ -43,12 +43,22 @@ export default function BadgesPage() {
       <Card>
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="h-section">Badge catalog</h2>
-            <p className="text-xs text-muted">Submit proof, an admin approves in one click — no spreadsheets.</p>
+            <h2 className="text-base font-bold tracking-tight text-white">Badge catalog</h2>
+            <p className="text-xs text-white/50 mt-0.5">Submit proof, an admin approves in one click — no spreadsheets.</p>
           </div>
-          <div className="flex flex-wrap gap-1.5 rounded-full bg-surface2 p-1">
+          <div className="profile-filter-group flex flex-wrap gap-1 rounded-xl border border-white/[0.1] bg-white/[0.04] p-1">
             {FILTERS.map((f) => (
-              <button key={f.id} onClick={() => setFilter(f.id)} className={cn('rounded-full px-3.5 py-1.5 text-xs font-semibold transition', filter === f.id ? 'bg-accent text-accentInk' : 'text-muted hover:text-ink')}>
+              <button
+                key={f.id}
+                aria-pressed={filter === f.id}
+                onClick={() => setFilter(f.id)}
+                className={cn(
+                  'profile-filter-option rounded-lg px-3 py-1.5 text-xs font-medium transition-colors',
+                  filter === f.id
+                    ? 'is-active text-white bg-white/[0.12] font-semibold'
+                    : 'text-white/55 hover:text-white hover:bg-white/[0.06]'
+                )}
+              >
                 {f.label}
               </button>
             ))}
@@ -63,20 +73,22 @@ export default function BadgesPage() {
               <div
                 key={badge.id}
                 className={cn(
-                  'flex flex-col rounded-2xl border p-5 transition-all shadow-2xs hover:border-black/20',
-                  approved ? 'border-emerald-200/80 bg-emerald-50/20' : 'border-line/80 bg-surface',
+                  'profile-glass-tile flex flex-col rounded-2xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-md p-5 transition-all shadow-lg hover:bg-white/[0.08] hover:border-white/[0.18]',
+                  approved && 'border-[#3fb950]/35 bg-[#3fb950]/10',
                 )}
               >
                 <div className="mb-4 flex items-start justify-between gap-3">
                   <BadgeIcon iconUrl={badge.iconUrl} muted={!approved} className={approved ? '' : 'opacity-80'} />
                   {mine ? <BadgeStatusChip status={mine.status} /> : <Chip>Not requested</Chip>}
                 </div>
-                <h3 className="font-bold tracking-tight">{badge.title}</h3>
-                <p className="mt-1 flex-1 text-sm text-muted">{badge.description}</p>
-                <p className="mt-3 text-[10px] font-semibold uppercase tracking-wider text-muted">{badge.category.replace('_', ' ')}</p>
+                <h3 className="font-bold tracking-tight text-white">{badge.title}</h3>
+                <p className="mt-1 flex-1 text-sm text-white/55">{badge.description}</p>
+                <p className="mt-3 text-[10px] font-semibold uppercase tracking-wider text-white/40">{badge.category.replace('_', ' ')}</p>
 
-                {mine?.status === 'REJECTED' && mine.rejectionReason && <p className="mt-3 rounded-xl bg-bad/10 p-3 text-xs text-bad">{mine.rejectionReason}</p>}
-                {approved && <p className="mt-3 text-xs text-good">Verified {formatDate(mine?.verifiedAt)}</p>}
+                {mine?.status === 'REJECTED' && mine.rejectionReason && (
+                  <p className="mt-3 rounded-xl border border-red-500/20 bg-red-500/10 p-3 text-xs text-red-400">{mine.rejectionReason}</p>
+                )}
+                {approved && <p className="mt-3 text-xs text-[#56d364]">Verified {formatDate(mine?.verifiedAt)}</p>}
 
                 <div className="mt-4 flex items-center gap-2">
                   {!mine && (
@@ -101,7 +113,7 @@ export default function BadgesPage() {
                     </Button>
                   )}
                   {mine && (
-                    <a href={mine.proofUrl} target="_blank" rel="noopener noreferrer" className="ml-auto inline-flex items-center gap-1 text-xs font-semibold text-accent hover:underline">
+                    <a href={mine.proofUrl} target="_blank" rel="noopener noreferrer" className="ml-auto inline-flex items-center gap-1 text-xs font-semibold text-[#58a6ff] hover:underline">
                       Proof <ArrowUpRight className="h-3.5 w-3.5" />
                     </a>
                   )}

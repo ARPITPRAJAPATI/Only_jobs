@@ -163,14 +163,14 @@ export default function OverviewPage() {
               <div className="flex flex-row sm:flex-col items-center gap-2 shrink-0 self-start sm:self-center">
                 <Link
                   href="/settings"
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.14] bg-white/[0.09] hover:bg-white/[0.16] px-3.5 py-1.5 text-xs font-semibold text-white transition-colors backdrop-blur-sm shadow-sm whitespace-nowrap"
+                  className="profile-hero-action inline-flex items-center gap-1.5 rounded-lg border border-white/[0.16] bg-white/[0.07] px-3.5 py-2 text-xs font-medium text-white transition-colors hover:bg-white/[0.13] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 whitespace-nowrap"
                 >
                   <Pencil className="h-3.5 w-3.5 text-white/55" />
                   Edit profile
                 </Link>
                 <button
                   onClick={handleCopyEmail}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-white/[0.14] bg-white/[0.09] hover:bg-white/[0.16] px-3.5 py-1.5 text-xs font-semibold text-white transition-colors backdrop-blur-sm shadow-sm whitespace-nowrap"
+                  className="profile-hero-action inline-flex items-center gap-1.5 rounded-lg border border-white/[0.16] bg-white/[0.07] px-3.5 py-2 text-xs font-medium text-white transition-colors hover:bg-white/[0.13] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 whitespace-nowrap"
                 >
                   <Copy className="h-3.5 w-3.5 text-white/55" />
                   {copied ? 'Copied!' : 'Copy email'}

@@ -1,14 +1,14 @@
 import type { Metadata, Viewport } from 'next';
-import { Nunito } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import { Providers } from '@/components/Providers';
 import { THEME_INIT_SCRIPT } from '@/components/theme';
 import './globals.css';
 
-const nunito = Nunito({
+const inter = Inter({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800', '900'],
+  weight: ['400', '500', '600', '700'],
   display: 'swap',
-  variable: '--font-nunito',
+  variable: '--font-inter',
 });
 
 export const metadata: Metadata = {
@@ -23,11 +23,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" data-theme="indigo" suppressHydrationWarning className={nunito.variable}>
+    <html lang="en" data-theme="indigo" suppressHydrationWarning className={inter.variable}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
-      <body className={nunito.className}>
+      <body className={inter.className}>
         <Providers>{children}</Providers>
       </body>
     </html>

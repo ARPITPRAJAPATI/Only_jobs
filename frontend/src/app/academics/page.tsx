@@ -60,9 +60,9 @@ export default function AcademicsPage() {
               <div className="-mx-2 overflow-x-auto">
                 <table className="w-full min-w-[640px] text-left text-sm">
                   <thead>
-                    <tr className="text-xs text-muted">
+                    <tr className="text-xs text-white/45">
                       {['Sem', 'SGPA', 'CGPA', 'Backlogs', 'Marksheet', 'Audit', ''].map((h) => (
-                        <th key={h} className="px-2 pb-3 font-medium">
+                        <th key={h} className="px-3 pb-3 font-medium">
                           {h}
                         </th>
                       ))}
@@ -73,31 +73,31 @@ export default function AcademicsPage() {
                       const locked = s.auditStatus !== 'SELF_DECLARED';
                       const local = s.resultPdfUrl.startsWith('local://');
                       return (
-                        <tr key={s.id} className="border-t border-line">
-                          <td className="px-2 py-3 font-semibold">Sem {s.semesterNumber}</td>
-                          <td className="px-2 py-3">{s.sgpa.toFixed(2)}</td>
-                          <td className="px-2 py-3">{s.cgpaCumulative.toFixed(2)}</td>
-                          <td className="px-2 py-3 text-muted">
+                        <tr key={s.id} className="border-t border-white/[0.08] text-white">
+                          <td className="px-3 py-3 font-semibold">Sem {s.semesterNumber}</td>
+                          <td className="px-3 py-3">{s.sgpa.toFixed(2)}</td>
+                          <td className="px-3 py-3">{s.cgpaCumulative.toFixed(2)}</td>
+                          <td className="px-3 py-3 text-white/50">
                             {s.activeBacklogs} active · {s.deadBacklogs} cleared
                           </td>
-                          <td className="px-2 py-3">
+                          <td className="px-3 py-3">
                             {local ? (
-                              <span className="inline-flex max-w-[140px] items-center gap-1.5 truncate text-xs text-muted" title={s.resultPdfUrl.slice(8)}>
+                              <span className="inline-flex max-w-[140px] items-center gap-1.5 truncate text-xs text-white/50" title={s.resultPdfUrl.slice(8)}>
                                 <FileText className="h-3.5 w-3.5 shrink-0" /> {s.resultPdfUrl.slice(8)}
                               </span>
                             ) : (
-                              <a href={s.resultPdfUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs font-semibold text-accent hover:underline">
+                              <a href={s.resultPdfUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#58a6ff] hover:underline">
                                 <FileText className="h-3.5 w-3.5" /> View PDF
                               </a>
                             )}
                           </td>
-                          <td className="px-2 py-3">
+                          <td className="px-3 py-3">
                             <AuditChip status={s.auditStatus} />
                           </td>
-                          <td className="px-2 py-3">
+                          <td className="px-3 py-3">
                             <div className="flex justify-end gap-0.5">
                               {locked ? (
-                                <span className="grid h-9 w-9 place-items-center text-muted" title="Locked after TPO audit">
+                                <span className="grid h-9 w-9 place-items-center text-white/40" title="Locked after TPO audit">
                                   <Lock className="h-4 w-4" />
                                 </span>
                               ) : (
@@ -138,19 +138,19 @@ export default function AcademicsPage() {
                 ['Spot audit', 'The TPO audits randomly and before sending names to recruiters.'],
               ].map(([t, d], i) => (
                 <li key={t} className="flex gap-3">
-                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-accentSoft text-xs font-bold text-accent">{i + 1}</span>
+                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white/[0.08] text-xs font-bold text-[#58a6ff] border border-white/[0.1]">{i + 1}</span>
                   <div>
-                    <p className="font-semibold">{t}</p>
-                    <p className="text-muted">{d}</p>
+                    <p className="font-semibold text-white">{t}</p>
+                    <p className="text-white/50 text-xs mt-0.5">{d}</p>
                   </div>
                 </li>
               ))}
             </ol>
-            <div className="mt-5 rounded-2xl bg-bad/10 p-4 text-sm">
-              <p className="flex items-center gap-2 font-semibold text-bad">
+            <div className="mt-5 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm">
+              <p className="flex items-center gap-2 font-semibold text-red-400">
                 <AlertTriangle className="h-4 w-4" /> If fraud is found
               </p>
-              <ul className="mt-2 list-disc space-y-1 pl-5 text-xs text-ink/80">
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-xs text-white/70">
                 <li>Account freezes instantly</li>
                 <li>₹500 fine is levied</li>
                 <li>Dean’s disciplinary notice is generated</li>
