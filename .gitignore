@@ -1,6 +1,7 @@
 # Dependencies
 node_modules/
 frontend/node_modules/
+backend/node_modules/
 
 # Next.js build output
 .next/
@@ -14,8 +15,12 @@ next-env.d.ts
 frontend/next-env.d.ts
 
 # Environment files
-.env*.local
-frontend/.env*.local
+.env
+.env.*
+*.env
+backend/.env
+frontend/.env
+*.env.local
 
 # Logs
 npm-debug.log*

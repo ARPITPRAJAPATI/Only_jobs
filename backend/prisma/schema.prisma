@@ -7,6 +7,54 @@ datasource db {
     provider = "postgresql"
 }
 
+enum UserRole {
+    DEAN
+    TEACHER
+    TPO
+    STUDENT
+    ADMIN
+}
+
+enum StaffRole {
+    DEAN
+    TEACHER
+    TPO
+}
+
+model User {
+    id           String   @id @default(uuid())
+    email        String   @unique
+    passwordHash String
+    role         UserRole
+    isActive     Boolean  @default(true)
+
+    student      Student?
+    staff        StaffRegistry?
+    staffProfile StaffProfile?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model StaffProfile {
+    id String @id @default(uuid())
+
+    userId String @unique
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    fullName     String
+    profileImage String?
+    designation  String
+    department   String
+    about        String
+
+    areasOfExpertise String[] @default([])
+    subjects         String[] @default([])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
 model Student {
     id          String  @id @default(uuid())
     name        String
@@ -18,13 +66,33 @@ model Student {
     branch      String
     batch       Int
 
+    // Authentication relation
+    userId String? @unique
+    user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
     createdAt       DateTime         @default(now())
     updatedAt       DateTime         @updatedAt
     studentProfile  StudentProfile?
     academicRecords AcademicRecord[]
     projects        Project[]
     certifications  Certification[]
-    studentBadges   StudentBadge[]
+    badges          StudentBadge[]
+}
+
+model StaffRegistry {
+    id      String    @id @default(uuid())
+    name    String?
+    staffId String?   @unique
+    email   String    @unique
+    role    StaffRole
+
+    userId String? @unique
+    user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+    isActive Boolean @default(true)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model StudentProfile {

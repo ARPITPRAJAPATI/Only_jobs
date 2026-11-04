@@ -51,7 +51,9 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  User: 'User',
   Student: 'Student',
+  StaffRegistry: 'StaffRegistry',
   StudentProfile: 'StudentProfile',
   AcademicRecord: 'AcademicRecord',
   Project: 'Project',
@@ -75,6 +77,19 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const UserScalarFieldEnum = {
+  id: 'id',
+  email: 'email',
+  passwordHash: 'passwordHash',
+  role: 'role',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
 export const StudentScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -85,11 +100,26 @@ export const StudentScalarFieldEnum = {
   course: 'course',
   branch: 'branch',
   batch: 'batch',
+  userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeof StudentScalarFieldEnum]
+
+
+export const StaffRegistryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  role: 'role',
+  userId: 'userId',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StaffRegistryScalarFieldEnum = (typeof StaffRegistryScalarFieldEnum)[keyof typeof StaffRegistryScalarFieldEnum]
 
 
 export const StudentProfileScalarFieldEnum = {

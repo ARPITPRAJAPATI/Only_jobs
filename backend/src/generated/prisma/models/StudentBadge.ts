@@ -272,7 +272,7 @@ export type StudentBadgeCreateInput = {
   awardedBy?: string | null
   awardedAt?: Date | string
   createdAt?: Date | string
-  student: Prisma.StudentCreateNestedOneWithoutStudentBadgesInput
+  student: Prisma.StudentCreateNestedOneWithoutBadgesInput
 }
 
 export type StudentBadgeUncheckedCreateInput = {
@@ -294,7 +294,7 @@ export type StudentBadgeUpdateInput = {
   awardedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   awardedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  student?: Prisma.StudentUpdateOneRequiredWithoutStudentBadgesNestedInput
+  student?: Prisma.StudentUpdateOneRequiredWithoutBadgesNestedInput
 }
 
 export type StudentBadgeUncheckedUpdateInput = {
