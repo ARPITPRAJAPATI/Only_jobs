@@ -14,15 +14,35 @@ export const createProfile = async (req, res) => {
             codechefUrl,
             xUrl,
         } = req.body;
-
-        // Basic validation
         if (!studentId || !username) {
             return res.status(400).json({
                 success: false,
                 message: "Student ID and username are required",
             });
         }
+        const student = await prisma.student.findUnique({
+            where: {
+                id: studentId,
+            },
+            select: {
+                id: true,
+                userId: true,
+            },
+        });
+        if (!student) {
+            return res.status(404).json({
+                success: false,
+                message: "Student not found",
+            });
+        }
+        // Basic validation
 
+        if (student.userId !== req.user.id) {
+            return res.status(403).json({
+                success: false,
+                message: "You can only create your own profile",
+            });
+        }
         // Create profile
         const profile = await prisma.studentProfile.create({
             data: {
@@ -120,7 +140,34 @@ export const updateProfile = async (req, res) => {
             codechefUrl,
             xUrl,
         } = req.body;
+        if (!studentId) {
+            return res.status(400).json({
+                success: false,
+                message: "You can only update your own profile",
+            });
+        }
+        const student = await prisma.student.findUnique({
+            where: {
+                id: studentId,
+            },
+            select: {
+                userId: true,
+            },
+        });
 
+        if (!student) {
+            return res.status(404).json({
+                success: false,
+                message: "Student not found",
+            });
+        }
+
+        if (student.userId !== req.user.id) {
+            return res.status(403).json({
+                success: false,
+                message: "You can only update your own profile",
+            });
+        }
         const profile = await prisma.studentProfile.update({
             where: {
                 studentId,
@@ -171,6 +218,34 @@ export const updateProfile = async (req, res) => {
 export const deleteProfile = async (req, res) => {
     try {
         const { studentId } = req.params;
+        if (!studentId) {
+            return res.status(400).json({
+                success: false,
+                message: "Student ID is required"
+            });
+        }
+        const student = await prisma.student.findUnique({
+            where: {
+                id: studentId,
+            },
+            select: {
+                userId: true,
+            },
+        });
+
+        if (!student) {
+            return res.status(404).json({
+                success: false,
+                message: "Student not found",
+            });
+        }
+
+        if (student.userId !== req.user.id) {
+            return res.status(403).json({
+                success: false,
+                message: "You can only delete your own profile",
+            });
+        }
 
         await prisma.studentProfile.delete({
             where: {

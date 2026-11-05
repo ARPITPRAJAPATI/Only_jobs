@@ -1,12 +1,29 @@
+
 import { Router } from "express";
-import { registerStudent, getFullStudentProfile } from "../controllers/student.controller.js";
+
+import {
+    registerStudent,
+    getFullStudentProfile,
+} from "../controllers/student.controller.js";
+
+import { authorizeRoles } from "../auth/middlewares/role.middleware.js";
 
 const router = Router();
 
-// Student registration route
-router.post("/register", registerStudent);
+// All routes require authentication
 
-// Get complete aggregated profile (by studentId OR rollNumber)
-router.get("/:identifier/full", getFullStudentProfile);
+
+// Only Admin can register student records
+router.post(
+    "/register",
+    authorizeRoles("ADMIN"),
+    registerStudent
+);
+
+// All authenticated users can view complete student profiles
+router.get(
+    "/:identifier/full",
+    getFullStudentProfile
+);
 
 export default router;
