@@ -2,10 +2,9 @@
 
 import { useState, useMemo } from 'react';
 import { CourseHeroBanner } from '@/components/courses/CourseHeroBanner';
-import { CourseFilterBar } from '@/components/courses/CourseFilterBar';
+import { CourseFilterBar, COURSE_CATEGORIES } from '@/components/courses/CourseFilterBar';
 import { CourseCard } from '@/components/courses/CourseCard';
 import { CourseGatekeeperModal } from '@/components/courses/CourseGatekeeperModal';
-import { CourseFooter } from '@/components/courses/CourseFooter';
 import { COURSES_DATA, CourseItem } from '@/components/courses/coursesData';
 import { ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -66,8 +65,10 @@ export default function CoursesPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-bg text-ink font-sans transition-colors selection:bg-[#0969da]/20 selection:text-[#0969da]">
-      {/* 1. Chalkboard Hero Banner */}
-      <CourseHeroBanner />
+      <CourseHeroBanner
+        courseCount={COURSES_DATA.length}
+        categoryCount={COURSE_CATEGORIES.length - 1}
+      />
 
       {/* 4. Main Course Catalog Section */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 pb-20">
@@ -172,9 +173,6 @@ export default function CoursesPage() {
         course={selectedCourse}
         onClose={() => setSelectedCourse(null)}
       />
-
-      {/* 7. Aduki 4-Column Footer */}
-      <CourseFooter />
     </div>
   );
 }

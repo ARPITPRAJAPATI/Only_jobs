@@ -133,13 +133,13 @@ export function FeedNavbar() {
       <div className="max-w-[1440px] mx-auto h-[56px] sm:h-[60px] px-3 sm:px-6 flex items-center justify-between gap-2 lg:gap-4">
         {/* Left: Brand Logo + GitHub-style Search Bar */}
         <div className="flex items-center gap-3 lg:gap-5 min-w-0 shrink-0">
-          {/* Brand Logo (GitHub style: clean dark typography + subtle badge) */}
-          <Link href="/feed" className="flex items-baseline gap-2 focus:outline-none group shrink-0">
-            <span className="text-[18px] sm:text-[20px] font-black tracking-tight text-ink group-hover:text-[#0969da] transition-colors">
-              Only Jobs
+          {/* Brand wordmark matches the landing page */}
+          <Link href="/" className="flex items-baseline gap-1.5 focus:outline-none group shrink-0">
+            <span className="text-[17px] sm:text-[18px] font-extrabold tracking-tight text-ink transition-colors group-hover:text-accent">
+              OnlyJobs
             </span>
-            <span className="text-[11px] font-bold text-ink bg-surface2 px-2 py-0.5 rounded-full border border-line">
-              KIET
+            <span className="text-[12px] font-bold text-accent transition-colors group-hover:text-ink">
+              × KIET
             </span>
           </Link>
 

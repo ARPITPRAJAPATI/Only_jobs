@@ -11,20 +11,17 @@ import {
   ArrowRight,
   Search,
   Building2,
-  Sparkles,
   Lock,
   Calendar,
   Video,
   FileText,
   AlertTriangle,
-  Award,
   ChevronRight,
   X,
   ExternalLink,
   ShieldCheck,
   Check,
   Globe,
-  Zap,
   Bookmark,
   Share2,
   Filter,
@@ -77,14 +74,13 @@ export interface OffCampusJob {
   isHot?: boolean;
 }
 
-export interface RecommendedJob {
+export interface SuggestedJob {
   id: string;
   company: string;
   logoLetter: string;
   role: string;
   type: 'TPO_DRIVE' | 'OFFCAMPUS';
   compensation: string;
-  matchScore: number; // e.g. 96%
   matchReasons: string[];
   skillsMatched: string[];
   originalDriveId?: string;
@@ -377,10 +373,10 @@ const OFFCAMPUS_POSTINGS: OffCampusJob[] = [
 ];
 
 // ============================================================================
-// DATA: RECOMMENDED FOR YOU (AI & SKILL MATCHING ENGINE)
+// DATA: SUGGESTED ROLES
 // ============================================================================
 
-const RECOMMENDED_JOBS_DATA: RecommendedJob[] = [
+const SUGGESTED_JOBS: SuggestedJob[] = [
   {
     id: 'rec-1',
     company: 'Razorpay',
@@ -388,11 +384,9 @@ const RECOMMENDED_JOBS_DATA: RecommendedJob[] = [
     role: 'Frontend Engineering Intern · Core Checkout Platform',
     type: 'OFFCAMPUS',
     compensation: '₹65,000 / mo',
-    matchScore: 98,
     matchReasons: [
-      'Matches your verified Next.js & React stack from your pinned KubePay project.',
-      'Your verified cumulative CGPA (8.42) exceeds the 7.0 minimum cutoff.',
-      'Full TypeScript proficiency demonstrated in repository inspections.',
+      'Frontend role focused on React and Next.js.',
+      'TypeScript and UI development experience are relevant.',
     ],
     skillsMatched: ['Next.js', 'React', 'TypeScript', 'TailwindCSS'],
     externalUrl: 'https://razorpay.com/jobs/frontend-intern',
@@ -404,11 +398,9 @@ const RECOMMENDED_JOBS_DATA: RecommendedJob[] = [
     role: 'Software Development Engineer Intern',
     type: 'TPO_DRIVE',
     compensation: '₹1.10 Lakh / mo',
-    matchScore: 94,
     matchReasons: [
-      'Official KIET on-campus recruitment drive with 1-click verified submission.',
-      'Matches your approved "200+ LeetCode Solved" badge and high consistency streak.',
-      'Zero backlogs audit verified by TPO administrator.',
+      'Available through the KIET on-campus placement drive.',
+      'Emphasizes data structures, algorithms, and problem solving.',
     ],
     skillsMatched: ['DSA in C++', 'Trees & Graphs', 'Algorithms', 'System Fundamentals'],
     originalDriveId: 'tpo-2',
@@ -420,11 +412,9 @@ const RECOMMENDED_JOBS_DATA: RecommendedJob[] = [
     role: 'Software Development Engineer (SDE 1)',
     type: 'TPO_DRIVE',
     compensation: '₹44.5 LPA',
-    matchScore: 91,
     matchReasons: [
-      'KIET Dream Company category with high CTC multiplier.',
-      'Matches your full-stack architecture work and multi-module microservices repository.',
-      'Branch CSE and 2026 Batch qualify for direct OA shortlisting slot.',
+      'Software engineering role with a systems and backend focus.',
+      'Open to eligible CSE students in the 2026 batch.',
     ],
     skillsMatched: ['Distributed Systems', 'Next.js', 'PostgreSQL', 'Docker'],
     originalDriveId: 'tpo-1',
@@ -436,10 +426,9 @@ const RECOMMENDED_JOBS_DATA: RecommendedJob[] = [
     role: 'Software Engineer · HackTag Global Challenge 2026',
     type: 'OFFCAMPUS',
     compensation: '₹38.5 LPA',
-    matchScore: 89,
     matchReasons: [
-      'High-impact off-campus competitive track with verified alumni referrals available.',
-      'Matches your Go backend services and Redis concurrency work.',
+      'Backend engineering role involving Go and distributed systems.',
+      'External application; review the role requirements before applying.',
     ],
     skillsMatched: ['Go', 'PostgreSQL', 'Kafka', 'System Design'],
     externalUrl: 'https://uber.com/careers/engineering-campus',
@@ -519,6 +508,10 @@ export default function JobsPage() {
   // Single Offer Policy tracking
   const acceptedOffer = collegeApplications.find((a) => a.isOfferAccepted);
   const currentOfferCtc = acceptedOffer ? (acceptedOffer.company === 'TCS Digital' ? 7.5 : 12.0) : null;
+  const highestCampusDrive = TPO_DRIVES_DATA.reduce(
+    (highest, drive) => drive.ctcLpa > highest.ctcLpa ? drive : highest,
+    TPO_DRIVES_DATA[0],
+  );
 
   // Superset Strict Eligibility Engine
   function evaluateEligibility(drive: JobDrive) {
@@ -621,77 +614,64 @@ export default function JobsPage() {
 
   return (
     <div className="min-h-screen bg-bg text-ink pb-20 transition-colors animate-fade-in">
-      {/* Clean, Airy Theme-Aware Header (Free Breathing) */}
-      <div className="border-b border-line bg-surface/50 py-8 sm:py-10">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-surface2 px-2.5 py-0.5 text-[11px] font-semibold text-muted border border-line">
-                Official KIET Career Gateway
-              </span>
-              <span className="inline-flex items-center gap-1 rounded-full bg-[#dafbe1] px-2.5 py-0.5 text-[11px] font-semibold text-[#1a7f37] border border-[#4ac26b]/40">
-                <CheckCircle2 className="h-3 w-3" />
-                <span>Superset Placement Engine & Off-Campus Radar</span>
-              </span>
+      <header className="border-b border-line bg-surface/40">
+        <div className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div className="max-w-3xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">Career center</p>
+              <h1 className="mt-2 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+                Jobs &amp; placements
+              </h1>
+              <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">
+                Browse campus drives and off-campus roles, then track your applications in one place.
+              </p>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted">
+              <span className="font-medium text-ink">{student.branch}</span>
+              <span aria-hidden="true">·</span>
+              <span>{studentCgpa.toFixed(2)} CGPA</span>
               {currentOfferCtc && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 px-2.5 py-0.5 text-[11px] font-bold border border-blue-500/20">
-                  <Award className="h-3 w-3" />
-                  <span>Placed at ₹{currentOfferCtc} LPA (Dream Upgrades Active)</span>
+                <span className="ml-2 rounded-md border border-line bg-surface px-2.5 py-1 text-xs font-medium text-ink">
+                  Current offer: ₹{currentOfferCtc} LPA
                 </span>
               )}
             </div>
-
-            {/* Live Student Identity Tag */}
-            <div className="text-xs font-mono text-muted flex items-center gap-2">
-              <span>{student.rollNumber}</span>
-              <span>·</span>
-              <span className="font-bold text-ink">{student.branch}</span>
-              <span>·</span>
-              <span className="text-[#1a7f37] font-bold">{studentCgpa.toFixed(2)} CGPA</span>
-            </div>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-ink font-sans">
-            Career & Placement Opportunities
-          </h1>
-          <p className="mt-2 text-xs sm:text-sm text-muted max-w-3xl font-normal leading-relaxed">
-            The comprehensive hub for official campus recruitment drives, verified off-campus opportunities, AI-tailored recommendations, and live multi-round selection tracking.
-          </p>
+          <dl className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div className="rounded-lg border border-line bg-surface px-4 py-3">
+              <dt className="text-xs text-muted">Highest listed campus package</dt>
+              <dd className="mt-1 text-xl font-semibold tracking-tight text-ink">₹{highestCampusDrive.ctcLpa.toFixed(1)} LPA</dd>
+              <dd className="mt-0.5 truncate text-xs text-muted">{highestCampusDrive.company}</dd>
+            </div>
+            <div className="rounded-lg border border-line bg-surface px-4 py-3">
+              <dt className="text-xs text-muted">Campus drives</dt>
+              <dd className="mt-1 text-xl font-semibold tracking-tight text-ink">{TPO_DRIVES_DATA.length}</dd>
+              <dd className="mt-0.5 text-xs text-muted">On-campus opportunities</dd>
+            </div>
+            <div className="rounded-lg border border-line bg-surface px-4 py-3">
+              <dt className="text-xs text-muted">Off-campus roles</dt>
+              <dd className="mt-1 text-xl font-semibold tracking-tight text-ink">{OFFCAMPUS_POSTINGS.length}</dd>
+              <dd className="mt-0.5 text-xs text-muted">Jobs and internships</dd>
+            </div>
+            <div className="rounded-lg border border-line bg-surface px-4 py-3">
+              <dt className="text-xs text-muted">Your applications</dt>
+              <dd className="mt-1 text-xl font-semibold tracking-tight text-ink">{collegeApplications.length}</dd>
+              <dd className="mt-0.5 text-xs text-muted">Campus drives</dd>
+            </div>
+          </dl>
 
-          {/* 4 Minimalist Metric Tiles (Airy, Border-Line, Generous Padding) */}
-          <div className="mt-6 sm:mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-            <div className="rounded-xl border border-line bg-surface p-4 shadow-2xs hover:border-[#0969da]/30 transition-all">
-              <span className="text-[11px] font-medium text-muted uppercase tracking-wider block">Highest Campus CTC</span>
-              <div className="text-xl sm:text-2xl font-extrabold text-ink font-mono mt-1">₹52.0 LPA</div>
-              <span className="text-[10.5px] text-[#1a7f37] font-medium mt-0.5 block">Atlassian (Remote)</span>
-            </div>
-            <div className="rounded-xl border border-line bg-surface p-4 shadow-2xs hover:border-[#0969da]/30 transition-all">
-              <span className="text-[11px] font-medium text-muted uppercase tracking-wider block">Jobs by TPO</span>
-              <div className="text-xl sm:text-2xl font-extrabold text-[#0969da] font-mono mt-1">{TPO_DRIVES_DATA.length} Drives</div>
-              <span className="text-[10.5px] text-muted font-medium mt-0.5 block">On-Campus Recruitment</span>
-            </div>
-            <div className="rounded-xl border border-line bg-surface p-4 shadow-2xs hover:border-[#0969da]/30 transition-all">
-              <span className="text-[11px] font-medium text-muted uppercase tracking-wider block">Off-Campus & Interns</span>
-              <div className="text-xl sm:text-2xl font-extrabold text-[#8250df] font-mono mt-1">{OFFCAMPUS_POSTINGS.length} Postings</div>
-              <span className="text-[10.5px] text-muted font-medium mt-0.5 block">External Portals</span>
-            </div>
-            <div className="rounded-xl border border-line bg-surface p-4 shadow-2xs hover:border-[#0969da]/30 transition-all">
-              <span className="text-[11px] font-medium text-muted uppercase tracking-wider block">My Applications</span>
-              <div className="text-xl sm:text-2xl font-extrabold text-[#1a7f37] font-mono mt-1">{collegeApplications.length} Drives</div>
-              <span className="text-[10.5px] text-muted font-medium mt-0.5 block">College Placement Only</span>
-            </div>
-          </div>
-
-          {/* EXACT 4 JOB SUB-SECTIONS REQUESTED BY USER (GitHub Primer Tabs) */}
-          <div className="mt-8 flex items-center gap-1 sm:gap-2 border-b border-line pb-px overflow-x-auto scrollbar-none">
+          <nav aria-label="Job sections" className="mt-7 flex items-center gap-1 overflow-x-auto border-b border-line scrollbar-none">
             {/* 1. Jobs by TPO */}
             <button
+              type="button"
+              aria-current={activeTab === 'TPO_DRIVES' ? 'page' : undefined}
               onClick={() => setActiveTab('TPO_DRIVES')}
               className={cn(
-                'flex items-center gap-2 px-3.5 sm:px-4 py-2.5 text-xs font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap',
+                'flex items-center gap-2 whitespace-nowrap border-b-2 px-3.5 py-3 text-xs font-semibold transition-colors sm:px-4',
                 activeTab === 'TPO_DRIVES'
                   ? 'border-[#0969da] text-[#0969da]'
-                  : 'border-transparent text-muted hover:text-ink hover:border-line'
+                  : 'border-transparent text-muted hover:text-ink'
               )}
             >
               <Briefcase className="h-4 w-4" />
@@ -703,12 +683,14 @@ export default function JobsPage() {
 
             {/* 2. Off-Campus Jobs & Internship Posting */}
             <button
+              type="button"
+              aria-current={activeTab === 'OFFCAMPUS' ? 'page' : undefined}
               onClick={() => setActiveTab('OFFCAMPUS')}
               className={cn(
-                'flex items-center gap-2 px-3.5 sm:px-4 py-2.5 text-xs font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap',
+                'flex items-center gap-2 whitespace-nowrap border-b-2 px-3.5 py-3 text-xs font-semibold transition-colors sm:px-4',
                 activeTab === 'OFFCAMPUS'
                   ? 'border-[#0969da] text-[#0969da]'
-                  : 'border-transparent text-muted hover:text-ink hover:border-line'
+                  : 'border-transparent text-muted hover:text-ink'
               )}
             >
               <Globe className="h-4 w-4" />
@@ -718,31 +700,35 @@ export default function JobsPage() {
               </span>
             </button>
 
-            {/* 3. Recommended For You */}
+            {/* 3. Suggested roles */}
             <button
+              type="button"
+              aria-current={activeTab === 'RECOMMENDED' ? 'page' : undefined}
               onClick={() => setActiveTab('RECOMMENDED')}
               className={cn(
-                'flex items-center gap-2 px-3.5 sm:px-4 py-2.5 text-xs font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap',
+                'flex items-center gap-2 whitespace-nowrap border-b-2 px-3.5 py-3 text-xs font-semibold transition-colors sm:px-4',
                 activeTab === 'RECOMMENDED'
                   ? 'border-[#0969da] text-[#0969da]'
-                  : 'border-transparent text-muted hover:text-ink hover:border-line'
+                  : 'border-transparent text-muted hover:text-ink'
               )}
             >
-              <Zap className="h-4 w-4 text-amber-500" />
-              <span>Recommended For You</span>
-              <span className="rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 px-2 py-0.5 text-[10px] font-bold border border-amber-500/20 font-mono">
-                {RECOMMENDED_JOBS_DATA.length} Matches
+              <Briefcase className="h-4 w-4" />
+              <span>Suggested roles</span>
+              <span className="rounded-full bg-surface2 px-2 py-0.5 text-[10px] text-ink border border-line font-mono">
+                {SUGGESTED_JOBS.length}
               </span>
             </button>
 
             {/* 4. My Job Application (Only for college placement drive) */}
             <button
+              type="button"
+              aria-current={activeTab === 'APPLICATIONS' ? 'page' : undefined}
               onClick={() => setActiveTab('APPLICATIONS')}
               className={cn(
-                'flex items-center gap-2 px-3.5 sm:px-4 py-2.5 text-xs font-bold border-b-2 transition-all cursor-pointer whitespace-nowrap',
+                'flex items-center gap-2 whitespace-nowrap border-b-2 px-3.5 py-3 text-xs font-semibold transition-colors sm:px-4',
                 activeTab === 'APPLICATIONS'
                   ? 'border-[#0969da] text-[#0969da]'
-                  : 'border-transparent text-muted hover:text-ink hover:border-line'
+                  : 'border-transparent text-muted hover:text-ink'
               )}
             >
               <Building2 className="h-4 w-4" />
@@ -751,9 +737,9 @@ export default function JobsPage() {
                 {collegeApplications.length}
               </span>
             </button>
-          </div>
+          </nav>
         </div>
-      </div>
+      </header>
 
       {/* Main Content Area */}
       <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 pt-8">
@@ -810,17 +796,17 @@ export default function JobsPage() {
                 return (
                   <div
                     key={job.id}
-                    className="rounded-xl border border-line bg-surface p-5 shadow-2xs hover:border-[#0969da]/50 hover:shadow-xs transition-all flex flex-col justify-between group"
+                    className="group flex h-full flex-col rounded-xl border border-line bg-surface p-4 transition-colors hover:border-accent/40 sm:p-5"
                   >
-                    <div>
+                    <div className="flex-1">
                       {/* Top Company Row */}
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex items-center gap-3 min-w-0">
-                          <div className="h-10 w-10 rounded-lg bg-surface2 border border-line text-ink font-bold flex items-center justify-center text-xs shadow-2xs shrink-0">
+                          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-line bg-surface2 text-xs font-semibold text-ink">
                             {job.logoLetter}
                           </div>
                           <div className="min-w-0">
-                            <h3 className="font-bold text-[15px] text-ink group-hover:text-[#0969da] transition-colors truncate">
+                            <h3 className="truncate text-sm font-semibold text-ink transition-colors group-hover:text-accent">
                               {job.company}
                             </h3>
                             <div className="flex items-center gap-1.5 text-xs text-muted mt-0.5">
@@ -830,78 +816,65 @@ export default function JobsPage() {
                           </div>
                         </div>
 
-                        <div className="flex flex-col items-end shrink-0">
-                          <span className="rounded-full bg-[#dafbe1] text-[#1a7f37] border border-[#4ac26b]/40 font-mono font-bold text-xs px-2.5 py-0.5">
+                        <div className="flex shrink-0 flex-col items-end">
+                          <span className="text-sm font-semibold tabular-nums text-ink">
                             {job.ctc}
                           </span>
-                          {job.isDreamCompany && (
-                            <span className="text-[10px] font-bold text-[#8250df] mt-1 flex items-center gap-1">
-                              <Sparkles className="h-2.5 w-2.5" />
-                              <span>Dream Drive</span>
-                            </span>
-                          )}
                         </div>
                       </div>
 
                       {/* Role Title & Type */}
-                      <div className="mt-4">
-                        <h4 className="font-bold text-sm text-ink leading-snug">
+                      <div className="mt-3 min-h-[3.5rem]">
+                        <h4 className="text-sm font-semibold leading-snug text-ink">
                           {job.role}
                         </h4>
-                        <span className="inline-block mt-1.5 text-[11px] font-medium text-muted bg-surface2 border border-line px-2.5 py-0.5 rounded-full">
+                        <span className="mt-1.5 inline-block text-xs text-muted">
                           {job.type} · On-Campus Drive
                         </span>
                       </div>
 
-                      {/* Criteria Box */}
-                      <div className="mt-4 p-3 rounded-lg bg-surface2/60 border border-line/70 space-y-1.5 text-xs text-muted">
-                        <div className="flex items-center justify-between">
-                          <span>Cutoff / Eligibility:</span>
-                          <strong className="text-ink font-mono">{job.cgpaCutoff} CGPA</strong>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span>Eligible Branches:</span>
-                          <strong className="text-ink truncate ml-2">{job.allowedBranches.join(', ')}</strong>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span>Max Backlogs:</span>
-                          <strong className="text-ink">{job.maxBacklogs === 0 ? '0 (Zero Tolerance)' : `Max ${job.maxBacklogs}`}</strong>
-                        </div>
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="shrink-0">Required Track:</span>
-                          <strong className="text-ink truncate text-right font-medium" title={job.requiredTrack}>
-                            {job.requiredTrack}
-                          </strong>
-                        </div>
-                      </div>
+                      <dl className="mt-3 grid grid-cols-[minmax(5.5rem,0.8fr)_minmax(0,1.2fr)] gap-x-3 gap-y-2 border-y border-line py-3 text-xs">
+                        <dt className="text-muted">Cutoff</dt>
+                        <dd className="text-right font-medium text-ink">{job.cgpaCutoff} CGPA</dd>
+                        <dt className="text-muted">Eligible branches</dt>
+                        <dd className="break-words text-right font-medium text-ink" title={job.allowedBranches.join(', ')}>
+                          {job.allowedBranches.join(', ')}
+                        </dd>
+                        <dt className="text-muted">Max backlogs</dt>
+                        <dd className="break-words text-right font-medium text-ink">{job.maxBacklogs === 0 ? '0 (Zero Tolerance)' : `Max ${job.maxBacklogs}`}</dd>
+                        <dt className="text-muted">Required track</dt>
+                        <dd className="line-clamp-2 break-words text-right font-medium text-ink" title={job.requiredTrack}>
+                          {job.requiredTrack}
+                        </dd>
+                      </dl>
 
                       {/* Eligibility Transparency Layer Banner */}
                       <div className="mt-3">
                         {evalResult.eligible ? (
-                          <div className="flex items-center gap-1.5 text-[11.5px] text-[#1a7f37] font-semibold bg-[#dafbe1]/40 border border-[#4ac26b]/30 p-2 rounded-md">
-                            <Check className="h-3.5 w-3.5 shrink-0" />
-                            <span>You meet all academic & badge criteria</span>
+                          <div className="flex min-h-10 min-w-0 items-start gap-2 rounded-lg border border-good/25 bg-good/5 px-3 py-2.5 text-sm font-medium leading-snug text-good">
+                            <Check className="mt-0.5 h-4 w-4 shrink-0" />
+                            <span className="min-w-0">Meets academic and badge criteria</span>
                           </div>
                         ) : (
-                          <div className="flex items-start gap-1.5 text-[11px] text-amber-700 dark:text-amber-400 bg-amber-500/10 border border-amber-500/20 p-2 rounded-md leading-tight">
-                            <AlertTriangle className="h-3.5 w-3.5 shrink-0 mt-0.5" />
-                            <span>Ineligible: {evalResult.reason}</span>
+                          <div className="flex min-h-10 min-w-0 items-start gap-2 rounded-lg border border-warn/25 bg-warn/5 px-3 py-2.5 text-sm leading-snug text-warn">
+                            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+                            <span className="min-w-0 break-words">Ineligible: {evalResult.reason}</span>
                           </div>
                         )}
                       </div>
                     </div>
 
                     {/* Footer Apply CTA */}
-                    <div className="mt-5 pt-3.5 border-t border-line/70 flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-1.5 text-[11px] text-muted">
+                    <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-line pt-3">
+                      <div className="flex min-w-0 items-center gap-1.5 text-xs text-muted">
                         <Clock className="h-3.5 w-3.5 text-muted shrink-0" />
-                        <span>Deadline: {job.deadline}</span>
+                        <span className="truncate">Deadline: {job.deadline}</span>
                       </div>
 
                       {isApplied ? (
                         <button
                           onClick={() => setActiveTab('APPLICATIONS')}
-                          className="rounded-md px-3 py-1.5 text-xs font-semibold bg-surface2 text-muted border border-line flex items-center gap-1.5 hover:text-ink cursor-pointer transition-colors"
+                          className="inline-flex items-center gap-1.5 rounded-md border border-line bg-surface2 px-3 py-2 text-xs font-medium text-muted transition-colors hover:text-ink"
                         >
                           <CheckCircle2 className="h-3.5 w-3.5 text-[#1a7f37]" />
                           <span>Track in Pipeline</span>
@@ -909,7 +882,7 @@ export default function JobsPage() {
                       ) : evalResult.eligible ? (
                         <button
                           onClick={() => setSelectedDriveForModal(job)}
-                          className="rounded-md px-3.5 py-1.5 text-xs font-semibold bg-[#1f883d] hover:bg-[#1a7f37] text-white flex items-center gap-1.5 shadow-2xs active:scale-95 transition-all cursor-pointer"
+                          className="inline-flex items-center gap-1.5 rounded-md bg-accent px-3 py-2 text-xs font-semibold text-accentInk transition-colors hover:opacity-90"
                         >
                           <span>1-Click Apply</span>
                           <ArrowRight className="h-3.5 w-3.5" />
@@ -918,7 +891,7 @@ export default function JobsPage() {
                         <button
                           disabled
                           title={evalResult.reason}
-                          className="rounded-md px-3 py-1.5 text-xs font-semibold bg-surface2 text-muted/60 border border-line cursor-not-allowed flex items-center gap-1.5"
+                          className="inline-flex items-center gap-1.5 rounded-md border border-line bg-surface2 px-3 py-2 text-xs font-medium text-muted/60"
                         >
                           <Lock className="h-3 w-3" />
                           <span>Locked</span>
@@ -1060,102 +1033,87 @@ export default function JobsPage() {
         )}
 
         {/* ========================================================================= */}
-        {/* SECTION 3: RECOMMENDED FOR YOU (AI & SKILL MATCHING ENGINE) */}
+        {/* SECTION 3: SUGGESTED ROLES */}
         {/* ========================================================================= */}
         {activeTab === 'RECOMMENDED' && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between pb-3 border-b border-line">
+            <div className="flex flex-wrap items-end justify-between gap-3 border-b border-line pb-4">
               <div>
-                <h2 className="text-lg font-bold text-ink flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-amber-500" />
-                  <span>Personalized Skill-Matched Job Recommendations</span>
+                <h2 className="text-lg font-semibold text-ink">
+                  Suggested roles
                 </h2>
-                <p className="text-xs text-muted mt-0.5">
-                  AI matchmaking engine compares your audited CGPA, verified GitHub repositories, and LeetCode activity against active hiring criteria.
+                <p className="mt-1 text-sm text-muted">
+                  A shortlist of roles to explore based on your current skills and eligibility.
                 </p>
               </div>
-
-              <span className="text-xs font-bold text-[#1a7f37] bg-[#dafbe1] px-3 py-1 rounded-md border border-[#4ac26b]/40">
-                Top 4 Matches Found
+              <span className="text-xs text-muted">
+                {SUGGESTED_JOBS.length} roles
               </span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {RECOMMENDED_JOBS_DATA.map((job) => (
+              {SUGGESTED_JOBS.map((job) => (
                 <div
                   key={job.id}
-                  className="rounded-xl border border-line bg-surface p-5 sm:p-6 shadow-2xs hover:border-amber-500/40 transition-all space-y-4"
+                  className="space-y-4 rounded-xl border border-line bg-surface p-5 transition-colors hover:border-accent/40 sm:p-6"
                 >
-                  {/* Top Row: Company, Compensation, Match Pill */}
                   <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <div className="h-11 w-11 rounded-lg bg-surface2 border border-line text-ink font-bold flex items-center justify-center text-xs shadow-2xs">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-line bg-surface2 text-xs font-semibold text-ink">
                         {job.logoLetter}
                       </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-bold text-base text-ink">{job.company}</h3>
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-surface2 border border-line text-muted">
-                            {job.type === 'TPO_DRIVE' ? 'On-Campus TPO' : 'Off-Campus'}
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h3 className="truncate text-sm font-semibold text-ink">{job.company}</h3>
+                          <span className="rounded-md border border-line bg-surface2 px-2 py-0.5 text-[10px] font-medium text-muted">
+                            {job.type === 'TPO_DRIVE' ? 'Campus' : 'Off-campus'}
                           </span>
                         </div>
-                        <p className="text-xs text-muted mt-0.5">{job.role}</p>
+                        <p className="mt-1 text-xs text-muted">{job.role}</p>
                       </div>
                     </div>
 
-                    <div className="flex flex-col items-end">
-                      <span className="rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30 font-mono font-extrabold text-xs px-2.5 py-0.5 flex items-center gap-1">
-                        <Zap className="h-3 w-3 fill-current" />
-                        <span>{job.matchScore}% Match</span>
-                      </span>
-                      <span className="text-[11px] font-mono font-bold text-ink mt-1">
-                        {job.compensation}
-                      </span>
+                    <div className="shrink-0 text-right">
+                      <span className="text-sm font-semibold text-ink">{job.compensation}</span>
                     </div>
                   </div>
 
-                  {/* Why this matches you */}
-                  <div className="rounded-lg bg-surface2/60 border border-line/70 p-3.5 space-y-2">
-                    <span className="text-[10.5px] font-bold uppercase tracking-wider text-muted block">
-                      Why Recommended For Your Profile:
-                    </span>
-                    <ul className="space-y-1.5 text-xs text-ink/90">
+                  <div className="space-y-2">
+                    <h4 className="text-xs font-semibold text-ink">
+                      Role highlights
+                    </h4>
+                    <ul className="space-y-1.5 text-sm text-muted">
                       {job.matchReasons.map((reason, idx) => (
                         <li key={idx} className="flex items-start gap-2">
-                          <Check className="h-3.5 w-3.5 text-[#1a7f37] shrink-0 mt-0.5" />
-                          <span className="leading-snug">{reason}</span>
+                          <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-good" />
+                          <span className="leading-relaxed">{reason}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
 
-                  {/* Matched Skill Badges */}
                   <div className="flex flex-wrap items-center gap-1.5">
                     {job.skillsMatched.map((skill) => (
                       <span
                         key={skill}
-                        className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-[#dafbe1] text-[#1a7f37] border border-[#4ac26b]/30"
+                        className="rounded-md border border-line bg-surface2 px-2 py-1 text-[11px] font-medium text-muted"
                       >
-                        ✓ {skill}
+                        {skill}
                       </span>
                     ))}
                   </div>
 
-                  {/* Actions */}
-                  <div className="pt-2 flex items-center justify-between border-t border-line/70">
-                    <span className="text-[11px] text-muted font-medium">
-                      Automated Profile Match
-                    </span>
-
+                  <div className="flex justify-end border-t border-line pt-3">
                     {job.type === 'TPO_DRIVE' ? (
                       <button
+                        type="button"
                         onClick={() => {
                           const original = TPO_DRIVES_DATA.find((d) => d.id === job.originalDriveId);
                           if (original) setSelectedDriveForModal(original);
                         }}
-                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-[#1f883d] hover:bg-[#1a7f37] text-white text-xs font-semibold shadow-2xs transition-all active:scale-95 cursor-pointer"
+                        className="inline-flex items-center gap-1.5 rounded-md bg-[#0969da] px-3.5 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#0860ca]"
                       >
-                        <span>1-Click Apply (TPO)</span>
+                        <span>View campus drive</span>
                         <ArrowRight className="h-3 w-3" />
                       </button>
                     ) : (
@@ -1163,7 +1121,7 @@ export default function JobsPage() {
                         href={job.externalUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-[#0969da] hover:bg-[#0860ca] text-white text-xs font-semibold shadow-2xs transition-all active:scale-95 cursor-pointer"
+                        className="inline-flex items-center gap-1.5 rounded-md bg-[#0969da] px-3.5 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#0860ca]"
                       >
                         <span>Apply on Portal</span>
                         <ExternalLink className="h-3 w-3" />

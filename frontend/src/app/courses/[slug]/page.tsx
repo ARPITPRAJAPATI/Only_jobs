@@ -48,7 +48,6 @@ import {
   getCourseReviews,
 } from '@/components/courses/coursesData';
 import { ExamPlayerModal } from '@/components/courses/ExamPlayerModal';
-import { CourseFooter } from '@/components/courses/CourseFooter';
 import { useStudent } from '@/components/store';
 import { useToast } from '@/components/toast';
 import { cn } from '@/lib/utils';
@@ -158,7 +157,6 @@ export default function CourseWorkspacePage() {
             <span>Back to All Courses</span>
           </Link>
         </div>
-        <CourseFooter />
       </div>
     );
   }
@@ -324,10 +322,6 @@ export default function CourseWorkspacePage() {
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-[#0969da]/10 text-[#0969da] border border-[#0969da]/30">
                   <Sparkles className="h-3 w-3" />
                   <span>{course.categoryLabel} Track</span>
-                </span>
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-[#dafbe1] text-[#1a7f37] border border-[#4ac26b]/40">
-                  <CheckCircle2 className="h-3 w-3" />
-                  <span>{course.priceTag}</span>
                 </span>
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-surface2 text-muted border border-line">
                   <Clock className="h-3 w-3" />
@@ -1110,10 +1104,6 @@ export default function CourseWorkspacePage() {
           </div>
         </section>
       </main>
-
-      {/* 3. Global Footer */}
-      <CourseFooter />
-
       {/* ========================================================================= */}
       {/* MODALS: EXAM PLAYER, NOTE VIEWER, WRITE REVIEW                            */}
       {/* ========================================================================= */}
