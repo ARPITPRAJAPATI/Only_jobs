@@ -910,109 +910,106 @@ export default function JobsPage() {
         {/* ========================================================================= */}
         {activeTab === 'OFFCAMPUS' && (
           <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-line">
+            <div className="flex flex-col gap-4 border-b border-line pb-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <h2 className="text-lg font-bold text-ink flex items-center gap-2">
-                  <Globe className="h-5 w-5 text-[#8250df]" />
-                  <span>Curated Off-Campus Jobs & Internship Postings</span>
+                <h2 className="text-lg font-semibold text-ink">
+                  Off-campus jobs &amp; internships
                 </h2>
-                <p className="text-xs text-muted mt-0.5">
-                  Verified external openings from top tech companies, hiring hackathons, and corporate career portals. Applications submitted directly on external portals.
+                <p className="mt-1 max-w-2xl text-sm text-muted">
+                  Explore external openings and apply directly through each employer’s career site.
                 </p>
               </div>
 
-              {/* Search Box */}
-              <div className="relative w-full sm:w-[280px]">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted" />
+              <label className="relative w-full sm:w-72">
+                <span className="sr-only">Search off-campus jobs and skills</span>
+                <Search aria-hidden="true" className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
                 <input
                   type="text"
-                  placeholder="Search off-campus roles, skills..."
+                  placeholder="Search roles or skills"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full h-9 rounded-lg bg-surface border border-line pl-9 pr-3 text-xs font-medium text-ink placeholder:text-muted outline-none focus:border-[#0969da] shadow-2xs transition-colors"
+                  className="h-10 w-full rounded-lg border border-line bg-surface pl-9 pr-3 text-sm text-ink shadow-2xs outline-none transition-colors placeholder:text-muted focus:border-accent focus-visible:ring-2 focus-visible:ring-accent/20"
                 />
-              </div>
+              </label>
             </div>
 
-            {/* Off-Campus Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div aria-live="polite" className="text-xs text-muted">
+              {filteredOffCampus.length} {filteredOffCampus.length === 1 ? 'opening' : 'openings'}
+            </div>
+
+            {filteredOffCampus.length > 0 ? (
+            <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-2 xl:grid-cols-3">
               {filteredOffCampus.map((job) => (
                 <div
                   key={job.id}
-                  className="rounded-xl border border-line bg-surface p-5 shadow-2xs hover:border-[#8250df]/50 hover:shadow-xs transition-all flex flex-col justify-between group"
+                  className="group flex h-full flex-col rounded-xl border border-line bg-surface p-4 transition-colors hover:border-accent/40 sm:p-5"
                 >
-                  <div>
-                    {/* Header */}
+                  <div className="flex-1">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-center gap-3 min-w-0">
-                        <div className="h-10 w-10 rounded-lg bg-surface2 border border-line text-ink font-bold flex items-center justify-center text-xs shadow-2xs shrink-0">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-line bg-surface2 text-xs font-semibold text-ink">
                           {job.logoLetter}
                         </div>
                         <div className="min-w-0">
-                          <h3 className="font-bold text-[15px] text-ink group-hover:text-[#8250df] transition-colors truncate">
+                          <h3 className="truncate text-sm font-semibold text-ink transition-colors group-hover:text-accent">
                             {job.company}
                           </h3>
-                          <div className="flex items-center gap-1.5 text-xs text-muted mt-0.5">
-                            <MapPin className="h-3 w-3 text-muted shrink-0" />
+                          <div className="mt-1 flex items-center gap-1.5 text-xs text-muted">
+                            <MapPin aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
                             <span className="truncate">{job.location}</span>
                           </div>
                         </div>
                       </div>
 
-                      <div className="flex flex-col items-end shrink-0">
-                        <span className="rounded-full bg-[#fbefff] dark:bg-[#382247] text-[#8250df] border border-[#8250df]/30 font-mono font-bold text-xs px-2.5 py-0.5">
+                      <div className="flex shrink-0 flex-col items-end gap-1">
+                        <span className="text-sm font-semibold tabular-nums text-ink">
                           {job.compensation}
                         </span>
                         {job.isHot && (
-                          <span className="text-[9.5px] font-bold text-amber-600 bg-amber-500/10 px-1.5 py-0.2 rounded mt-1 border border-amber-500/20">
-                            High Demand
+                          <span className="rounded border border-line px-1.5 py-0.5 text-[10px] font-medium text-muted">
+                            Popular
                           </span>
                         )}
                       </div>
                     </div>
 
-                    {/* Role Title */}
-                    <div className="mt-4">
-                      <h4 className="font-bold text-sm text-ink leading-snug">
+                    <div className="mt-4 min-h-[3.5rem]">
+                      <h4 className="text-sm font-semibold leading-snug text-ink">
                         {job.role}
                       </h4>
-                      <div className="flex flex-wrap items-center gap-1.5 mt-2">
-                        <span className="text-[10.5px] font-medium text-muted bg-surface2 border border-line px-2 py-0.5 rounded">
+                    </div>
+                    <div className="mt-2 flex min-h-7 flex-wrap items-center gap-1.5">
+                        <span className="rounded-md border border-line bg-surface2 px-2 py-1 text-[11px] font-medium text-muted">
                           {job.type}
                         </span>
-                        <span className="text-[10.5px] font-medium text-muted bg-surface2 border border-line px-2 py-0.5 rounded">
+                        <span className="rounded-md border border-line bg-surface2 px-2 py-1 text-[11px] font-medium text-muted">
                           {job.batchEligible}
                         </span>
                         {job.hasReferral && (
-                          <span className="text-[10.5px] font-bold text-[#1a7f37] bg-[#dafbe1] px-2 py-0.5 rounded border border-[#4ac26b]/40">
-                            Alumni Referral Active
+                          <span className="rounded-md border border-line px-2 py-1 text-[11px] font-medium text-muted">
+                            Referral available
                           </span>
                         )}
-                      </div>
                     </div>
 
-                    {/* Required Skills */}
-                    <div className="mt-4">
-                      <span className="text-[10.5px] font-bold text-muted uppercase tracking-wider block mb-1.5">
-                        Required Tech & Skills:
-                      </span>
-                      <div className="flex flex-wrap gap-1.5">
+                    <div className="mt-4 min-h-24 border-t border-line pt-3">
+                      <h5 className="mb-2 text-xs font-medium text-muted">Skills</h5>
+                      <ul className="flex flex-wrap gap-1.5">
                         {job.requiredSkills.map((skill) => (
-                          <span
+                          <li
                             key={skill}
-                            className="text-[10.5px] font-mono font-semibold px-2 py-0.5 rounded bg-surface2 border border-line text-ink"
+                            className="rounded-md border border-line bg-surface2 px-2 py-1 text-[11px] font-medium text-ink"
                           >
                             {skill}
-                          </span>
+                          </li>
                         ))}
-                      </div>
+                      </ul>
                     </div>
                   </div>
 
-                  {/* Footer & Apply External */}
-                  <div className="mt-5 pt-3.5 border-t border-line/70 flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-1.5 text-[11px] text-muted">
-                      <Clock className="h-3.5 w-3.5 text-muted shrink-0" />
+                  <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-3">
+                    <div className="flex items-center gap-1.5 text-xs text-muted">
+                      <Clock aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
                       <span>Closes: {job.deadline}</span>
                     </div>
 
@@ -1020,15 +1017,21 @@ export default function JobsPage() {
                       href={job.applyUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-surface2 hover:bg-[#8250df] text-ink hover:text-white border border-line hover:border-[#8250df] text-xs font-semibold shadow-2xs transition-all active:scale-95 cursor-pointer"
+                      className="inline-flex items-center gap-1.5 rounded-md bg-accent px-3 py-2 text-xs font-semibold text-accentInk transition-colors hover:opacity-90"
                     >
-                      <span>Apply on Portal</span>
+                      <span>View &amp; apply</span>
                       <ExternalLink className="h-3 w-3" />
                     </a>
                   </div>
                 </div>
               ))}
             </div>
+            ) : (
+              <div className="rounded-xl border border-dashed border-line px-5 py-12 text-center">
+                <h3 className="text-sm font-semibold text-ink">No matching openings</h3>
+                <p className="mt-1 text-sm text-muted">Try another company or skill.</p>
+              </div>
+            )}
           </div>
         )}
 
