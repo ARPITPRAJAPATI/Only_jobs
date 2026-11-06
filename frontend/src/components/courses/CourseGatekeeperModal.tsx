@@ -76,9 +76,6 @@ export function CourseGatekeeperModal({ course, onClose }: CourseGatekeeperModal
             </button>
 
             <div className="flex flex-wrap items-center gap-2 mb-2">
-              <span className="rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 px-2 py-0.5 text-xs font-mono font-bold">
-                {course.priceTag}
-              </span>
               <span className="rounded-md bg-surface2 border border-line px-2 py-0.5 text-xs font-semibold text-muted">
                 {course.categoryLabel}
               </span>

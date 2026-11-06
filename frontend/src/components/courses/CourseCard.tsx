@@ -23,10 +23,6 @@ export function CourseCard({ course, viewMode = 'grid', onSelect }: CourseCardPr
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
           />
-          {/* GitHub Style Pill Tag */}
-          <span className="absolute top-2.5 right-2.5 rounded-md bg-[#dafbe1] text-[#1a7f37] border border-[#4ac26b]/40 px-2 py-0.5 text-xs font-mono font-bold shadow-2xs">
-            {course.priceTag}
-          </span>
           <span className="absolute bottom-2.5 left-2.5 rounded bg-[#161b22]/80 backdrop-blur-xs px-2 py-0.5 text-[9px] font-mono font-bold text-white uppercase tracking-wider">
             {course.currentPhase}
           </span>
@@ -121,11 +117,6 @@ export function CourseCard({ course, viewMode = 'grid', onSelect }: CourseCardPr
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
           />
-
-          {/* Floating Pill Tag (GitHub style) */}
-          <span className="absolute top-2.5 right-2.5 rounded-md bg-[#dafbe1] text-[#1a7f37] border border-[#4ac26b]/40 px-2 py-0.5 text-xs font-mono font-bold shadow-2xs">
-            {course.priceTag}
-          </span>
 
           {/* Phase Badge */}
           <span className="absolute bottom-2 left-2 rounded bg-[#161b22]/80 backdrop-blur-xs px-2 py-0.5 text-[9px] font-mono font-bold text-white uppercase tracking-wider">

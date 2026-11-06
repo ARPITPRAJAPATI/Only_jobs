@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowDownWideNarrow, BarChart3, Bookmark, Heart, ImagePlus, MessageCircle, MoreHorizontal, Send, ShieldCheck } from 'lucide-react';
+import { ArrowDownWideNarrow, Check, ChevronDown, Heart, ImagePlus, MessageCircle, MoreHorizontal, Send, ShieldCheck, X } from 'lucide-react';
+import { BadgeIcon } from '@/components/BadgeIcon';
 import { useStudent } from '@/components/store';
 import { trustBreakdown } from '@/lib/utils';
 
@@ -33,15 +34,46 @@ interface Post {
   };
   likes: number;
   comments: number;
-  saves: number;
   isLiked?: boolean;
-  isSaved?: boolean;
+  isOwnPost?: boolean;
+}
+
+interface FeedComment {
+  id: string;
+  authorName: string;
+  initials: string;
+  content: string;
+}
+
+const DAILY_POST_LIMIT = 3;
+
+function getLocalDateKey() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function readDailyPostCount(storageKey: string) {
+  const raw = localStorage.getItem(storageKey);
+  if (!raw) return 0;
+
+  try {
+    const saved = JSON.parse(raw) as { date?: string; count?: number };
+    if (saved.date !== getLocalDateKey() || !Number.isInteger(saved.count)) return 0;
+    return Math.min(DAILY_POST_LIMIT, Math.max(0, saved.count ?? 0));
+  } catch {
+    return 0;
+  }
 }
 
 export default function FeedPage() {
-  const { student } = useStudent();
+  const { student, catalog } = useStudent();
   const trust = trustBreakdown(student).total;
   const approvedBadges = student.badges.filter((b) => b.status === 'APPROVED').length;
+  const approvedBadgeIds = new Set(student.badges.filter((badge) => badge.status === 'APPROVED').map((badge) => badge.badgeId));
+  const topStudentBadges = catalog.filter((badge) => approvedBadgeIds.has(badge.id)).slice(0, 3);
 
   const [posts, setPosts] = useState<Post[]>([
     {
@@ -61,9 +93,7 @@ export default function FeedPage() {
       hashtags: ['SIH2026', 'KIETAcademics', 'Hackathon'],
       likes: 1240,
       comments: 86,
-      saves: 340,
       isLiked: false,
-      isSaved: true,
     },
     {
       id: '1',
@@ -77,7 +107,6 @@ export default function FeedPage() {
         initials: student.name.split(' ').map((n) => n[0]).join('').slice(0, 2),
         time: '15m ago',
         verifiedType: 'student',
-        badges: ['200+ LeetCode', 'Full-Stack Builder', 'Hackathon Winner'],
       },
       content: 'Deployed KubePay to production. Microservices payment gateway on AWS EKS with Argo Rollouts and double-entry ledger. Passed k6 load tests at 1.2k RPS with zero-downtime canary updates.',
       hashtags: ['Kubernetes', 'DevOps', 'EKS', 'Go', 'Microservices'],
@@ -91,9 +120,7 @@ export default function FeedPage() {
       },
       likes: 342,
       comments: 28,
-      saves: 56,
       isLiked: true,
-      isSaved: true,
     },
     {
       id: '2',
@@ -112,9 +139,7 @@ export default function FeedPage() {
       hashtags: ['PlacementDrive', 'Amazon', 'CampusRecruitment', 'KIET2025'],
       likes: 890,
       comments: 64,
-      saves: 210,
       isLiked: false,
-      isSaved: false,
     },
     {
       id: '3',
@@ -133,18 +158,100 @@ export default function FeedPage() {
       hashtags: ['Hackathon', 'Innogeeks', 'ComputerVision', 'KIETBuilders'],
       likes: 412,
       comments: 42,
-      saves: 31,
       isLiked: false,
-      isSaved: false,
     },
   ]);
 
   // Composer
   const [postText, setPostText] = useState('');
-  const [dailyQuota, setDailyQuota] = useState(2);
+  const [dailyQuota, setDailyQuota] = useState(DAILY_POST_LIMIT);
+  const [quotaReady, setQuotaReady] = useState(false);
+  const [quotaStorageError, setQuotaStorageError] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [composerOpen, setComposerOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [composerError, setComposerError] = useState<string | null>(null);
   const [commentInputs, setCommentInputs] = useState<Record<string, string>>({});
+  const [postComments, setPostComments] = useState<Record<string, FeedComment[]>>({});
+  const [expandedComments, setExpandedComments] = useState<string | null>(null);
+  const [openPostMenu, setOpenPostMenu] = useState<string | null>(null);
+  const [postActionNotice, setPostActionNotice] = useState<{ postId: string; message: string } | null>(null);
   const [sortOrder, setSortOrder] = useState<'recent' | 'popular'>('recent');
+  const [sortMenuOpen, setSortMenuOpen] = useState(false);
   const visiblePosts = sortOrder === 'popular' ? [...posts].sort((a, b) => b.likes - a.likes) : posts;
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const postTextRef = useRef<HTMLTextAreaElement>(null);
+  const publishingRef = useRef(false);
+  const quotaStorageKey = `onlyjobs:feed-post-limit:v1:${student.id}`;
+
+  useEffect(() => {
+    const refreshQuota = () => {
+      try {
+        const usedToday = readDailyPostCount(quotaStorageKey);
+        setDailyQuota(DAILY_POST_LIMIT - usedToday);
+        setQuotaStorageError(false);
+      } catch {
+        setDailyQuota(0);
+        setQuotaStorageError(true);
+      } finally {
+        setQuotaReady(true);
+      }
+    };
+
+    refreshQuota();
+    const refreshOnFocus = () => refreshQuota();
+    const refreshOnStorage = (event: StorageEvent) => {
+      if (event.key === quotaStorageKey) refreshQuota();
+    };
+    window.addEventListener('focus', refreshOnFocus);
+    window.addEventListener('storage', refreshOnStorage);
+    const refreshInterval = window.setInterval(refreshQuota, 60_000);
+    return () => {
+      window.removeEventListener('focus', refreshOnFocus);
+      window.removeEventListener('storage', refreshOnStorage);
+      window.clearInterval(refreshInterval);
+    };
+  }, [quotaStorageKey]);
+
+  useEffect(() => {
+    if (!selectedImage) {
+      setImagePreview(null);
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(selectedImage);
+    setImagePreview(previewUrl);
+    return () => URL.revokeObjectURL(previewUrl);
+  }, [selectedImage]);
+
+  useEffect(() => {
+    if (!composerOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setComposerOpen(false);
+    };
+
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', closeOnEscape);
+    postTextRef.current?.focus();
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [composerOpen]);
+
+  const readImage = (file: File) =>
+    new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') resolve(reader.result);
+        else reject(new Error('The selected image could not be read.'));
+      };
+      reader.onerror = () => reject(new Error('The selected image could not be read.'));
+      reader.readAsDataURL(file);
+    });
 
   // Follow states
   const [followedState, setFollowedState] = useState<Record<string, boolean>>({
@@ -154,43 +261,101 @@ export default function FeedPage() {
     priya: true,
   });
 
-  const handleCreatePost = (e: React.FormEvent) => {
+  const handleCreatePost = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!postText.trim()) return;
+    const content = postText.trim();
+    if ((!content && !selectedImage) || !quotaReady || quotaStorageError || publishingRef.current) return;
 
-    const newPost: Post = {
-      id: Date.now().toString(),
-      type: 'PROJECT_SHOWCASE',
-      author: {
-        name: student.name,
-        email: student.email || 'student@kiet.edu',
-        role: 'B.Tech CSE · Sem 7',
-        dept: 'Student Contributor',
-        initials: student.name.split(' ').map((n) => n[0]).join('').slice(0, 2),
-        time: 'Just now',
-        verifiedType: 'student',
-        badges: ['Verified Student'],
-      },
-      content: postText,
-      hashtags: ['KIETCampus', 'ProofOfWork'],
-      likes: 1,
-      comments: 0,
-      saves: 0,
-      isLiked: false,
-      isSaved: false,
-    };
+    publishingRef.current = true;
+    setIsPublishing(true);
+    setComposerError(null);
 
-    setPosts([newPost, ...posts]);
-    setPostText('');
-    setDailyQuota((prev) => Math.max(0, prev - 1));
+    try {
+      const currentCount = readDailyPostCount(quotaStorageKey);
+      if (currentCount >= DAILY_POST_LIMIT) {
+        setDailyQuota(0);
+        setComposerError('You’ve reached today’s post limit. You can post again tomorrow.');
+        return;
+      }
+
+      let image: string | undefined;
+      if (selectedImage) {
+        try {
+          image = await readImage(selectedImage);
+        } catch {
+          setComposerError('We could not load that image. Please choose it again.');
+          return;
+        }
+      }
+
+      const latestCount = readDailyPostCount(quotaStorageKey);
+      if (latestCount >= DAILY_POST_LIMIT) {
+        setDailyQuota(0);
+        setComposerError('You’ve reached today’s post limit. You can post again tomorrow.');
+        return;
+      }
+
+      const nextCount = latestCount + 1;
+      localStorage.setItem(quotaStorageKey, JSON.stringify({ date: getLocalDateKey(), count: nextCount }));
+      setDailyQuota(DAILY_POST_LIMIT - nextCount);
+
+      const newPost: Post = {
+        id: Date.now().toString(),
+        type: 'PROJECT_SHOWCASE',
+        author: {
+          name: student.name,
+          email: student.email || 'student@kiet.edu',
+          role: 'B.Tech CSE · Sem 7',
+          dept: 'Student Contributor',
+          avatarUrl: student.avatarUrl || undefined,
+          initials: student.name.split(' ').map((n) => n[0]).join('').slice(0, 2),
+          time: 'Just now',
+          verifiedType: 'student',
+        },
+        content,
+        image,
+        likes: 0,
+        comments: 0,
+        isLiked: false,
+        isOwnPost: true,
+      };
+
+      setPosts((currentPosts) => [newPost, ...currentPosts]);
+      setPostText('');
+      setSelectedImage(null);
+      setComposerError(null);
+      setComposerOpen(false);
+    } catch {
+      setDailyQuota(0);
+      setQuotaStorageError(true);
+      setComposerError('We couldn’t verify your daily post limit. Please enable browser storage and try again.');
+    } finally {
+      publishingRef.current = false;
+      setIsPublishing(false);
+    }
+  };
+
+  const handleImageSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setComposerError('Choose an image file to attach.');
+      event.target.value = '';
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setComposerError('Images must be 5 MB or smaller.');
+      event.target.value = '';
+      return;
+    }
+
+    setComposerError(null);
+    setSelectedImage(file);
   };
 
   const toggleLike = (postId: string) => {
     setPosts(posts.map((p) => (p.id === postId ? { ...p, isLiked: !p.isLiked, likes: p.isLiked ? p.likes - 1 : p.likes + 1 } : p)));
-  };
-
-  const toggleSave = (postId: string) => {
-    setPosts(posts.map((p) => (p.id === postId ? { ...p, isSaved: !p.isSaved, saves: p.isSaved ? p.saves - 1 : p.saves + 1 } : p)));
   };
 
   const toggleFollow = (userKey: string) => {
@@ -200,8 +365,45 @@ export default function FeedPage() {
   const handleAddComment = (postId: string) => {
     const text = commentInputs[postId]?.trim();
     if (!text) return;
-    setPosts(posts.map((p) => (p.id === postId ? { ...p, comments: p.comments + 1 } : p)));
-    setCommentInputs({ ...commentInputs, [postId]: '' });
+    const comment: FeedComment = {
+      id: `${Date.now()}-${Math.random()}`,
+      authorName: student.name,
+      initials: student.name.split(' ').map((n) => n[0]).join('').slice(0, 2),
+      content: text,
+    };
+    setPosts((currentPosts) => currentPosts.map((p) => (p.id === postId ? { ...p, comments: p.comments + 1 } : p)));
+    setPostComments((currentComments) => ({
+      ...currentComments,
+      [postId]: [...(currentComments[postId] || []), comment],
+    }));
+    setCommentInputs((currentInputs) => ({ ...currentInputs, [postId]: '' }));
+    setExpandedComments(postId);
+  };
+
+  const handleCopyPostLink = async (postId: string) => {
+    try {
+      await navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}#post-${postId}`);
+      setPostActionNotice({ postId, message: 'Post link copied.' });
+    } catch {
+      setPostActionNotice({ postId, message: 'Could not copy the post link. Check clipboard permissions.' });
+    }
+    setOpenPostMenu(null);
+  };
+
+  const handleHidePost = (postId: string) => {
+    setPosts((currentPosts) => currentPosts.filter((post) => post.id !== postId));
+    setOpenPostMenu(null);
+    setPostActionNotice(null);
+  };
+
+  const handleDeletePost = (postId: string) => {
+    setPosts((currentPosts) => currentPosts.filter((post) => post.id !== postId));
+    setPostComments((currentComments) => {
+      const { [postId]: _deletedComments, ...remainingComments } = currentComments;
+      return remainingComments;
+    });
+    setOpenPostMenu(null);
+    setPostActionNotice(null);
   };
 
   return (
@@ -268,70 +470,107 @@ export default function FeedPage() {
           <main className="lg:col-span-6 space-y-3.5">
             
             {/* Post Composer */}
-            <div className="bg-surface rounded-xl p-3.5 sm:p-4 border border-line shadow-xs">
-              <form onSubmit={handleCreatePost}>
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-surface2 text-ink flex items-center justify-center font-semibold text-xs shrink-0 border border-line">
-                    {student.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
-                  </div>
-                  
-                  <input
-                    type="text"
-                    placeholder="Share a project, achievement, or update…"
-                    value={postText}
-                    onChange={(e) => setPostText(e.target.value)}
-                    className="w-full bg-surface2/70 hover:bg-surface2 focus:bg-surface rounded-full px-4 py-2.5 text-sm text-ink placeholder-muted outline-none border border-transparent focus:border-line focus:ring-2 focus:ring-accent/15 transition-colors"
-                  />
+            <div className="rounded-2xl border border-line bg-surface p-4 shadow-xs sm:p-5">
+              <div className="flex items-center gap-3">
+                <div className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-full border border-line bg-surface2 text-xs font-semibold text-ink">
+                  {student.avatarUrl ? (
+                    <Image src={student.avatarUrl} alt="" width={40} height={40} className="h-full w-full object-cover" />
+                  ) : (
+                    student.name.split(' ').map((n) => n[0]).join('').slice(0, 2)
+                  )}
                 </div>
-
-                <div className="mt-3 flex items-center justify-between gap-3 border-t border-line/70 pt-3 text-xs text-muted">
-                  <div className="flex min-w-0 items-center gap-1 sm:gap-2">
-                    <button type="button" className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-2 font-medium transition-colors hover:bg-surface2 hover:text-ink">
-                      <ImagePlus className="h-4 w-4 text-accent" />
-                      <span>Photo</span>
-                    </button>
-                    <button type="button" className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-2 font-medium transition-colors hover:bg-surface2 hover:text-ink">
-                      <BarChart3 className="h-4 w-4 text-muted" />
-                      <span>Poll</span>
-                    </button>
-                    <span className="hidden text-[11px] text-muted sm:inline">{dailyQuota}/3 posts left today</span>
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={!postText.trim()}
-                    className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-ink px-3.5 py-2 text-xs font-semibold text-surface transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
-                  >
-                    Share update <Send className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-              </form>
+                <button
+                  type="button"
+                  onClick={() => setComposerOpen(true)}
+                  disabled={!quotaReady || quotaStorageError || dailyQuota <= 0}
+                  className="flex min-h-11 flex-1 items-center rounded-full border border-line bg-surface2/60 px-4 text-left text-sm text-muted transition-colors hover:border-accent/40 hover:bg-surface2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/30 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {!quotaReady
+                    ? 'Checking today’s post limit…'
+                    : dailyQuota > 0
+                      ? 'Share a project, achievement, or update…'
+                      : 'You’ve reached today’s post limit'}
+                </button>
+              </div>
+              <div className="mt-3 flex items-center justify-between border-t border-line/70 pt-3">
+                <button
+                  type="button"
+                  onClick={() => setComposerOpen(true)}
+                  disabled={!quotaReady || quotaStorageError || dailyQuota <= 0}
+                  className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-surface2 hover:text-ink disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <ImagePlus className="h-4 w-4 text-accent" />
+                  Add a photo
+                </button>
+                <span className="text-xs text-muted">
+                  {quotaReady ? `${dailyQuota}/3 posts left today` : 'Checking daily post limit…'}
+                </span>
+              </div>
+              {quotaStorageError && (
+                <p role="alert" className="mt-2 text-xs text-bad">
+                  Could not verify your daily limit. Enable browser storage to post.
+                </p>
+              )}
             </div>
 
             <div className="flex items-center justify-between border-b border-line/70 px-1 pb-2 text-xs">
               <span className="text-muted">{posts.length} campus updates</span>
-              <label className="inline-flex items-center gap-2 text-muted">
-                <ArrowDownWideNarrow className="h-3.5 w-3.5" />
-                <span>Sort by</span>
-                <select
-                  value={sortOrder}
-                  onChange={(event) => setSortOrder(event.target.value as 'recent' | 'popular')}
-                  className="cursor-pointer bg-transparent font-semibold text-ink outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
-                  aria-label="Sort campus updates"
+              <div
+                className="relative"
+                onKeyDown={(event) => {
+                  if (event.key === 'Escape') setSortMenuOpen(false);
+                }}
+              >
+                <button
+                  type="button"
+                  aria-label={`Sort campus updates: ${sortOrder === 'recent' ? 'Recent' : 'Most liked'}`}
+                  aria-haspopup="menu"
+                  aria-expanded={sortMenuOpen}
+                  onClick={() => setSortMenuOpen((open) => !open)}
+                  className="inline-flex items-center gap-2 rounded-lg border border-line bg-surface px-3 py-2 font-semibold text-ink shadow-xs transition-colors hover:border-accent/40 hover:bg-surface2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
                 >
-                  <option value="recent">Recent</option>
-                  <option value="popular">Most liked</option>
-                </select>
-              </label>
+                  <ArrowDownWideNarrow className="h-3.5 w-3.5 text-muted" />
+                  <span>{sortOrder === 'recent' ? 'Recent' : 'Most liked'}</span>
+                  <ChevronDown className={`h-3.5 w-3.5 text-muted transition-transform ${sortMenuOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {sortMenuOpen && (
+                  <div role="menu" aria-label="Sort campus updates" className="absolute right-0 top-full z-20 mt-2 min-w-40 rounded-xl border border-line bg-surface p-1.5 shadow-lg">
+                    {([
+                      { value: 'recent', label: 'Recent' },
+                      { value: 'popular', label: 'Most liked' },
+                    ] as const).map((option) => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        role="menuitemradio"
+                        aria-checked={sortOrder === option.value}
+                        onClick={() => {
+                          setSortOrder(option.value);
+                          setSortMenuOpen(false);
+                        }}
+                        className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-medium text-ink transition-colors hover:bg-surface2"
+                      >
+                        {option.label}
+                        {sortOrder === option.value && <Check className="h-3.5 w-3.5 text-accent" />}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Posts Feed */}
             {visiblePosts.map((post) => {
               const isDeanNotice = post.id === 'dean-notice';
+              const isStudentPost = post.isOwnPost || post.author.email === (student.email || 'arpit.prajapati@kiet.edu');
+              const postBadges: { id: string; title: string; iconUrl?: string }[] = isStudentPost
+                ? topStudentBadges.map((badge) => ({ id: badge.id, title: badge.title, iconUrl: badge.iconUrl }))
+                : (post.author.badges || []).slice(0, 3).map((title) => ({ id: title, title }));
               return (
                 <article
                   key={post.id}
-                  className={`overflow-hidden bg-surface rounded-xl border shadow-xs transition-shadow hover:shadow-sm ${
+                  id={`post-${post.id}`}
+                  className={`overflow-hidden bg-surface rounded-2xl border shadow-xs transition-shadow hover:shadow-md ${
                     isDeanNotice
                       ? 'border-[#d4a72c]/40'
                       : 'border-line'
@@ -348,10 +587,28 @@ export default function FeedPage() {
                           )}
                         </div>
                         <div className="min-w-0">
-                          <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
-                            <h4 className="text-sm font-semibold leading-tight text-ink">{post.author.name}</h4>
+                          <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                            <h4 className="min-w-0 truncate text-sm font-semibold leading-tight text-ink">{post.author.name}</h4>
                             {post.author.verifiedType !== 'student' && (
                               <ShieldCheck className="h-3.5 w-3.5 text-accent" aria-label="Verified campus account" />
+                            )}
+                            {postBadges.length > 0 && (
+                              <div aria-label="Top badges" className="flex min-w-0 flex-wrap items-center gap-1">
+                                {postBadges.map((badge) => (
+                                  <span
+                                    key={badge.id}
+                                    title={badge.title}
+                                    className="inline-flex max-w-36 items-center gap-1 rounded-full border border-[#54aeff]/30 bg-[#ddf4ff]/70 py-0.5 pl-1 pr-2 text-[10px] font-semibold leading-none text-[#0969da] transition-colors hover:bg-[#ddf4ff]"
+                                  >
+                                    {badge.iconUrl ? (
+                                      <BadgeIcon iconUrl={badge.iconUrl} className="!h-4 !w-4 !shrink-0 !rounded-full !border-0 !bg-transparent !text-[#0969da] !shadow-none [&>svg]:!h-3 [&>svg]:!w-3" />
+                                    ) : (
+                                      <ShieldCheck className="ml-0.5 h-3 w-3 shrink-0" />
+                                    )}
+                                    <span className="truncate">{badge.title}</span>
+                                  </span>
+                                ))}
+                              </div>
                             )}
                             {isDeanNotice && (
                               <span className="rounded border border-[#d4a72c]/40 bg-[#fff8c5]/60 px-1.5 py-0.5 text-[10px] font-medium text-[#9a6700]">
@@ -365,11 +622,57 @@ export default function FeedPage() {
                         </div>
                       </div>
 
-                      <button type="button" aria-label="More post options" className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-muted transition-colors hover:bg-surface2 hover:text-ink">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </button>
+                      <div className="relative shrink-0">
+                        <button
+                          type="button"
+                          aria-label="More post options"
+                          aria-expanded={openPostMenu === post.id}
+                          aria-haspopup="menu"
+                          onClick={() => {
+                            setOpenPostMenu((currentPostId) => currentPostId === post.id ? null : post.id);
+                            setPostActionNotice(null);
+                          }}
+                          className="grid h-8 w-8 place-items-center rounded-lg text-muted transition-colors hover:bg-surface2 hover:text-ink"
+                        >
+                          <MoreHorizontal className="h-4 w-4" />
+                        </button>
+                        {openPostMenu === post.id && (
+                          <div role="menu" className="absolute right-0 top-10 z-20 min-w-44 rounded-xl border border-line bg-surface p-1.5 shadow-lg">
+                            <button
+                              type="button"
+                              role="menuitem"
+                              onClick={() => void handleCopyPostLink(post.id)}
+                              className="w-full rounded-lg px-3 py-2 text-left text-xs font-medium text-ink transition-colors hover:bg-surface2"
+                            >
+                              Copy post link
+                            </button>
+                            {post.isOwnPost ? (
+                              <button
+                                type="button"
+                                role="menuitem"
+                                onClick={() => handleDeletePost(post.id)}
+                                className="w-full rounded-lg px-3 py-2 text-left text-xs font-medium text-bad transition-colors hover:bg-surface2"
+                              >
+                                Delete post
+                              </button>
+                            ) : (
+                              <button
+                                type="button"
+                                role="menuitem"
+                                onClick={() => handleHidePost(post.id)}
+                                className="w-full rounded-lg px-3 py-2 text-left text-xs font-medium text-ink transition-colors hover:bg-surface2"
+                              >
+                                Not interested
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
+                  {postActionNotice?.postId === post.id && (
+                    <p role="status" className="px-5 pb-2 text-xs text-muted">{postActionNotice.message}</p>
+                  )}
 
                   {/* Post Content */}
                   <div className="px-4 pb-4 text-[13px] leading-relaxed text-ink sm:px-5 sm:pb-5">
@@ -445,60 +748,87 @@ export default function FeedPage() {
                       <button
                         type="button"
                         aria-label={`Write a comment (${post.comments})`}
-                        onClick={() => document.getElementById(`comment-${post.id}`)?.focus()}
-                        className="inline-flex items-center gap-1.5 transition-colors hover:text-ink"
+                        aria-expanded={expandedComments === post.id}
+                        aria-controls={`comments-${post.id}`}
+                        onClick={() => {
+                          const isExpanded = expandedComments === post.id;
+                          setExpandedComments(isExpanded ? null : post.id);
+                          if (!isExpanded) window.setTimeout(() => document.getElementById(`comment-${post.id}`)?.focus(), 0);
+                        }}
+                        className={`inline-flex items-center gap-1.5 transition-colors ${
+                          expandedComments === post.id ? 'text-accent' : 'hover:text-ink'
+                        }`}
                       >
                         <MessageCircle className="h-4 w-4" />
                         <span>{post.comments}</span>
                       </button>
 
-                      <button
-                        type="button"
-                        aria-label={`${post.isSaved ? 'Unsave' : 'Save'} post (${post.saves})`}
-                        aria-pressed={Boolean(post.isSaved)}
-                        onClick={() => toggleSave(post.id)}
-                        className={`inline-flex items-center gap-1.5 transition-colors ${
-                          post.isSaved ? 'text-accent' : 'hover:text-ink'
-                        }`}
-                      >
-                        <Bookmark className={`h-4 w-4 ${post.isSaved ? 'fill-current' : ''}`} />
-                        <span>{post.saves}</span>
-                      </button>
                     </div>
-
-                    <span className="inline-flex items-center gap-1 text-[11px] text-muted">
-                      <ShieldCheck className="h-3.5 w-3.5 text-good" />
-                      KIET verified
-                    </span>
                   </div>
 
-                  {/* Quick comment box */}
-                  <div className="mx-4 flex items-center gap-2 pb-4 sm:mx-5 sm:pb-5">
-                    <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-surface2 text-[10px] font-semibold text-muted">
-                      {student.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
-                    </div>
-                    <input
-                      id={`comment-${post.id}`}
-                      type="text"
-                      placeholder="Write a comment"
-                      value={commentInputs[post.id] || ''}
-                      onChange={(e) => setCommentInputs({ ...commentInputs, [post.id]: e.target.value })}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') handleAddComment(post.id);
-                      }}
-                      className="min-w-0 flex-1 rounded-full border border-line/70 bg-surface2/60 px-4 py-2 text-xs text-ink outline-none transition-colors placeholder:text-muted focus:border-accent/50 focus:bg-surface"
-                    />
-                    {commentInputs[post.id]?.trim() && (
-                      <button
-                        type="button"
-                        aria-label="Send comment"
-                        onClick={() => handleAddComment(post.id)}
-                        className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-accent transition-colors hover:bg-accent/10"
+                  {expandedComments === post.id && (
+                    <section
+                      id={`comments-${post.id}`}
+                      aria-label={`Comments on ${post.author.name}'s post`}
+                      className="border-t border-line bg-surface2/40 px-4 py-4 sm:px-5"
+                    >
+                      <div className="mb-4 flex items-center justify-between">
+                        <h5 className="text-sm font-semibold text-ink">Comments</h5>
+                        <span className="text-xs text-muted">{post.comments}</span>
+                      </div>
+                      {(postComments[post.id] || []).length > 0 ? (
+                        <div className="mb-4 space-y-4">
+                          {postComments[post.id].map((comment) => (
+                            <div key={comment.id} className="flex items-start gap-2.5">
+                              <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-line bg-surface text-[10px] font-semibold text-muted">
+                                {comment.initials}
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <div className="inline-block max-w-full rounded-xl bg-surface px-3 py-2">
+                                  <p className="text-xs font-semibold text-ink">{comment.authorName}</p>
+                                  <p className="mt-1 whitespace-pre-wrap break-words text-xs leading-relaxed text-ink">{comment.content}</p>
+                                </div>
+                                <p className="mt-1 px-2 text-[11px] font-medium text-muted">Just now</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="mb-4 text-xs text-muted">No comments yet. Start the conversation.</p>
+                      )}
+                      <form
+                        onSubmit={(event) => {
+                          event.preventDefault();
+                          handleAddComment(post.id);
+                        }}
+                        className="flex items-center gap-2"
                       >
-                        <Send className="h-4 w-4" />
-                      </button>
-                    )}
-                  </div>
+                        <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-surface text-[10px] font-semibold text-muted">
+                          {student.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
+                        </div>
+                        <input
+                          id={`comment-${post.id}`}
+                          type="text"
+                          maxLength={500}
+                          placeholder="Write a comment"
+                          value={commentInputs[post.id] || ''}
+                          onChange={(event) => setCommentInputs((currentInputs) => ({
+                            ...currentInputs,
+                            [post.id]: event.target.value,
+                          }))}
+                          className="min-w-0 flex-1 rounded-full border border-line/70 bg-surface px-4 py-2 text-xs text-ink outline-none transition-colors placeholder:text-muted focus:border-accent/50"
+                        />
+                        <button
+                          type="submit"
+                          aria-label="Send comment"
+                          disabled={!commentInputs[post.id]?.trim()}
+                          className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-accent transition-colors hover:bg-accent/10 disabled:cursor-not-allowed disabled:opacity-40"
+                        >
+                          <Send className="h-4 w-4" />
+                        </button>
+                      </form>
+                    </section>
+                  )}
                 </article>
               );
             })}
@@ -621,6 +951,129 @@ export default function FeedPage() {
 
         </div>
       </div>
+
+      {composerOpen && (
+        <div
+          className="fixed inset-0 z-[60] grid place-items-center bg-black/55 p-3 backdrop-blur-sm sm:p-6"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setComposerOpen(false);
+          }}
+        >
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="create-post-title"
+            className="w-full max-w-xl overflow-hidden rounded-2xl border border-line bg-surface shadow-2xl"
+          >
+            <header className="flex items-center justify-between border-b border-line px-5 py-4">
+              <div>
+                <h2 id="create-post-title" className="text-base font-semibold text-ink">Create a post</h2>
+                <p className="mt-0.5 text-xs text-muted">Share an update with the KIET community.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setComposerOpen(false)}
+                aria-label="Close post composer"
+                className="grid h-9 w-9 place-items-center rounded-full text-muted transition-colors hover:bg-surface2 hover:text-ink"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </header>
+
+            <form onSubmit={handleCreatePost}>
+              <div className="max-h-[65vh] space-y-4 overflow-y-auto p-5">
+                {quotaStorageError && (
+                  <p role="alert" className="text-sm text-bad">
+                    We couldn’t verify your daily post limit. Please enable browser storage and try again.
+                  </p>
+                )}
+                <div className="flex items-center gap-3">
+                  <div className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-full border border-line bg-surface2 text-xs font-semibold text-ink">
+                    {student.avatarUrl ? (
+                      <Image src={student.avatarUrl} alt="" width={40} height={40} className="h-full w-full object-cover" />
+                    ) : (
+                      student.name.split(' ').map((n) => n[0]).join('').slice(0, 2)
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold text-ink">{student.name}</p>
+                    <p className="text-xs text-muted">KIET student</p>
+                  </div>
+                </div>
+
+                <textarea
+                  ref={postTextRef}
+                  value={postText}
+                  onChange={(event) => setPostText(event.target.value)}
+                  placeholder="What would you like to share?"
+                  rows={5}
+                  maxLength={2000}
+                  className="w-full resize-y border-0 bg-transparent p-0 text-[15px] leading-relaxed text-ink outline-none placeholder:text-muted focus:ring-0"
+                  aria-label="Post text"
+                />
+
+                {imagePreview && (
+                  <div className="relative overflow-hidden rounded-xl border border-line bg-surface2">
+                    <img src={imagePreview} alt="Selected post preview" className="max-h-80 w-full object-contain" />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedImage(null);
+                        if (imageInputRef.current) imageInputRef.current.value = '';
+                      }}
+                      aria-label="Remove selected image"
+                      className="absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full bg-black/70 text-white transition-colors hover:bg-black"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                )}
+
+                <input
+                  ref={imageInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageSelection}
+                  className="hidden"
+                  aria-label="Choose an image"
+                />
+                {composerError && <p role="alert" className="text-sm text-bad">{composerError}</p>}
+                <div className="flex items-center justify-between rounded-xl border border-line px-3 py-2.5">
+                  <span className="text-sm font-medium text-ink">Add to your post</span>
+                  <button
+                    type="button"
+                    onClick={() => imageInputRef.current?.click()}
+                    className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-surface2 hover:text-ink"
+                  >
+                    <ImagePlus className="h-4 w-4 text-accent" />
+                    Photo
+                  </button>
+                </div>
+                <p className="text-right text-xs text-muted">{postText.length}/2000 characters · 5 MB max image</p>
+              </div>
+
+              <footer className="flex items-center justify-between border-t border-line px-5 py-4">
+                <span className="text-xs text-muted">
+                  {quotaReady ? `${dailyQuota}/3 posts left today` : 'Checking daily post limit…'}
+                </span>
+                <button
+                  type="submit"
+                  disabled={
+                    (!postText.trim() && !selectedImage) ||
+                    !quotaReady ||
+                    quotaStorageError ||
+                    dailyQuota <= 0 ||
+                    isPublishing
+                  }
+                  className="inline-flex items-center gap-2 rounded-lg bg-ink px-4 py-2.5 text-sm font-semibold text-surface transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  {isPublishing ? 'Publishing…' : 'Share post'} <Send className="h-4 w-4" />
+                </button>
+              </footer>
+            </form>
+          </section>
+        </div>
+      )}
     </div>
   );
 }
