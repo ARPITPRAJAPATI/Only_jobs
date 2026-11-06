@@ -1,167 +1,131 @@
 'use client';
 
-import { useState } from 'react';
-import { AlertTriangle, FileText, GraduationCap, Gavel, Lock, Pencil, Plus, ScanSearch, ShieldCheck, Trash2, Upload } from 'lucide-react';
-import { SemesterModal } from '@/components/forms/SemesterModal';
+import { AlertTriangle, FileText, GraduationCap, Gavel, Lock, ScanSearch, ShieldCheck } from 'lucide-react';
 import { SgpaChart } from '@/components/SgpaChart';
 import { AuditChip } from '@/components/StatusChips';
 import { useStudent } from '@/components/store';
-import { useToast } from '@/components/toast';
-import { Button, Card, CardHeader, EmptyState, IconButton, PageGrid, Stat } from '@/components/ui';
+import { Card, CardHeader, EmptyState, PageGrid, Stat } from '@/components/ui';
 import { ProfileSubnav } from '@/components/ProfileSubnav';
-import type { AcademicSemester } from '@/lib/types';
 import { latestCgpa, totalBacklogs } from '@/lib/utils';
 
 export default function AcademicsPage() {
-  const { student, removeSemester } = useStudent();
-  const toast = useToast();
-  const [modal, setModal] = useState<{ open: boolean; initial: AcademicSemester | null }>({ open: false, initial: null });
+  const { student } = useStudent();
 
   const sems = student.academics;
   const cgpa = latestCgpa(student);
   const backlogs = totalBacklogs(student);
   const verified = sems.filter((s) => s.auditStatus === 'VERIFIED').length;
   const flagged = sems.filter((s) => s.auditStatus === 'FLAGGED_FRAUD').length;
-  const nextSem = Array.from({ length: 8 }, (_, i) => i + 1).find((n) => !sems.some((s) => s.semesterNumber === n));
   const latest = [...sems].sort((a, b) => b.semesterNumber - a.semesterNumber)[0];
 
   return (
     <div className="pb-16 animate-fade-in">
       <ProfileSubnav />
       <PageGrid>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5 xl:grid-cols-4">
-        <Stat label="Cumulative CGPA" value={cgpa ? cgpa.toFixed(2) : '—'} sub={`Across ${sems.length} semesters`} icon={<GraduationCap className="h-6 w-6" />} />
-        <Stat label="Latest SGPA" value={latest ? latest.sgpa.toFixed(2) : '—'} sub={latest ? `Semester ${latest.semesterNumber}` : 'Nothing declared'} icon={<ScanSearch className="h-6 w-6" />} tone="accent2" />
-        <Stat label="Backlogs" value={`${backlogs.active} active`} sub={`${backlogs.dead} cleared`} icon={<AlertTriangle className="h-6 w-6" />} tone="warn" />
-        <Stat label="Audit status" value={`${verified}/${sems.length}`} sub={flagged ? `${flagged} flagged` : 'semesters verified'} icon={<ShieldCheck className="h-6 w-6" />} tone="good" />
-      </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5 xl:grid-cols-4">
+          <Stat label="Cumulative CGPA" value={cgpa ? cgpa.toFixed(2) : '—'} sub={`Across ${sems.length} semesters`} icon={<GraduationCap className="h-6 w-6" />} />
+          <Stat label="Latest SGPA" value={latest ? latest.sgpa.toFixed(2) : '—'} sub={latest ? `Semester ${latest.semesterNumber}` : 'No records found'} icon={<ScanSearch className="h-6 w-6" />} tone="accent2" />
+          <Stat label="Backlogs" value={`${backlogs.active} active`} sub={`${backlogs.dead} cleared`} icon={<AlertTriangle className="h-6 w-6" />} tone="warn" />
+          <Stat label="Audit status" value={`${verified}/${sems.length}`} sub={flagged ? `${flagged} flagged` : 'semesters verified'} icon={<ShieldCheck className="h-6 w-6" />} tone="good" />
+        </div>
 
-      <div className="grid gap-4 lg:gap-5 xl:grid-cols-3">
-        <div className="grid gap-4 lg:gap-5 xl:col-span-2">
-          <Card>
-            <CardHeader
-              title="SGPA trend"
-              subtitle="Solid bars are TPO-verified, faded bars are self-declared"
-              icon={<GraduationCap className="h-4 w-4" />}
-              action={
-                <Button size="sm" disabled={!nextSem} onClick={() => setModal({ open: true, initial: null })}>
-                  <Plus className="h-4 w-4" /> Declare semester
-                </Button>
-              }
-            />
-            <SgpaChart semesters={sems} cgpa={cgpa} />
-          </Card>
+        <div className="grid gap-4 lg:gap-5 xl:grid-cols-3">
+          <div className="grid gap-4 lg:gap-5 xl:col-span-2">
+            <Card>
+              <CardHeader
+                title="SGPA trend"
+                subtitle="Official semester records verified by Examination Cell & TPO"
+                icon={<GraduationCap className="h-4 w-4" />}
+              />
+              <SgpaChart semesters={sems} cgpa={cgpa} />
+            </Card>
 
-          <Card>
-            <CardHeader title="Semester records" subtitle="Sem 1 – 8 · marksheets are stored in secure object storage" icon={<FileText className="h-4 w-4" />} />
-            {sems.length === 0 ? (
-              <EmptyState icon={<Upload className="h-5 w-5" />} title="No semesters declared" body="Self-declare your SGPA and upload the marksheet PDF for each semester." action={<Button onClick={() => setModal({ open: true, initial: null })}>Declare Semester 1</Button>} />
-            ) : (
-              <div className="-mx-2 overflow-x-auto">
-                <table className="w-full min-w-[640px] text-left text-sm">
-                  <thead>
-                    <tr className="text-xs text-white/45">
-                      {['Sem', 'SGPA', 'CGPA', 'Backlogs', 'Marksheet', 'Audit', ''].map((h) => (
-                        <th key={h} className="px-3 pb-3 font-medium">
-                          {h}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {sems.map((s) => {
-                      const locked = s.auditStatus !== 'SELF_DECLARED';
-                      const local = s.resultPdfUrl.startsWith('local://');
-                      return (
+            <Card>
+              <CardHeader
+                title="Semester records"
+                subtitle="Sem 1 – 8 · Official university records (Read-Only for Students)"
+                icon={<FileText className="h-4 w-4" />}
+              />
+              {sems.length === 0 ? (
+                <EmptyState
+                  icon={<GraduationCap className="h-5 w-5" />}
+                  title="No academic records entered yet"
+                  body="Your official academic marks are updated directly by the Examination Cell and TPO office."
+                />
+              ) : (
+                <div className="-mx-2 overflow-x-auto">
+                  <table className="w-full min-w-[560px] text-left text-sm">
+                    <thead>
+                      <tr className="text-xs text-white/45">
+                        {['Semester', 'SGPA', 'CGPA', 'Backlogs', 'Verification Status', 'Access'].map((h) => (
+                          <th key={h} className="px-3 pb-3 font-medium">
+                            {h}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {sems.map((s) => (
                         <tr key={s.id} className="border-t border-white/[0.08] text-white">
                           <td className="px-3 py-3 font-semibold">Sem {s.semesterNumber}</td>
-                          <td className="px-3 py-3">{s.sgpa.toFixed(2)}</td>
-                          <td className="px-3 py-3">{s.cgpaCumulative.toFixed(2)}</td>
-                          <td className="px-3 py-3 text-white/50">
-                            {s.activeBacklogs} active · {s.deadBacklogs} cleared
-                          </td>
-                          <td className="px-3 py-3">
-                            {local ? (
-                              <span className="inline-flex max-w-[140px] items-center gap-1.5 truncate text-xs text-white/50" title={s.resultPdfUrl.slice(8)}>
-                                <FileText className="h-3.5 w-3.5 shrink-0" /> {s.resultPdfUrl.slice(8)}
-                              </span>
+                          <td className="px-3 py-3 font-mono">{s.sgpa.toFixed(2)}</td>
+                          <td className="px-3 py-3 font-mono">{s.cgpaCumulative.toFixed(2)}</td>
+                          <td className="px-3 py-3 text-white/60">
+                            {s.activeBacklogs === 0 ? (
+                              <span className="text-emerald-400 font-medium">Clean record</span>
                             ) : (
-                              <a href={s.resultPdfUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#58a6ff] hover:underline">
-                                <FileText className="h-3.5 w-3.5" /> View PDF
-                              </a>
+                              <span className="text-amber-400 font-medium">{s.activeBacklogs} active</span>
                             )}
+                            {s.deadBacklogs > 0 && ` · ${s.deadBacklogs} cleared`}
                           </td>
                           <td className="px-3 py-3">
                             <AuditChip status={s.auditStatus} />
                           </td>
-                          <td className="px-3 py-3">
-                            <div className="flex justify-end gap-0.5">
-                              {locked ? (
-                                <span className="grid h-9 w-9 place-items-center text-white/40" title="Locked after TPO audit">
-                                  <Lock className="h-4 w-4" />
-                                </span>
-                              ) : (
-                                <>
-                                  <IconButton aria-label={`Edit semester ${s.semesterNumber}`} onClick={() => setModal({ open: true, initial: s })}>
-                                    <Pencil className="h-4 w-4" />
-                                  </IconButton>
-                                  <IconButton
-                                    aria-label={`Delete semester ${s.semesterNumber}`}
-                                    onClick={() => {
-                                      if (removeSemester(s.id)) toast(`Semester ${s.semesterNumber} removed.`, 'info');
-                                    }}
-                                  >
-                                    <Trash2 className="h-4 w-4" />
-                                  </IconButton>
-                                </>
-                              )}
-                            </div>
+                          <td className="px-3 py-3 text-right">
+                            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-white/40" title="Locked official record">
+                              <Lock className="h-3.5 w-3.5" /> Locked
+                            </span>
                           </td>
                         </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </Card>
+          </div>
+
+          {/* Official Policy Card */}
+          <div className="grid content-start gap-4 lg:gap-5">
+            <Card>
+              <CardHeader title="Academic Record Policy" subtitle="Official records managed by University Administration" icon={<Gavel className="h-4 w-4" />} />
+              <ol className="space-y-4 text-sm">
+                {[
+                  ['Admin Verified', 'All SGPA, CGPA, and backlog metrics are synced directly from the University Examination Cell.'],
+                  ['Read-Only for Students', 'Students cannot alter, create, or delete academic records. This ensures 100% integrity for placement drives.'],
+                  ['Corporate Recruiter Proof', 'Verified academic standings are shared directly with recruiters during on-campus hiring.'],
+                ].map(([t, d], i) => (
+                  <li key={t} className="flex gap-3">
+                    <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white/[0.08] text-xs font-bold text-[#58a6ff] border border-white/[0.1]">{i + 1}</span>
+                    <div>
+                      <p className="font-semibold text-white">{t}</p>
+                      <p className="text-white/50 text-xs mt-0.5">{d}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+              <div className="mt-5 rounded-2xl border border-white/[0.08] bg-white/[0.04] p-4 text-xs text-white/60">
+                <p className="flex items-center gap-2 font-semibold text-white/90">
+                  <Lock className="h-4 w-4 text-[#58a6ff]" /> Grade Discrepancy?
+                </p>
+                <p className="mt-1.5 leading-relaxed">
+                  If you believe there is an error in your grades or backlogs, please contact the Dean of Academics or the TPO office for resolution.
+                </p>
               </div>
-            )}
-          </Card>
+            </Card>
+          </div>
         </div>
-
-        {/* Trust + Penalty */}
-        <div className="grid content-start gap-4 lg:gap-5">
-          <Card>
-            <CardHeader title="Trust + Penalty model" subtitle="Why there is no upfront paperwork queue" icon={<Gavel className="h-4 w-4" />} />
-            <ol className="space-y-4 text-sm">
-              {[
-                ['Self-declare', 'You enter SGPA, CGPA and backlogs for Sem 1–8.'],
-                ['Upload proof', 'Marksheet PDFs go straight from your browser to secure storage.'],
-                ['Spot audit', 'The TPO audits randomly and before sending names to recruiters.'],
-              ].map(([t, d], i) => (
-                <li key={t} className="flex gap-3">
-                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white/[0.08] text-xs font-bold text-[#58a6ff] border border-white/[0.1]">{i + 1}</span>
-                  <div>
-                    <p className="font-semibold text-white">{t}</p>
-                    <p className="text-white/50 text-xs mt-0.5">{d}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-            <div className="mt-5 rounded-2xl border border-red-500/20 bg-red-500/10 p-4 text-sm">
-              <p className="flex items-center gap-2 font-semibold text-red-400">
-                <AlertTriangle className="h-4 w-4" /> If fraud is found
-              </p>
-              <ul className="mt-2 list-disc space-y-1 pl-5 text-xs text-white/70">
-                <li>Account freezes instantly</li>
-                <li>₹500 fine is levied</li>
-                <li>Dean’s disciplinary notice is generated</li>
-              </ul>
-            </div>
-          </Card>
-        </div>
-      </div>
-
-      <SemesterModal key={modal.initial?.id ?? 'new'} open={modal.open} initial={modal.initial} defaultSem={nextSem} onClose={() => setModal({ open: false, initial: null })} />
-    </PageGrid>
+      </PageGrid>
     </div>
   );
 }

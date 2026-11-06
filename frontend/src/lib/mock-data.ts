@@ -52,7 +52,6 @@ function leetcodeStats() {
 }
 
 const sgpas = [8.2, 8.32, 8.55, 8.4, 8.62, 8.43];
-const audit = ['VERIFIED', 'VERIFIED', 'VERIFIED', 'VERIFIED', 'SELF_DECLARED', 'SELF_DECLARED'] as const;
 
 const academics: AcademicSemester[] = sgpas.map((sgpa, i) => {
   const upto = sgpas.slice(0, i + 1);
@@ -63,10 +62,9 @@ const academics: AcademicSemester[] = sgpas.map((sgpa, i) => {
     cgpaCumulative: Math.round((upto.reduce((a, b) => a + b, 0) / upto.length) * 100) / 100,
     activeBacklogs: 0,
     deadBacklogs: i === 1 ? 1 : 0,
-    resultPdfUrl: `https://example.com/marksheets/sem-${i + 1}.pdf`,
-    auditStatus: audit[i],
-    auditedBy: audit[i] === 'VERIFIED' ? 'tpo-admin' : null,
-    teacherReview: i === 2 ? 'Marksheet matches university portal.' : null,
+    auditStatus: 'VERIFIED',
+    auditedBy: 'tpo-admin',
+    teacherReview: 'Official university record verified by Exam Cell.',
   };
 });
 

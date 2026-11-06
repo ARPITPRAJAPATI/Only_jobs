@@ -34,7 +34,7 @@ export interface AcademicSemester {
   cgpaCumulative: number;
   activeBacklogs: number;
   deadBacklogs: number;
-  resultPdfUrl: string; // S3/R2 CDN link ("local://name.pdf" in demo mode)
+  resultPdfUrl?: string; // Optional legacy field
   auditStatus: AuditStatus;
   auditedBy?: string | null;
   teacherReview?: string | null;

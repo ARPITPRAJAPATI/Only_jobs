@@ -118,7 +118,7 @@ export function TrustCard({ compact = false }: { compact?: boolean }) {
       <div className="mt-4 pt-3 border-t border-line/60">
         <p className="flex items-center gap-1.5 text-[10.5px] leading-relaxed text-muted font-medium">
           <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-emerald-600" />
-          <span>Audited by KIET TPO System. All marksheet and AST hashes verified.</span>
+          <span>Audited by KIET TPO System. All academic records and AST hashes verified.</span>
         </p>
       </div>
     </Card>
