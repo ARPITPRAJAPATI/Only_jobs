@@ -1,5 +1,5 @@
 import prisma from "../../config/prisma.js";
-import { comparePassword } from "../utils/password.util.js";
+
 import { generateToken } from "../utils/token.util.js";
 import { comparePassword, hashPassword } from "../utils/password.util.js";
 

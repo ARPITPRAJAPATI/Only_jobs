@@ -1,4 +1,3 @@
-
 import { Router } from "express";
 
 import {
@@ -10,17 +9,14 @@ import { authorizeRoles } from "../auth/middlewares/role.middleware.js";
 
 const router = Router();
 
-// All routes require authentication
-
-
-// Only Admin can register student records
+// Admin only: Register student record + create login account in one step
 router.post(
     "/register",
     authorizeRoles("ADMIN"),
     registerStudent
 );
 
-// All authenticated users can view complete student profiles
+// All authenticated users can view full student profile
 router.get(
     "/:identifier/full",
     getFullStudentProfile

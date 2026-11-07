@@ -1,5 +1,7 @@
 import prisma from "../config/prisma.js";
+import { hashPassword } from "../auth/utils/password.util.js";
 
+// 1. Admin only: Register student record + create login account in one step
 export const registerStudent = async (req, res) => {
     try {
         const {
@@ -11,34 +13,75 @@ export const registerStudent = async (req, res) => {
             course,
             branch,
             batch,
+            tempPassword,
         } = req.body;
 
-        // Basic validation
-        if (!name || !email || !rollNumber || !collegeName || !course || !branch || !batch) {
+        if (
+            !name ||
+            !email ||
+            !rollNumber ||
+            !collegeName ||
+            !course ||
+            !branch ||
+            !batch ||
+            !tempPassword
+        ) {
             return res.status(400).json({
                 success: false,
-                message: "Please provide all required fields",
+                message: "Please provide all required fields including tempPassword",
             });
         }
 
-        // Create student
-        const student = await prisma.student.create({
-            data: {
-                name,
-                email,
-                collegeName,
-                rollNumber,
-                libraryId,
-                course,
-                branch,
-                batch: Number(batch),
-            },
+        if (typeof tempPassword !== "string" || tempPassword.length < 6) {
+            return res.status(400).json({
+                success: false,
+                message: "Temporary password must be at least 6 characters",
+            });
+        }
+
+        const normalizedEmail = email.trim().toLowerCase();
+        const passwordHash = await hashPassword(tempPassword);
+
+        const result = await prisma.$transaction(async (tx) => {
+            // Create login User account
+            const newUser = await tx.user.create({
+                data: {
+                    email: normalizedEmail,
+                    passwordHash,
+                    role: "STUDENT",
+                },
+                select: {
+                    id: true,
+                    email: true,
+                    role: true,
+                },
+            });
+
+            // Create official Student record linked to User
+            const newStudent = await tx.student.create({
+                data: {
+                    name: name.trim(),
+                    email: normalizedEmail,
+                    collegeName: collegeName.trim(),
+                    rollNumber: rollNumber.trim(),
+                    libraryId: libraryId?.trim() || null,
+                    course: course.trim(),
+                    branch: branch.trim(),
+                    batch: Number(batch),
+                    userId: newUser.id,
+                },
+            });
+
+            return {
+                student: newStudent,
+                user: newUser,
+            };
         });
 
         return res.status(201).json({
             success: true,
             message: "Student registered successfully",
-            data: student,
+            data: result,
         });
 
     } catch (error) {
@@ -60,7 +103,7 @@ export const registerStudent = async (req, res) => {
     }
 };
 
-// Aggregated Full Student Profile (All 5 modules in 1 call)
+// 2. All authenticated users: Aggregated Full Student Profile
 export const getFullStudentProfile = async (req, res) => {
     try {
         const { identifier } = req.params; // Can be studentId OR rollNumber
@@ -90,7 +133,7 @@ export const getFullStudentProfile = async (req, res) => {
                         createdAt: "desc",
                     },
                 },
-                studentBadges: {
+                badges: {
                     orderBy: {
                         awardedAt: "desc",
                     },
