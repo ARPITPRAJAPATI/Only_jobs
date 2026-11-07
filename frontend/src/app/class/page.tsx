@@ -847,94 +847,95 @@ export default function ClassPage() {
   // =========================================================================
   if (!selectedClassId || !currentClass) {
     return (
-      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 animate-fade-in text-ink">
-        {/* Top Header & Role Switcher */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-line">
-          <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#dafbe1] text-[#1a7f37] border border-[#4ac26b]/40">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#1a7f37] animate-pulse" />
-                Semester 6 • 2026 Academic Session
-              </span>
-              <span className="text-xs text-muted font-medium">CSE 3A Section</span>
+      <>
+        <header className="border-b border-line bg-surface/40 text-ink">
+          <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+            {/* Top Header & Role Switcher */}
+            <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
+              <div className="max-w-3xl">
+                <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-2">
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#1a7f37]" />
+                    Semester 6 • 2026 Academic Session
+                  </span>
+                  <span className="text-xs font-medium text-muted">CSE 3A Section</span>
+                </div>
+
+                <h1 className="flex items-center gap-3 text-2xl font-extrabold tracking-tight text-ink sm:text-[2.1rem]">
+                  <BookOpen className="h-7 w-7 text-[#0969da]" />
+                  <span>My Sem Classes</span>
+                </h1>
+
+                <p className="mt-3 max-w-3xl text-sm leading-7 text-muted sm:text-[15px]">
+                  Select any of your active semester laboratory classes to enter the live classroom chat,
+                  review lecture notes, and track upcoming class test assessments.
+                </p>
+              </div>
+
+              <div className="flex shrink-0 items-center gap-2 self-start rounded-xl border border-line bg-surface2/80 p-1 sm:self-center">
+                <span className="px-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">Role</span>
+                <button
+                  onClick={() => {
+                    setUserRole('student');
+                    toast('Switched to Student View', 'info');
+                  }}
+                  className={cn(
+                    'rounded-lg px-3 py-1.5 text-[12px] font-semibold transition-colors',
+                    userRole === 'student' ? 'bg-surface text-ink shadow-xs border border-line' : 'text-muted hover:text-ink'
+                  )}
+                >
+                  Student View
+                </button>
+                <button
+                  onClick={() => {
+                    setUserRole('teacher');
+                    toast('Switched to Teacher / Faculty View', 'info');
+                  }}
+                  className={cn(
+                    'rounded-lg px-3 py-1.5 text-[12px] font-semibold transition-colors',
+                    userRole === 'teacher' ? 'bg-surface text-ink shadow-xs border border-line' : 'text-muted hover:text-ink'
+                  )}
+                >
+                  Teacher View
+                </button>
+              </div>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-ink flex items-center gap-3">
-              <BookOpen className="h-7 w-7 text-[#0969da]" />
-              <span>My Sem Classes</span>
-            </h1>
-            <p className="text-sm text-muted mt-1 max-w-2xl">
-              Select any of your active semester laboratory classes to enter the live classroom chat,
-              review lecture notes, and track upcoming class test assessments.
-            </p>
+          </div>
+        </header>
+
+        <main className="mx-auto max-w-7xl space-y-8 px-4 py-6 text-ink animate-fade-in sm:px-6 lg:px-8">
+          {/* Filter and Search Bar */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="relative w-full sm:w-96">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
+              <input
+                type="text"
+                placeholder="Search by class name, subject code, or faculty..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full h-10 rounded-xl bg-surface border border-line pl-9 pr-4 text-xs font-medium text-ink placeholder:text-muted outline-none focus:border-[#0969da] transition-all shadow-2xs"
+              />
+            </div>
+            <div className="flex items-center gap-2 text-xs font-semibold text-muted self-end sm:self-auto">
+              <span>Showing {filteredClasses.length} active laboratory classes</span>
+            </div>
           </div>
 
-          {/* Role Toggle Switcher */}
-          <div className="flex items-center gap-2.5 self-start sm:self-center bg-surface2/80 p-1.5 rounded-xl border border-line">
-            <span className="text-xs font-semibold text-muted px-2">Role:</span>
-            <button
-              onClick={() => {
-                setUserRole('student');
-                toast('Switched to Student View', 'info');
-              }}
-              className={cn(
-                'px-3 py-1.5 rounded-lg text-xs font-bold transition-all',
-                userRole === 'student'
-                  ? 'bg-surface text-ink shadow-xs border border-line'
-                  : 'text-muted hover:text-ink'
-              )}
-            >
-              👨‍🎓 Student View
-            </button>
-            <button
-              onClick={() => {
-                setUserRole('teacher');
-                toast('Switched to Teacher / Faculty View', 'info');
-              }}
-              className={cn(
-                'px-3 py-1.5 rounded-lg text-xs font-bold transition-all',
-                userRole === 'teacher'
-                  ? 'bg-[#0969da] text-white shadow-xs'
-                  : 'text-muted hover:text-ink'
-              )}
-            >
-              👨‍🏫 Teacher View
-            </button>
-          </div>
-        </div>
-
-        {/* Filter and Search Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="relative w-full sm:w-96">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
-            <input
-              type="text"
-              placeholder="Search by class name, subject code, or faculty..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-10 rounded-xl bg-surface border border-line pl-9 pr-4 text-xs font-medium text-ink placeholder:text-muted outline-none focus:border-[#0969da] transition-all shadow-2xs"
-            />
-          </div>
-
-          <div className="flex items-center gap-2 text-xs font-semibold text-muted self-end sm:self-auto">
-            <span>Showing {filteredClasses.length} active laboratory classes</span>
-          </div>
-        </div>
-
-        {/* Classes Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5">
-          {filteredClasses.map((item) => (
+          {/* Classes Cards Grid */}
+          <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-2 xl:gap-5">
+            {filteredClasses.map((item) => (
             <div
               key={item.id}
               onClick={() => setSelectedClassId(item.id)}
-              className="group relative rounded-2xl border border-line bg-surface hover:border-[#0969da]/60 transition-all duration-200 p-6 flex flex-col justify-between shadow-xs hover:shadow-md cursor-pointer"
+              className="group flex min-h-[320px] cursor-pointer flex-col justify-between rounded-xl border border-line bg-surface p-4 shadow-xs transition-colors duration-200 hover:border-[#0969da]/60 sm:p-5"
             >
               <div>
                 {/* Header: Short Name badge + Subject Code + Students */}
-                <div className="flex items-start justify-between gap-2 mb-3">
-                  <div className="flex items-center gap-2.5">
+                <div className="mb-4 flex items-start justify-between gap-3">
+                  <div className="flex min-w-0 items-center gap-3">
                     <div
                       className={cn(
-                        'h-11 w-11 rounded-xl flex items-center justify-center font-extrabold text-sm border shadow-2xs',
+                        'flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border text-sm font-bold shadow-2xs',
                         item.accentBg,
                         item.accentColor,
                         'border-black/5'
@@ -942,79 +943,79 @@ export default function ClassPage() {
                     >
                       {item.shortName.substring(0, 3).toUpperCase()}
                     </div>
-                    <div>
-                      <h2 className="text-xl font-bold text-ink group-hover:text-[#0969da] transition-colors flex items-center gap-2">
-                        <span>{item.shortName}</span>
-                        <ChevronRight className="h-4 w-4 text-muted group-hover:translate-x-1 transition-transform" />
+                    <div className="min-w-0">
+                      <h2 className="flex items-center gap-1.5 text-lg font-bold text-ink transition-colors group-hover:text-[#0969da] sm:text-xl">
+                        <span className="truncate">{item.shortName}</span>
+                        <ChevronRight className="h-4 w-4 shrink-0 text-muted transition-transform group-hover:translate-x-0.5" />
                       </h2>
-                      <span className="text-xs font-mono font-semibold text-muted block">
+                      <span className="mt-0.5 block truncate text-[11px] font-mono font-medium text-muted">
                         {item.code} • {item.semester}
                       </span>
                     </div>
                   </div>
 
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-surface2 border border-line text-ink">
-                    <Users className="h-3.5 w-3.5 text-[#0969da]" />
+                  <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-line bg-surface2 px-2.5 py-1 text-[11px] font-semibold text-ink">
+                    <Users className="h-3.5 w-3.5 text-accent" />
                     <span>{item.totalStudents} enrolled</span>
                   </span>
                 </div>
 
-                <p className="text-xs text-muted font-medium line-clamp-1 mb-4">
+                <p className="mb-4 line-clamp-1 text-xs font-medium text-muted" title={item.fullName}>
                   {item.fullName}
                 </p>
 
                 {/* Faculty & Timing Info */}
-                <div className="rounded-xl bg-surface2/60 border border-line/60 p-3 mb-4 space-y-1.5 text-xs">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted">Faculty In-Charge:</span>
-                    <strong className="text-ink font-semibold">{item.teacher}</strong>
+                <div className="mb-4 space-y-2 rounded-lg border border-line/70 bg-surface2/50 px-3 py-3 text-xs">
+                  <div className="flex items-start justify-between gap-4">
+                    <span className="shrink-0 text-muted">Faculty</span>
+                    <strong className="min-w-0 text-right font-semibold text-ink">{item.teacher}</strong>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted">Lab Schedule:</span>
-                    <span className="text-ink font-mono text-[11px]">{item.timing}</span>
+                  <div className="flex items-start justify-between gap-4">
+                    <span className="shrink-0 text-muted">Schedule</span>
+                    <span className="min-w-0 text-right font-mono text-[10px] leading-5 text-ink sm:text-[11px]">{item.timing}</span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted">Location:</span>
-                    <span className="text-ink font-medium">{item.labRoom}</span>
+                  <div className="flex items-start justify-between gap-4">
+                    <span className="shrink-0 text-muted">Location</span>
+                    <span className="min-w-0 text-right font-medium text-ink">{item.labRoom}</span>
                   </div>
                 </div>
 
                 {/* Today's Topic Banner */}
-                <div className="p-2.5 rounded-lg bg-[#ddf4ff]/40 border border-[#54aeff]/30 text-xs flex items-center gap-2 mb-4">
-                  <Flame className="h-4 w-4 text-[#0969da] shrink-0" />
-                  <div className="truncate">
-                    <span className="font-bold text-[#0969da] mr-1.5">Today:</span>
-                    <span className="text-ink font-medium truncate">{item.todayTopic}</span>
+                <div className="mb-4 flex min-h-11 items-start gap-2 rounded-lg border border-line bg-surface2/60 px-3 py-2.5 text-xs">
+                  <Flame className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                  <div className="min-w-0 leading-5">
+                    <span className="mr-1.5 font-semibold text-accent">Today</span>
+                    <span className="font-medium text-ink" title={item.todayTopic}>{item.todayTopic}</span>
                   </div>
                 </div>
               </div>
 
               {/* Bottom Quick Stats & Enter CTA */}
-              <div className="pt-4 border-t border-line flex items-center justify-between text-xs">
-                <div className="flex items-center gap-3">
-                  <span className="flex items-center gap-1 text-muted">
-                    <FileText className="h-3.5 w-3.5 text-[#0969da]" />
-                    <span>{item.notesCount} Notes</span>
+              <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4 text-xs">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                  <span className="flex items-center gap-1.5 text-muted">
+                    <FileText className="h-3.5 w-3.5 text-accent" />
+                    <span>{item.notesCount} notes</span>
                   </span>
-                  <span className="text-muted/60">•</span>
-                  <span className="flex items-center gap-1 text-muted">
+                  <span className="flex items-center gap-1.5 text-muted">
                     <Timer className="h-3.5 w-3.5 text-[#cf222e]" />
-                    <span>{item.upcomingTestsCount} Upcoming Tests</span>
+                    <span>{item.upcomingTestsCount} upcoming tests</span>
                   </span>
                 </div>
 
                 <button
                   type="button"
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#0969da] group-hover:bg-[#0854b0] text-white px-3.5 py-1.5 text-xs font-bold transition-all shadow-xs"
+                  className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-[#0969da] px-3.5 py-2 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#0854b0]"
                 >
                   <span>Enter Class</span>
                   <ArrowRight className="h-3.5 w-3.5" />
                 </button>
               </div>
             </div>
-          ))}
-        </div>
-      </div>
+            ))}
+          </div>
+        </main>
+      </>
     );
   }
 

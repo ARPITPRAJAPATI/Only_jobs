@@ -298,53 +298,63 @@ export function FeedNavbar() {
           </div>
         </nav>
 
-        {/* Right: Avatar + User Name + Theme Toggle + GitHub Button + Mobile Toggle */}
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          {/* One-Click Theme Switcher (Sun / Moon) */}
+        {/* Right: Theme, profile, and mobile navigation */}
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <button
             type="button"
             onClick={toggleDark}
-            className="h-8 w-8 rounded-md border border-line bg-surface2 hover:bg-surface flex items-center justify-center text-ink transition-all cursor-pointer shadow-2xs"
+            className={cn(
+              'grid h-9 w-9 place-items-center rounded-xl border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40',
+              isDark
+                ? 'border-white/10 bg-[#171f2d] text-[#f6d589] shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_6px_16px_rgba(15,23,42,0.28)] hover:bg-[#1d2739]'
+                : 'border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200'
+            )}
             title={isDark ? 'Switch to GitHub Light mode' : 'Switch to GitHub Dark mode'}
             aria-label={isDark ? 'Switch to GitHub Light mode' : 'Switch to GitHub Dark mode'}
           >
             {isDark ? (
-              <Sun className="h-4 w-4 text-[#e3b341] transition-transform hover:rotate-45" />
+              <Sun className="h-4 w-4 transition-transform hover:rotate-45" />
             ) : (
-              <Moon className="h-4 w-4 text-[#656d76] transition-transform hover:-rotate-12" />
+              <Moon className="h-4 w-4 transition-transform hover:-rotate-12" />
             )}
           </button>
 
-          {/* Student Profile Shortcut (GitHub clean avatar) */}
+          <span aria-hidden="true" className="hidden h-5 border-l border-line sm:block" />
+
           <Link
             href="/profile"
             className={cn(
-              'flex items-center gap-2 p-1 sm:px-2 sm:py-1 rounded-md transition-all group border border-transparent',
-              pathname.startsWith('/profile')
-                ? 'bg-surface2 border-line'
-                : 'hover:bg-surface2'
+              'group flex items-center gap-2 rounded-full border py-1 pl-1 pr-3 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40',
+              isDark
+                ? 'border-white/10 bg-[#0f172a]/80 hover:border-sky-400/30 hover:bg-[#111c2d]'
+                : 'border-slate-200 bg-slate-100 hover:border-slate-300 hover:bg-slate-200',
+              pathname.startsWith('/profile') && 'border-accent/30'
             )}
             title="View Student Profile"
           >
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-line overflow-hidden bg-surface2 flex items-center justify-center shrink-0">
+            <div className={cn(
+              'grid h-7 w-7 shrink-0 place-items-center overflow-hidden rounded-full border text-[10px] font-bold tracking-[0.12em]',
+              isDark
+                ? 'border-white/10 bg-[#1e293b] text-slate-100'
+                : 'border-slate-200 bg-slate-200 text-slate-800'
+            )}>
               {student.avatarUrl ? (
                 <img src={student.avatarUrl} alt={student.name} className="h-full w-full object-cover" />
               ) : (
-                <span className="font-bold text-[11px] text-ink">
-                  {student.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
-                </span>
+                student.name.split(' ').map((n) => n[0]).join('').slice(0, 2)
               )}
             </div>
-            <span className="hidden sm:inline-block text-[12.5px] font-semibold text-ink group-hover:text-[#0969da] transition-colors max-w-[110px] truncate">
-              {student.name.split(' ')[0]}
+            <span className={cn(
+              'hidden max-w-[110px] truncate text-sm font-semibold transition-colors sm:inline-block',
+              isDark ? 'text-slate-100 group-hover:text-sky-300' : 'text-slate-800 group-hover:text-accent'
+            )}>
+              {student.name}
             </span>
           </Link>
 
-
-          {/* Mobile Hamburger Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden h-8 w-8 rounded-md border border-line bg-surface2 flex items-center justify-center text-ink hover:bg-surface transition-colors"
+            className="grid h-8 w-8 place-items-center rounded-md border border-line bg-surface2 text-ink transition-colors hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 lg:hidden"
             aria-label="Toggle navigation menu"
           >
             {mobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
