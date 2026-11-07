@@ -22,7 +22,6 @@ export const authenticateUser = async (req, res, next) => {
                 id: true,
                 role: true,
                 isActive: true,
-                mustChangePassword: true,
             },
         });
 
@@ -36,7 +35,6 @@ export const authenticateUser = async (req, res, next) => {
         req.user = {
             id: user.id,
             role: user.role,
-            mustChangePassword: user.mustChangePassword,
         };
 
         next();

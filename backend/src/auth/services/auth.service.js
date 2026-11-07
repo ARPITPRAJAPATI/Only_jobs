@@ -42,7 +42,6 @@ export const loginUser = async ({ email, password }) => {
             id: user.id,
             email: user.email,
             role: user.role,
-            mustChangePassword: user.mustChangePassword,
         },
     };
 };
@@ -57,7 +56,6 @@ export const getCurrentUser = async (userId) => {
             email: true,
             role: true,
             isActive: true,
-            mustChangePassword: true,
         },
     });
 
@@ -69,7 +67,6 @@ export const getCurrentUser = async (userId) => {
         id: user.id,
         email: user.email,
         role: user.role,
-        mustChangePassword: user.mustChangePassword,
     };
 };
 
@@ -101,13 +98,11 @@ export const changePassword = async ({
         where: { id: userId },
         data: {
             passwordHash: newPasswordHash,
-            mustChangePassword: false,
         },
         select: {
             id: true,
             email: true,
             role: true,
-            mustChangePassword: true,
         },
     });
 

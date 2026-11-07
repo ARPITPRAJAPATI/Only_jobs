@@ -4,21 +4,23 @@ import {
     addProject,
     getStudentProjects,
     updateProject,
-    deleteProject
+    deleteProject,
 } from "../controllers/project.controller.js";
+
+import { authorizeRoles } from "../auth/middlewares/role.middleware.js";
 
 const router = Router();
 
-// Add project
-router.post("/add", addProject);
+// Add project (Only Students can add projects)
+router.post("/add", authorizeRoles("STUDENT"), addProject);
 
-// Get all student projects
+// View all projects of a student (All authenticated users)
 router.get("/:studentId", getStudentProjects);
 
-// Update project
-router.patch("/:studentId/:projectId", updateProject);
+// Update project (Only owner student)
+router.patch("/:studentId/:projectId", authorizeRoles("STUDENT"), updateProject);
 
-// Delete project
-router.delete("/:studentId/:projectId", deleteProject);
+// Delete project (Only owner student)
+router.delete("/:studentId/:projectId", authorizeRoles("STUDENT"), deleteProject);
 
 export default router;

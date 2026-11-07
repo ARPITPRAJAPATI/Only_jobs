@@ -1,7 +1,6 @@
-
 import prisma from "../config/prisma.js";
 
-// 1. Add Certification
+// 1. Student submits certification (Default isVerified: false)
 export const addCertification = async (req, res) => {
     try {
         const {
@@ -15,59 +14,110 @@ export const addCertification = async (req, res) => {
             expiresAt,
         } = req.body;
 
-        if (!studentId || !title?.trim() || !issuer?.trim()) {
+        if (!title?.trim() || !issuer?.trim()) {
             return res.status(400).json({
                 success: false,
-                message: "Student ID, title and issuer are required",
+                message: "Certification title and issuer are required",
             });
         }
 
+        // Ownership verify karo
+        let targetStudentId = studentId;
+
+        if (targetStudentId) {
+            const student = await prisma.student.findUnique({
+                where: { id: targetStudentId },
+                select: { id: true, userId: true },
+            });
+
+            if (!student) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Student not found",
+                });
+            }
+
+            if (student.userId !== req.user.id) {
+                return res.status(403).json({
+                    success: false,
+                    message: "You can only submit certifications for your own profile",
+                });
+            }
+        } else {
+            const student = await prisma.student.findUnique({
+                where: { userId: req.user.id },
+                select: { id: true },
+            });
+
+            if (!student) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Student record not found for your account",
+                });
+            }
+
+            targetStudentId = student.id;
+        }
+
+        // isVerified hamesha false rahega jab tak Admin approve na kare
         const certification = await prisma.certification.create({
             data: {
-                studentId,
+                studentId: targetStudentId,
                 title: title.trim(),
                 issuer: issuer.trim(),
-                credentialId,
-                credentialUrl,
-                certificateUrl,
+                credentialId: credentialId?.trim() || null,
+                credentialUrl: credentialUrl?.trim() || null,
+                certificateUrl: certificateUrl?.trim() || null,
                 issuedAt: issuedAt ? new Date(issuedAt) : null,
                 expiresAt: expiresAt ? new Date(expiresAt) : null,
+                isVerified: false,
+                verifiedAt: null,
             },
         });
 
         return res.status(201).json({
             success: true,
-            message: "Certification added successfully",
+            message: "Certification submitted for admin verification",
             data: certification,
         });
 
     } catch (error) {
         console.error("Add certification error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to submit certification",
+        });
+    }
+};
 
-        if (error.code === "P2003") {
+// 2. View Certifications (Public only sees verified; Owner & Admin see all)
+export const getStudentCertifications = async (req, res) => {
+    try {
+        const { studentId } = req.params;
+
+        const student = await prisma.student.findUnique({
+            where: { id: studentId },
+            select: { id: true, userId: true },
+        });
+
+        if (!student) {
             return res.status(404).json({
                 success: false,
                 message: "Student not found",
             });
         }
 
-        return res.status(500).json({
-            success: false,
-            message: "Failed to add certification",
-        });
-    }
-};
+        const isOwner = student.userId === req.user.id;
+        const isAdmin = req.user.role === "ADMIN";
 
-
-// 2. Get Student Certifications
-export const getStudentCertifications = async (req, res) => {
-    try {
-        const { studentId } = req.params;
+        // Agar viewer owner ya admin nahi hai, toh SIRF verified dikhao
+        const whereClause = {
+            studentId,
+            ...(isOwner || isAdmin ? {} : { isVerified: true }),
+        };
 
         const certifications = await prisma.certification.findMany({
-            where: {
-                studentId,
-            },
+            where: whereClause,
             orderBy: {
                 createdAt: "desc",
             },
@@ -81,7 +131,6 @@ export const getStudentCertifications = async (req, res) => {
 
     } catch (error) {
         console.error("Get certifications error:", error);
-
         return res.status(500).json({
             success: false,
             message: "Failed to fetch certifications",
@@ -89,8 +138,7 @@ export const getStudentCertifications = async (req, res) => {
     }
 };
 
-
-// 3. Update Certification
+// 3. Update Certification (Only owner student)
 export const updateCertification = async (req, res) => {
     try {
         const { studentId, certificationId } = req.params;
@@ -105,31 +153,15 @@ export const updateCertification = async (req, res) => {
             expiresAt,
         } = req.body;
 
-        if (
-            (title !== undefined &&
-                (typeof title !== "string" || !title.trim())) ||
-            (issuer !== undefined &&
-                (typeof issuer !== "string" || !issuer.trim())) ||
-            (issuedAt !== undefined &&
-                issuedAt !== null &&
-                Number.isNaN(Date.parse(issuedAt))) ||
-            (expiresAt !== undefined &&
-                expiresAt !== null &&
-                Number.isNaN(Date.parse(expiresAt)))
-        ) {
-            return res.status(400).json({
-                success: false,
-                message: "Please provide valid certification details",
-            });
-        }
-
-        const existingCertification =
-            await prisma.certification.findFirst({
-                where: {
-                    id: certificationId,
-                    studentId,
-                },
-            });
+        const existingCertification = await prisma.certification.findFirst({
+            where: {
+                id: certificationId,
+                studentId,
+            },
+            include: {
+                student: { select: { userId: true } },
+            },
+        });
 
         if (!existingCertification) {
             return res.status(404).json({
@@ -138,34 +170,37 @@ export const updateCertification = async (req, res) => {
             });
         }
 
+        if (existingCertification.student.userId !== req.user.id) {
+            return res.status(403).json({
+                success: false,
+                message: "You can only update your own certifications",
+            });
+        }
+
+        // Details change hone par verification dobara pending ho jayegi
         const certification = await prisma.certification.update({
-            where: {
-                id: certificationId,
-            },
+            where: { id: certificationId },
             data: {
                 ...(title !== undefined && { title: title.trim() }),
                 ...(issuer !== undefined && { issuer: issuer.trim() }),
-                ...(credentialId !== undefined && { credentialId }),
-                ...(credentialUrl !== undefined && { credentialUrl }),
-                ...(certificateUrl !== undefined && { certificateUrl }),
-                ...(issuedAt !== undefined && {
-                    issuedAt: issuedAt ? new Date(issuedAt) : null,
-                }),
-                ...(expiresAt !== undefined && {
-                    expiresAt: expiresAt ? new Date(expiresAt) : null,
-                }),
+                ...(credentialId !== undefined && { credentialId: credentialId?.trim() || null }),
+                ...(credentialUrl !== undefined && { credentialUrl: credentialUrl?.trim() || null }),
+                ...(certificateUrl !== undefined && { certificateUrl: certificateUrl?.trim() || null }),
+                ...(issuedAt !== undefined && { issuedAt: issuedAt ? new Date(issuedAt) : null }),
+                ...(expiresAt !== undefined && { expiresAt: expiresAt ? new Date(expiresAt) : null }),
+                isVerified: false,
+                verifiedAt: null,
             },
         });
 
         return res.status(200).json({
             success: true,
-            message: "Certification updated successfully",
+            message: "Certification updated and resubmitted for verification",
             data: certification,
         });
 
     } catch (error) {
         console.error("Update certification error:", error);
-
         return res.status(500).json({
             success: false,
             message: "Failed to update certification",
@@ -173,19 +208,20 @@ export const updateCertification = async (req, res) => {
     }
 };
 
-
-// 4. Delete Certification
+// 4. Delete Certification (Only owner student)
 export const deleteCertification = async (req, res) => {
     try {
         const { studentId, certificationId } = req.params;
 
-        const existingCertification =
-            await prisma.certification.findFirst({
-                where: {
-                    id: certificationId,
-                    studentId,
-                },
-            });
+        const existingCertification = await prisma.certification.findFirst({
+            where: {
+                id: certificationId,
+                studentId,
+            },
+            include: {
+                student: { select: { userId: true } },
+            },
+        });
 
         if (!existingCertification) {
             return res.status(404).json({
@@ -194,10 +230,15 @@ export const deleteCertification = async (req, res) => {
             });
         }
 
+        if (existingCertification.student.userId !== req.user.id) {
+            return res.status(403).json({
+                success: false,
+                message: "You can only delete your own certifications",
+            });
+        }
+
         await prisma.certification.delete({
-            where: {
-                id: certificationId,
-            },
+            where: { id: certificationId },
         });
 
         return res.status(200).json({
@@ -207,10 +248,56 @@ export const deleteCertification = async (req, res) => {
 
     } catch (error) {
         console.error("Delete certification error:", error);
-
         return res.status(500).json({
             success: false,
             message: "Failed to delete certification",
+        });
+    }
+};
+
+// 5. Admin Verify Endpoint (Only Admin can call)
+export const verifyCertification = async (req, res) => {
+    try {
+        const { studentId, certificationId } = req.params;
+        const { isVerified } = req.body;
+
+        const existingCertification = await prisma.certification.findFirst({
+            where: {
+                id: certificationId,
+                studentId,
+            },
+        });
+
+        if (!existingCertification) {
+            return res.status(404).json({
+                success: false,
+                message: "Certification not found",
+            });
+        }
+
+        const approved = typeof isVerified === "boolean" ? isVerified : true;
+
+        const updatedCertification = await prisma.certification.update({
+            where: { id: certificationId },
+            data: {
+                isVerified: approved,
+                verifiedAt: approved ? new Date() : null,
+            },
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: approved
+                ? "Certification verified successfully and is now live on student profile"
+                : "Certification verification revoked",
+            data: updatedCertification,
+        });
+
+    } catch (error) {
+        console.error("Verify certification error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to verify certification",
         });
     }
 };
