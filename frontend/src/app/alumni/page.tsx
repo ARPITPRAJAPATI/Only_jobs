@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import {
   Building2,
   Send,
@@ -14,6 +14,7 @@ import {
   Lock,
   Sparkles,
   ArrowRight,
+  ChevronDown,
   Filter,
 } from 'lucide-react';
 import { useToast } from '@/components/toast';
@@ -36,6 +37,88 @@ interface AlumniMentor {
   referralSlotsAvailable: number;
   linkedinUrl: string;
   verifiedByTpo: boolean;
+}
+
+interface FilterDropdownProps {
+  label: string;
+  value: string;
+  options: { value: string; label: string }[];
+  onChange: (value: string) => void;
+}
+
+function FilterDropdown({ label, value, options, onChange }: FilterDropdownProps) {
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const selectedOption = options.find((option) => option.value === value);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const closeOnOutsideClick = (event: PointerEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setOpen(false);
+        triggerRef.current?.focus();
+      }
+    };
+
+    document.addEventListener('pointerdown', closeOnOutsideClick);
+    document.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutsideClick);
+      document.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [open]);
+
+  return (
+    <div ref={containerRef} className="relative grid min-w-[205px] gap-1.5">
+      <span className="text-[11px] font-semibold text-muted">{label}</span>
+      <button
+        ref={triggerRef}
+        type="button"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen((current) => !current)}
+        className="flex h-10 w-full items-center justify-between gap-3 rounded-lg border border-line bg-surface px-3 text-left text-[13px] font-medium text-ink transition-colors hover:border-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+      >
+        <span className="truncate">{selectedOption?.label ?? value}</span>
+        <ChevronDown aria-hidden="true" className={cn('h-4 w-4 shrink-0 text-muted transition-transform', open && 'rotate-180')} />
+      </button>
+      {open && (
+        <div
+          role="menu"
+          aria-label={label}
+          className="absolute left-0 top-full z-30 mt-1.5 max-h-64 w-full overflow-y-auto rounded-lg border border-line bg-surface p-1 shadow-lg"
+        >
+          {options.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              role="menuitemradio"
+              aria-checked={value === option.value}
+              onClick={() => {
+                onChange(option.value);
+                setOpen(false);
+              }}
+              className={cn(
+                'flex min-h-9 w-full items-center rounded-md px-3 text-left text-[13px] transition-colors',
+                value === option.value
+                  ? 'bg-accent/10 font-semibold text-accent'
+                  : 'text-ink hover:bg-surface2'
+              )}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 const ALUMNI_DATA: AlumniMentor[] = [
@@ -174,6 +257,8 @@ export default function AlumniPage() {
       return matchSearch && matchCompany && matchDomain && matchBatch;
     });
   }, [search, selectedCompany, selectedDomain, selectedBatch]);
+  const verifiedAlumniCount = ALUMNI_DATA.filter((alumni) => alumni.verifiedByTpo).length;
+  const representedCompanyCount = new Set(ALUMNI_DATA.map((alumni) => alumni.company)).size;
 
   const handleOpenModal = (mentor: AlumniMentor) => {
     setSelectedMentor(mentor);
@@ -201,130 +286,113 @@ export default function AlumniPage() {
 
   return (
     <div className="min-h-screen bg-bg text-ink pb-20 transition-colors">
-      {/* Clean, Airy Theme-Aware Header */}
-      <div className="border-b border-line bg-surface/50 py-8 sm:py-12">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-center gap-2 mb-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-surface2 px-2.5 py-0.5 text-[11px] font-semibold text-muted border border-line">
-              Alumni Mentorship Network
-            </span>
-            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-              <CheckCircle2 className="h-3 w-3" />
-              <span>Verified TPO Institutional Records</span>
-            </span>
+      <header className="border-b border-line bg-surface/40 text-ink">
+        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-8 sm:px-6 sm:py-10 md:flex-row md:items-end md:justify-between lg:px-8">
+          <div className="max-w-2xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-accent">Alumni</p>
+            <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
+              Connect with KIET alumni
+            </h1>
+            <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">
+              Find alumni by company, experience, or area of expertise, and reach out for career guidance.
+            </p>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-ink font-sans">
-            KIET Alumni Mentorship & Placement Rails
-          </h1>
-          <p className="mt-2 text-xs sm:text-sm text-muted max-w-2xl font-normal leading-relaxed">
-            Auto-populated strictly from verified campus placement audits. Connect with placed KIET seniors across Microsoft, Amazon, Swiggy, and NVIDIA for employee job referrals, 1-on-1 mock interviews, and portfolio reviews.
-          </p>
-
-          <div className="mt-6 flex flex-wrap gap-3 text-xs font-semibold text-muted">
-            <div className="flex items-center gap-2 rounded-lg border border-line bg-surface px-3 py-1.5 shadow-2xs">
-              <span className="h-2 w-2 rounded-full bg-[#1a7f37]" />
-              <span className="text-ink font-medium">450+ Verified Alumni Mentors</span>
+          <dl className="flex items-center gap-6">
+            <div>
+              <dt className="text-xs text-muted">Verified alumni</dt>
+              <dd className="mt-1 text-lg font-semibold tabular-nums text-ink">{verifiedAlumniCount}</dd>
             </div>
-            <div className="flex items-center gap-2 rounded-lg border border-line bg-surface px-3 py-1.5 shadow-2xs">
-              <span className="h-2 w-2 rounded-full bg-[#0969da]" />
-              <span className="text-ink font-medium">120+ Big Tech Referrals Placed</span>
+            <div className="h-8 border-l border-line" aria-hidden="true" />
+            <div>
+              <dt className="text-xs text-muted">Companies</dt>
+              <dd className="mt-1 text-lg font-semibold tabular-nums text-ink">{representedCompanyCount}</dd>
             </div>
-            <div className="flex items-center gap-2 rounded-lg border border-line bg-surface px-3 py-1.5 shadow-2xs">
-              <Lock className="h-3 w-3 text-muted" />
-              <span className="text-muted font-medium">Strict Privacy Package Controls</span>
-            </div>
-          </div>
+          </dl>
         </div>
-      </div>
+      </header>
 
       {/* Main Content Area */}
-      <div className="max-w-[1340px] mx-auto px-4 sm:px-6 pt-6">
+      <main className="mx-auto max-w-7xl px-4 pt-5 sm:px-6 lg:px-8">
         {/* Controls Toolbar: Search & Filter Tabs */}
-        <div className="space-y-4 mb-6">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        <div className="mb-6 space-y-4 border-b border-line pb-5">
+          <div className="flex flex-col items-stretch justify-between gap-3 sm:flex-row sm:items-center">
             {/* Search Bar */}
-            <div className="relative w-full sm:w-[340px]">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted" />
+            <div className="relative w-full sm:max-w-[480px] sm:flex-1">
+              <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
               <input
                 type="text"
                 placeholder="Search mentor name, company, skill..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full h-8.5 rounded-md bg-surface border border-line pl-8.5 pr-3 text-xs font-medium text-ink outline-none focus:border-[#0969da] shadow-2xs transition-colors"
+                className="h-10 w-full rounded-lg border border-line bg-surface pl-10 pr-3.5 text-[13px] text-ink outline-none transition placeholder:text-muted focus:border-accent focus:ring-2 focus:ring-accent/20"
               />
             </div>
 
-            <div className="flex items-center gap-2 text-xs text-muted">
-              <Filter className="h-3.5 w-3.5 text-muted" />
-              <span>Showing <strong>{filteredAlumni.length}</strong> of {ALUMNI_DATA.length} Verified Alumni</span>
+            <div aria-live="polite" className="flex items-center gap-2 text-[13px] text-muted">
+              <Filter className="h-3.5 w-3.5 shrink-0" />
+              <span>
+                Showing <strong className="font-semibold text-ink">{filteredAlumni.length}</strong> of {ALUMNI_DATA.length} alumni
+              </span>
             </div>
           </div>
 
           {/* Quick Pill Filter Bars */}
-          <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-line">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-muted mr-1.5">
-              Top Firms:
-            </span>
-            {COMPANIES.map((company) => (
-              <button
-                key={company}
-                onClick={() => setSelectedCompany(company)}
-                className={cn(
-                  'rounded-md px-2.5 py-1 text-xs font-semibold transition-all cursor-pointer',
-                  selectedCompany === company
-                    ? 'bg-[#0969da] text-white shadow-2xs'
-                    : 'bg-surface2 text-muted hover:text-ink hover:bg-surface border border-line'
-                )}
-              >
-                {company}
-              </button>
-            ))}
+          <div className="space-y-2">
+            <p className="text-[11px] font-semibold text-muted">Company</p>
+            <div className="flex flex-wrap gap-1.5">
+              {COMPANIES.map((company) => (
+                <button
+                  key={company}
+                  type="button"
+                  aria-pressed={selectedCompany === company}
+                  onClick={() => setSelectedCompany(company)}
+                  className={cn(
+                    'min-h-8 rounded-lg border px-3 py-1 text-[13px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40',
+                    selectedCompany === company
+                      ? 'border-accent bg-accent text-accent-ink'
+                      : 'border-line bg-surface text-muted hover:bg-surface2 hover:text-ink'
+                  )}
+                >
+                  {company === 'ALL' ? 'All companies' : company}
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Domain & Batch Filters */}
-          <div className="flex flex-wrap items-center gap-3 pt-2 text-xs">
-            <div className="flex items-center gap-1.5">
-              <span className="text-muted font-medium">Domain:</span>
-              <select
-                value={selectedDomain}
-                onChange={(e) => setSelectedDomain(e.target.value)}
-                className="rounded-md border border-line bg-surface px-2.5 py-1 text-xs font-medium text-ink outline-none focus:border-[#0969da]"
-              >
-                {DOMAINS.map((dom) => (
-                  <option key={dom} value={dom}>
-                    {dom}
-                  </option>
-                ))}
-              </select>
-            </div>
+          <div className="flex flex-wrap items-end gap-3">
+            <FilterDropdown
+              label="Area of expertise"
+              value={selectedDomain}
+              options={DOMAINS.map((domain) => ({
+                value: domain,
+                label: domain === 'ALL' ? 'All areas' : domain,
+              }))}
+              onChange={setSelectedDomain}
+            />
 
-            <div className="flex items-center gap-1.5">
-              <span className="text-muted font-medium">Batch:</span>
-              <select
-                value={selectedBatch}
-                onChange={(e) => setSelectedBatch(e.target.value)}
-                className="rounded-md border border-line bg-surface px-2.5 py-1 text-xs font-medium text-ink outline-none focus:border-[#0969da]"
-              >
-                {BATCHES.map((batch) => (
-                  <option key={batch} value={batch}>
-                    {batch}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <FilterDropdown
+              label="Graduation year"
+              value={selectedBatch}
+              options={BATCHES.map((batch) => ({
+                value: batch,
+                label: batch === 'ALL' ? 'All years' : batch.replace('Class of ', ''),
+              }))}
+              onChange={setSelectedBatch}
+            />
 
             {(selectedCompany !== 'ALL' || selectedDomain !== 'ALL' || selectedBatch !== 'ALL' || search) && (
               <button
+                type="button"
                 onClick={() => {
                   setSelectedCompany('ALL');
                   setSelectedDomain('ALL');
                   setSelectedBatch('ALL');
                   setSearch('');
                 }}
-                className="text-xs text-[#0969da] hover:underline font-semibold cursor-pointer"
+                className="mb-0.5 min-h-9 px-1.5 text-[13px] font-medium text-accent transition-colors hover:underline"
               >
-                Clear all filters
+                Clear filters
               </button>
             )}
           </div>
@@ -349,7 +417,7 @@ export default function AlumniPage() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-2 xl:grid-cols-3">
             {filteredAlumni.map((alumni) => {
               const reqData = requested[alumni.id];
               const isReq = !!reqData;
@@ -357,24 +425,24 @@ export default function AlumniPage() {
               return (
                 <div
                   key={alumni.id}
-                  className="rounded-md border border-line bg-surface p-4 shadow-2xs hover:border-[#8c959f] transition-all flex flex-col justify-between"
+                  className="flex h-full flex-col justify-between rounded-xl border border-line bg-surface p-4 shadow-2xs transition-colors hover:border-accent/50 sm:p-5"
                 >
                   <div>
                     {/* Top Row: Avatar & Basic Identity */}
-                    <div className="flex items-start gap-3">
+                    <div className="flex items-start gap-3.5">
                       <img
                         src={alumni.avatarUrl}
                         alt={alumni.name}
-                        className="h-11 w-11 rounded-full object-cover border border-line shrink-0"
+                        className="h-12 w-12 shrink-0 rounded-full border border-line object-cover"
                       />
                       <div className="min-w-0 flex-1">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-1.5 truncate">
-                            <h3 className="font-bold text-sm text-ink truncate">
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex min-w-0 items-center gap-1.5">
+                            <h3 className="truncate text-sm font-semibold leading-[18px] text-ink sm:text-[15px]">
                               {alumni.name}
                             </h3>
-                            <span title="Verified KIET Placement Record" className="inline-flex text-[#1a7f37] shrink-0">
-                              <CheckCircle2 className="h-3.5 w-3.5 fill-emerald-500/15" />
+                            <span title="Verified KIET Placement Record" className="inline-flex shrink-0 text-[#1a7f37]">
+                              <CheckCircle2 className="h-4 w-4" />
                             </span>
                           </div>
 
@@ -382,56 +450,56 @@ export default function AlumniPage() {
                             href={alumni.linkedinUrl}
                             target="_blank"
                             rel="noreferrer"
-                            className="text-muted hover:text-[#0969da] transition-colors p-1"
+                            className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-muted transition-colors hover:bg-surface2 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
                             aria-label={`LinkedIn for ${alumni.name}`}
                           >
-                            <Linkedin className="h-3.5 w-3.5" />
+                            <Linkedin className="h-4 w-4" />
                           </a>
                         </div>
 
-                        <div className="text-xs font-semibold text-ink mt-0.5 truncate">
+                        <div className="-mt-0.5 truncate text-xs font-medium leading-4 text-ink sm:text-[13px]">
                           {alumni.role}
                         </div>
 
-                        <div className="flex items-center gap-1.5 text-[11px] text-muted mt-0.5">
-                          <Building2 className="h-3 w-3 text-muted shrink-0" />
+                        <div className="mt-1 flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1 text-[11px] text-muted">
+                          <Building2 className="h-3 w-3 shrink-0" />
                           <span className="font-medium text-ink">{alumni.company}</span>
-                          <span>•</span>
-                          <span>{alumni.batch}</span>
-                          <span>•</span>
+                          <span aria-hidden="true">·</span>
+                          <span>{alumni.batch.replace('Class of ', '')}</span>
+                          <span aria-hidden="true">·</span>
                           <span>{alumni.branch}</span>
                         </div>
                       </div>
                     </div>
 
                     {/* Domain & Placement CTC Box */}
-                    <div className="mt-3.5 p-2.5 rounded-md bg-surface2 border border-line space-y-1.5 text-xs">
+                    <dl className="mt-4 divide-y divide-line/70 rounded-lg border border-line bg-surface2/60 px-3.5 text-xs">
                       <div className="flex items-center justify-between">
-                        <span className="text-[11px] text-muted">Domain:</span>
-                        <span className="text-[11px] font-semibold text-ink">{alumni.domain}</span>
+                        <dt className="py-2.5 text-muted">Expertise</dt>
+                        <dd className="py-2.5 text-right font-medium text-ink">{alumni.domain}</dd>
                       </div>
 
-                      <div className="flex items-center justify-between pt-1 border-t border-line/60">
-                        <span className="text-[11px] text-muted">Verified CTC:</span>
+                      <div className="flex items-center justify-between gap-3">
+                        <dt className="py-2.5 text-muted">Verified package</dt>
                         {alumni.isPackagePublic && alumni.packageLpa ? (
-                          <span className="text-[11.5px] font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                          <dd className="py-2.5 font-mono text-[11.5px] font-semibold text-emerald-600 dark:text-emerald-400">
                             ₹{alumni.packageLpa.toFixed(1)} LPA
-                          </span>
+                          </dd>
                         ) : (
-                          <span className="text-[10.5px] text-muted italic flex items-center gap-1">
+                          <dd className="flex items-center gap-1 py-2.5 text-[10.5px] italic text-muted">
                             <Lock className="h-2.5 w-2.5" />
-                            <span>Confidential (Alumnus masked)</span>
-                          </span>
+                            Confidential
+                          </dd>
                         )}
                       </div>
-                    </div>
+                    </dl>
 
                     {/* Skills Pills */}
-                    <div className="mt-3 flex flex-wrap gap-1">
+                    <div className="mt-4 flex min-h-12 flex-wrap content-start gap-1.5">
                       {alumni.skills.map((skill) => (
                         <span
                           key={skill}
-                          className="rounded bg-surface2 border border-line px-2 py-0.5 text-[10.5px] font-medium text-ink"
+                          className="rounded-md border border-line bg-surface2 px-2 py-1 text-[10.5px] font-medium text-ink"
                         >
                           {skill}
                         </span>
@@ -439,28 +507,30 @@ export default function AlumniPage() {
                     </div>
 
                     {/* Referral Slots Available */}
-                    <div className="mt-3 flex items-center justify-between text-xs text-muted">
-                      <span>Available Referral Slots:</span>
-                      <strong className="text-[#1a7f37] font-mono font-bold">
-                        {alumni.referralSlotsAvailable} Active
-                      </strong>
+                    <div className="mt-3 flex items-center justify-between gap-3 text-xs">
+                      <span className="text-muted">Referral availability</span>
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-1 font-medium text-emerald-700 dark:text-emerald-400">
+                        <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                        {alumni.referralSlotsAvailable} slots
+                      </span>
                     </div>
                   </div>
 
                   {/* Action CTA */}
-                  <div className="mt-4 pt-3 border-t border-line flex items-center justify-between gap-3">
-                    <span className="text-[11px] text-muted">
+                  <div className="mt-4 flex items-center justify-between gap-3 border-t border-line pt-4">
+                    <span className="text-xs text-muted">
                       {isReq ? `Sent on ${reqData.date}` : '1-on-1 Guidance & CV'}
                     </span>
 
                     <button
+                      type="button"
                       onClick={() => (isReq ? null : handleOpenModal(alumni))}
                       disabled={isReq}
                       className={cn(
-                        'rounded-md px-3 py-1.5 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 border shadow-2xs',
+                        'inline-flex shrink-0 items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-semibold transition-colors',
                         isReq
-                          ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 cursor-default'
-                          : 'bg-[#1f883d] hover:bg-[#1a7f37] text-white border-[#1b1f24]/15 active:scale-95'
+                          ? 'cursor-default border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
+                          : 'border-accent bg-accent text-accent-ink hover:opacity-90'
                       )}
                     >
                       {isReq ? (
@@ -481,7 +551,7 @@ export default function AlumniPage() {
             })}
           </div>
         )}
-      </div>
+      </main>
 
       {/* ── Interactive Referral & Guidance Request Modal ── */}
       {selectedMentor && (

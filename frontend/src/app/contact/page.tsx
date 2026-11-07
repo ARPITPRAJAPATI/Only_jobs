@@ -8,14 +8,9 @@ import {
   ShieldCheck,
   Send,
   CheckCircle2,
-  AlertCircle,
-  Clock,
   Code2,
   MessageSquare,
   Star,
-  Sparkles,
-  ChevronRight,
-  Filter,
 } from 'lucide-react';
 import { useToast } from '@/components/toast';
 import { useStudent } from '@/components/store';
@@ -73,14 +68,6 @@ const INITIAL_TICKETS: SupportTicket[] = [
     rating: 5,
   },
 ];
-
-const CATEGORY_LABELS: Record<TicketCategory, string> = {
-  COURSE_DOUBT: 'Course Conceptual Doubt',
-  LAB_PROJECT_HELP: 'Lab & Project Runtime Help',
-  EXAM_ISSUE: 'Phase Exam & Gatekeeper Test',
-  TPO_DRIVE: 'Placement Drive & Eligibility',
-  BUG_REPORT: 'Platform Bug & Audit Query',
-};
 
 export default function ContactPage() {
   const toast = useToast();
@@ -150,89 +137,79 @@ export default function ContactPage() {
   const filteredTickets = tickets.filter(
     (t) => filterStatus === 'ALL' || t.status === filterStatus
   );
+  const openTicketCount = tickets.filter((ticket) => ticket.status !== 'RESOLVED').length;
 
   return (
     <div className="min-h-screen bg-bg text-ink pb-20 transition-colors">
-      {/* Clean, Airy Theme-Aware Header */}
-      <div className="border-b border-line bg-surface/50 py-8 sm:py-12">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-center gap-2 mb-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-surface2 px-2.5 py-0.5 text-[11px] font-semibold text-muted border border-line">
-              Helper & Mentor Support Engine
-            </span>
-            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-              <CheckCircle2 className="h-3 w-3" />
-              <span>Smart Load-Balanced Helper Routing</span>
-            </span>
+      <header className="border-b border-line bg-surface/40 text-ink">
+        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-8 sm:px-6 sm:py-10 md:flex-row md:items-end md:justify-between lg:px-8">
+          <div className="max-w-2xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-accent">Support</p>
+            <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
+              Contact &amp; helpdesk
+            </h1>
+            <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">
+              Get help with courses, lab work, exams, and placements, or contact the campus support teams directly.
+            </p>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-ink font-sans">
-            Campus Helpdesk & Mentor Support Engine
-          </h1>
-          <p className="mt-2 text-xs sm:text-sm text-muted max-w-2xl font-normal leading-relaxed">
-            Spam-proof structured doubt tickets and direct institutional channels. Raise course errors, phase exam verification requests, and placement drive inquiries directly to faculty and senior TAs.
-          </p>
-
-          <div className="mt-6 flex flex-wrap gap-3 text-xs font-semibold text-muted">
-            <div className="flex items-center gap-2 rounded-lg border border-line bg-surface px-3 py-1.5 shadow-2xs">
-              <span className="h-2 w-2 rounded-full bg-[#1a7f37]" />
-              <span className="text-ink font-medium">8 Active TAs & Faculty Online</span>
+          <dl className="flex items-center gap-6 border-t border-line pt-4 md:border-l md:border-t-0 md:pl-8 md:pt-0">
+            <div>
+              <dt className="text-xs text-muted">Your tickets</dt>
+              <dd className="mt-1 text-lg font-semibold tabular-nums text-ink">{tickets.length}</dd>
             </div>
-            <div className="flex items-center gap-2 rounded-lg border border-line bg-surface px-3 py-1.5 shadow-2xs">
-              <Clock className="h-3.5 w-3.5 text-muted" />
-              <span className="text-muted font-medium">Average Resolution: &lt; 2 hours</span>
+            <div className="h-8 border-l border-line" aria-hidden="true" />
+            <div>
+              <dt className="text-xs text-muted">Open</dt>
+              <dd className="mt-1 text-lg font-semibold tabular-nums text-ink">{openTicketCount}</dd>
             </div>
-          </div>
+          </dl>
         </div>
-      </div>
+      </header>
 
       {/* Main Content Area */}
-      <div className="max-w-[1340px] mx-auto px-4 sm:px-6 pt-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <main className="mx-auto max-w-[1280px] px-4 pt-6 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-12">
           
           {/* ============================================================ */}
           {/* ── LEFT COLUMN: Official Channels & Active Tickets ── */}
           {/* ============================================================ */}
-          <div className="lg:col-span-6 space-y-6">
+          <div className="space-y-7 lg:col-span-5">
             
             {/* Quick Contact Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {/* Phone Card */}
-              <div className="rounded-md border border-line bg-surface p-4 shadow-2xs">
-                <div className="h-8 w-8 rounded-md bg-surface2 border border-line flex items-center justify-center text-ink shrink-0 mb-2.5">
+              <div className="rounded-lg border border-line bg-surface p-4">
+                <div className="mb-3 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-line bg-surface2">
                   <PhoneCall className="h-4 w-4 text-[#1a7f37]" />
                 </div>
-                <div className="text-[10.5px] font-bold uppercase tracking-wider text-muted">
-                  TPO Helpline
-                </div>
+                <h2 className="text-sm font-semibold text-ink">TPO Helpline</h2>
                 <a
                   href="tel:+911202974300"
-                  className="text-sm font-bold text-ink hover:text-[#0969da] transition-colors block mt-0.5"
+                  className="mt-1 block text-sm font-medium text-ink transition-colors hover:text-accent"
                 >
                   +91-120-297-4300
                 </a>
-                <p className="text-[11px] text-muted mt-0.5">
+                <p className="mt-1 text-xs text-muted">
                   Mon – Sat: 9:00 AM – 5:30 PM
                 </p>
               </div>
 
               {/* Email Card */}
-              <div className="rounded-md border border-line bg-surface p-4 shadow-2xs">
-                <div className="h-8 w-8 rounded-md bg-surface2 border border-line flex items-center justify-center text-ink shrink-0 mb-2.5">
+              <div className="rounded-lg border border-line bg-surface p-4">
+                <div className="mb-3 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-line bg-surface2">
                   <Mail className="h-4 w-4 text-[#0969da]" />
                 </div>
-                <div className="text-[10.5px] font-bold uppercase tracking-wider text-muted">
-                  Academic Desks
-                </div>
+                <h2 className="text-sm font-semibold text-ink">Email support</h2>
                 <a
                   href="mailto:placement@kiet.edu"
-                  className="text-xs font-semibold text-ink hover:text-[#0969da] block mt-0.5"
+                  className="mt-1 block break-all text-sm text-ink transition-colors hover:text-accent"
                 >
                   placement@kiet.edu
                 </a>
                 <a
                   href="mailto:academics@kiet.edu"
-                  className="text-xs font-semibold text-ink hover:text-[#0969da] block mt-0.5"
+                  className="mt-1 block break-all text-sm text-ink transition-colors hover:text-accent"
                 >
                   academics@kiet.edu
                 </a>
@@ -240,13 +217,13 @@ export default function ContactPage() {
             </div>
 
             {/* Location Banner */}
-            <div className="rounded-md border border-line bg-surface p-3.5 shadow-2xs flex items-start gap-3">
-              <div className="h-7 w-7 rounded-md bg-surface2 border border-line flex items-center justify-center text-ink shrink-0 mt-0.5">
+            <div className="flex items-start gap-3 rounded-lg border border-line bg-surface p-4">
+              <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-line bg-surface2">
                 <MapPin className="h-3.5 w-3.5 text-[#0969da]" />
               </div>
-              <div className="text-xs">
-                <span className="font-bold text-ink block">Corporate Relations & Placement Cell (CRPC)</span>
-                <span className="text-muted leading-relaxed block">
+              <div className="text-sm">
+                <span className="block font-semibold text-ink">Corporate Relations &amp; Placement Cell</span>
+                <span className="mt-1 block leading-relaxed text-muted">
                   KIET Group of Institutions, Delhi-NCR, Ghaziabad, UP 201206
                 </span>
               </div>
@@ -255,28 +232,30 @@ export default function ContactPage() {
             {/* Active Tickets Queue Section */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-bold text-ink flex items-center gap-2">
+                <h2 className="flex items-center gap-2 text-base font-semibold text-ink">
                   <MessageSquare className="h-4 w-4 text-[#0969da]" />
-                  <span>Your Support Tickets</span>
-                  <span className="rounded-full bg-surface2 px-2 py-0.5 text-xs font-mono font-bold text-muted border border-line">
+                  <span>Your tickets</span>
+                  <span className="rounded-md border border-line bg-surface px-2 py-0.5 text-xs font-medium tabular-nums text-muted">
                     {tickets.length}
                   </span>
-                </h3>
+                </h2>
 
                 {/* Filter */}
                 <div className="flex items-center gap-1.5 text-xs">
                   {['ALL', 'ASSIGNED', 'RESOLVED'].map((st) => (
                     <button
                       key={st}
+                      type="button"
+                      aria-pressed={filterStatus === st}
                       onClick={() => setFilterStatus(st)}
                       className={cn(
-                        'px-2 py-0.5 rounded text-[11px] font-semibold transition-colors cursor-pointer',
+                        'rounded-md px-2.5 py-1 text-[11px] font-medium transition-colors',
                         filterStatus === st
-                          ? 'bg-[#0969da] text-white'
-                          : 'bg-surface2 text-muted hover:text-ink'
+                          ? 'bg-accent text-accent-ink'
+                          : 'text-muted hover:bg-surface2 hover:text-ink'
                       )}
                     >
-                      {st}
+                      {st === 'ALL' ? 'All' : st === 'ASSIGNED' ? 'Assigned' : 'Resolved'}
                     </button>
                   ))}
                 </div>
@@ -291,12 +270,12 @@ export default function ContactPage() {
                   {filteredTickets.map((t) => (
                     <div
                       key={t.id}
-                      className="rounded-md border border-line bg-surface p-4 shadow-2xs hover:border-[#8c959f] transition-all"
+                      className="rounded-lg border border-line bg-surface p-4 transition-colors hover:border-muted"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="font-mono text-[11px] font-bold text-muted">
+                            <span className="font-mono text-[11px] font-medium text-muted">
                               {t.id}
                             </span>
                             <span
@@ -321,9 +300,9 @@ export default function ContactPage() {
                             </span>
                           </div>
 
-                          <h4 className="text-xs sm:text-sm font-bold text-ink leading-snug">
+                          <h3 className="text-sm font-semibold leading-snug text-ink">
                             {t.title}
-                          </h4>
+                          </h3>
 
                           <p className="text-[11px] text-muted mt-1 font-medium">
                             {t.courseContext}
@@ -333,25 +312,26 @@ export default function ContactPage() {
                         <span className="text-[11px] text-muted shrink-0">{t.createdAt}</span>
                       </div>
 
-                      <p className="text-xs text-ink/90 mt-2.5 leading-relaxed bg-surface2/40 p-2 rounded border border-line/60">
+                      <p className="mt-3 rounded-md bg-surface2/60 p-3 text-xs leading-relaxed text-ink">
                         {t.description}
                       </p>
 
                       {t.codeSnippet && (
-                        <div className="mt-2.5 rounded bg-surface2 p-2.5 border border-line text-[11px] font-mono overflow-x-auto text-ink">
+                        <div className="mt-3 overflow-x-auto rounded-md border border-line bg-surface2 p-3 font-mono text-[11px] text-ink">
                           <pre>{t.codeSnippet}</pre>
                         </div>
                       )}
 
-                      <div className="mt-3 pt-2.5 border-t border-line flex flex-wrap items-center justify-between gap-2 text-xs">
+                      <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-3 text-xs">
                         <span className="text-muted text-[11px]">
                           Assigned to: <strong className="text-ink">{t.assignedHelper}</strong>
                         </span>
 
                         {t.status !== 'RESOLVED' ? (
                           <button
+                            type="button"
                             onClick={() => handleResolve(t.id)}
-                            className="rounded px-2.5 py-1 text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors cursor-pointer"
+                            className="rounded-md border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1.5 text-xs font-medium text-emerald-700 transition-colors hover:bg-emerald-500/15 dark:text-emerald-400"
                           >
                             Mark Resolved
                           </button>
@@ -374,55 +354,38 @@ export default function ContactPage() {
           {/* ============================================================ */}
           {/* ── RIGHT COLUMN: Raise Structured Doubt Ticket Form ── */}
           {/* ============================================================ */}
-          <div className="lg:col-span-6">
-            <div className="rounded-md border border-line bg-surface p-5 sm:p-6 shadow-2xs">
-              <div className="flex items-center gap-2 mb-1.5">
-                <ShieldCheck className="h-4 w-4 text-[#0969da]" />
-                <h2 className="text-base font-bold text-ink">
-                  Raise Structured Doubt Ticket
-                </h2>
+          <div className="lg:col-span-7">
+            <section className="rounded-lg border border-line bg-surface p-4 sm:p-5">
+              <div className="mb-4 border-b border-line pb-4">
+                <h2 className="text-lg font-semibold text-ink">Submit a support request</h2>
+                <p className="mt-1.5 text-sm leading-relaxed text-muted">
+                  Share the issue and its course or placement context so the support team can follow up.
+                </p>
               </div>
-              <p className="text-xs text-muted mb-5 leading-relaxed">
-                Tickets are automatically routed to the least-busy faculty or TA mentor. Code snippets, error messages, and course context are analyzed.
-              </p>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-3.5">
                 {/* Auto Student Info */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div className="flex flex-wrap items-center gap-x-6 gap-y-2 rounded-lg bg-surface2/60 px-3.5 py-3 text-sm">
                   <div>
-                    <label className="block text-xs font-semibold text-ink mb-1">
-                      Student Name
-                    </label>
-                    <input
-                      type="text"
-                      disabled
-                      value={student.name}
-                      className="w-full rounded-md border border-line bg-surface2 px-3 py-1.5 text-xs font-semibold text-ink cursor-not-allowed"
-                    />
+                    <span className="block text-[11px] text-muted">Student</span>
+                    <span className="font-medium text-ink">{student.name}</span>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-ink mb-1">
-                      Roll Number
-                    </label>
-                    <input
-                      type="text"
-                      disabled
-                      value={student.rollNumber}
-                      className="w-full rounded-md border border-line bg-surface2 px-3 py-1.5 text-xs font-mono font-semibold text-ink cursor-not-allowed"
-                    />
+                    <span className="block text-[11px] text-muted">Roll number</span>
+                    <span className="font-mono text-xs font-medium text-ink">{student.rollNumber}</span>
                   </div>
                 </div>
 
                 {/* Category & Priority */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
-                    <label className="block text-xs font-semibold text-ink mb-1">
+                    <label className="mb-1.5 block text-xs font-medium text-muted">
                       Ticket Category
                     </label>
                     <select
                       value={category}
                       onChange={(e) => setCategory(e.target.value as TicketCategory)}
-                      className="w-full rounded-md border border-line bg-surface2 px-3 py-1.5 text-xs font-semibold text-ink outline-none focus:border-[#0969da]"
+                      className="h-10 w-full rounded-lg border border-line bg-surface px-3 text-[13px] text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
                     >
                       <option value="COURSE_DOUBT">Course Conceptual Doubt</option>
                       <option value="LAB_PROJECT_HELP">Lab & Project Runtime Help</option>
@@ -433,13 +396,13 @@ export default function ContactPage() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-ink mb-1">
+                    <label className="mb-1.5 block text-xs font-medium text-muted">
                       Priority Level
                     </label>
                     <select
                       value={priority}
                       onChange={(e) => setPriority(e.target.value as TicketPriority)}
-                      className="w-full rounded-md border border-line bg-surface2 px-3 py-1.5 text-xs font-semibold text-ink outline-none focus:border-[#0969da]"
+                      className="h-10 w-full rounded-lg border border-line bg-surface px-3 text-[13px] text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
                     >
                       <option value="LOW">Low (Conceptual enquiry)</option>
                       <option value="MEDIUM">Medium (General lab doubt)</option>
@@ -451,8 +414,8 @@ export default function ContactPage() {
 
                 {/* Course Context */}
                 <div>
-                  <label className="block text-xs font-semibold text-ink mb-1">
-                    Course / Placement Drive Context
+                  <label className="mb-1.5 block text-xs font-medium text-muted">
+                    Course or placement context
                   </label>
                   <input
                     type="text"
@@ -460,14 +423,14 @@ export default function ContactPage() {
                     value={courseContext}
                     onChange={(e) => setCourseContext(e.target.value)}
                     placeholder="e.g., DevOps Phase 1: Docker Containerization"
-                    className="w-full rounded-md border border-line bg-surface2 px-3 py-1.5 text-xs font-medium text-ink outline-none focus:border-[#0969da]"
+                    className="h-10 w-full rounded-lg border border-line bg-surface px-3 text-[13px] text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
                   />
                 </div>
 
                 {/* Title */}
                 <div>
-                  <label className="block text-xs font-semibold text-ink mb-1">
-                    Issue Title / Error Headline
+                  <label className="mb-1.5 block text-xs font-medium text-muted">
+                    Subject
                   </label>
                   <input
                     type="text"
@@ -475,14 +438,14 @@ export default function ContactPage() {
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="e.g., Socket permission denied when building container image"
-                    className="w-full rounded-md border border-line bg-surface2 px-3 py-1.5 text-xs font-medium text-ink outline-none focus:border-[#0969da]"
+                    className="h-10 w-full rounded-lg border border-line bg-surface px-3 text-[13px] text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
                   />
                 </div>
 
                 {/* Description */}
                 <div>
-                  <label className="block text-xs font-semibold text-ink mb-1">
-                    Detailed Problem Description
+                  <label className="mb-1.5 block text-xs font-medium text-muted">
+                    Description
                   </label>
                   <textarea
                     rows={4}
@@ -490,7 +453,7 @@ export default function ContactPage() {
                     placeholder="Explain what steps you took, expected result, and what went wrong..."
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full rounded-md border border-line bg-surface2 p-3 text-xs text-ink outline-none focus:border-[#0969da]"
+                    className="w-full rounded-lg border border-line bg-surface px-3 py-2.5 text-[13px] text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
                   />
                 </div>
 
@@ -500,7 +463,7 @@ export default function ContactPage() {
                     <button
                       type="button"
                       onClick={() => setShowCodeInput(true)}
-                      className="text-xs font-semibold text-[#0969da] hover:underline flex items-center gap-1 cursor-pointer"
+                      className="flex items-center gap-1.5 text-sm font-medium text-accent hover:underline"
                     >
                       <Code2 className="h-3.5 w-3.5" />
                       <span>+ Attach code snippet or terminal error logs</span>
@@ -508,7 +471,7 @@ export default function ContactPage() {
                   ) : (
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <label className="text-xs font-semibold text-ink flex items-center gap-1">
+                        <label className="flex items-center gap-1.5 text-xs font-medium text-muted">
                           <Code2 className="h-3.5 w-3.5 text-[#0969da]" />
                           <span>Code Snippet / Terminal Error Logs</span>
                         </label>
@@ -528,31 +491,27 @@ export default function ContactPage() {
                         placeholder="Paste terminal logs or offending code snippet here..."
                         value={codeSnippet}
                         onChange={(e) => setCodeSnippet(e.target.value)}
-                        className="w-full rounded-md border border-line bg-surface2 p-3 text-xs font-mono text-ink outline-none focus:border-[#0969da]"
+                        className="w-full rounded-lg border border-line bg-surface px-3 py-2.5 font-mono text-xs text-ink outline-none focus:border-accent focus:ring-2 focus:ring-accent/20"
                       />
                     </div>
                   )}
                 </div>
 
                 {/* Submit Row */}
-                <div className="flex items-center justify-between pt-2 border-t border-line">
-                  <span className="text-[11px] text-muted">
-                    Auto-dispatched to least-busy mentor
-                  </span>
-
+                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
                   <button
                     type="submit"
-                    className="rounded-md bg-[#1f883d] hover:bg-[#1a7f37] text-white font-semibold text-xs px-4 py-1.5 flex items-center gap-1.5 shadow-2xs active:scale-95 transition-all cursor-pointer"
+                    className="ml-auto inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-accent-ink transition-opacity hover:opacity-90"
                   >
-                    <span>Dispatch Ticket</span>
-                    <Send className="h-3 w-3" />
+                    <span>Submit request</span>
+                    <Send className="h-4 w-4" />
                   </button>
                 </div>
               </form>
-            </div>
+            </section>
           </div>
         </div>
-      </div>
+      </main>
 
       {/* ── Rating Modal upon Resolution ── */}
       {ratingTicketId && (
