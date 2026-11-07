@@ -27,34 +27,55 @@ export type AggregateStudentBadge = {
 export type StudentBadgeMinAggregateOutputType = {
   id: string | null
   studentId: string | null
+  badgeId: string | null
   title: string | null
   description: string | null
   imageUrl: string | null
+  proofUrl: string | null
+  screenshotUrl: string | null
+  status: $Enums.BadgeStatus | null
+  reviewedBy: string | null
+  reviewedAt: Date | null
   awardedBy: string | null
   awardedAt: Date | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type StudentBadgeMaxAggregateOutputType = {
   id: string | null
   studentId: string | null
+  badgeId: string | null
   title: string | null
   description: string | null
   imageUrl: string | null
+  proofUrl: string | null
+  screenshotUrl: string | null
+  status: $Enums.BadgeStatus | null
+  reviewedBy: string | null
+  reviewedAt: Date | null
   awardedBy: string | null
   awardedAt: Date | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type StudentBadgeCountAggregateOutputType = {
   id: number
   studentId: number
+  badgeId: number
   title: number
   description: number
   imageUrl: number
+  proofUrl: number
+  screenshotUrl: number
+  status: number
+  reviewedBy: number
+  reviewedAt: number
   awardedBy: number
   awardedAt: number
   createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -62,34 +83,55 @@ export type StudentBadgeCountAggregateOutputType = {
 export type StudentBadgeMinAggregateInputType = {
   id?: true
   studentId?: true
+  badgeId?: true
   title?: true
   description?: true
   imageUrl?: true
+  proofUrl?: true
+  screenshotUrl?: true
+  status?: true
+  reviewedBy?: true
+  reviewedAt?: true
   awardedBy?: true
   awardedAt?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type StudentBadgeMaxAggregateInputType = {
   id?: true
   studentId?: true
+  badgeId?: true
   title?: true
   description?: true
   imageUrl?: true
+  proofUrl?: true
+  screenshotUrl?: true
+  status?: true
+  reviewedBy?: true
+  reviewedAt?: true
   awardedBy?: true
   awardedAt?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type StudentBadgeCountAggregateInputType = {
   id?: true
   studentId?: true
+  badgeId?: true
   title?: true
   description?: true
   imageUrl?: true
+  proofUrl?: true
+  screenshotUrl?: true
+  status?: true
+  reviewedBy?: true
+  reviewedAt?: true
   awardedBy?: true
   awardedAt?: true
   createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -168,12 +210,19 @@ export type StudentBadgeGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
 export type StudentBadgeGroupByOutputType = {
   id: string
   studentId: string
+  badgeId: string | null
   title: string
   description: string | null
   imageUrl: string | null
+  proofUrl: string | null
+  screenshotUrl: string | null
+  status: $Enums.BadgeStatus
+  reviewedBy: string | null
+  reviewedAt: Date | null
   awardedBy: string | null
-  awardedAt: Date
+  awardedAt: Date | null
   createdAt: Date
+  updatedAt: Date
   _count: StudentBadgeCountAggregateOutputType | null
   _min: StudentBadgeMinAggregateOutputType | null
   _max: StudentBadgeMaxAggregateOutputType | null
@@ -200,25 +249,41 @@ export type StudentBadgeWhereInput = {
   NOT?: Prisma.StudentBadgeWhereInput | Prisma.StudentBadgeWhereInput[]
   id?: Prisma.StringFilter<"StudentBadge"> | string
   studentId?: Prisma.StringFilter<"StudentBadge"> | string
+  badgeId?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
   title?: Prisma.StringFilter<"StudentBadge"> | string
   description?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
+  proofUrl?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
+  screenshotUrl?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
+  status?: Prisma.EnumBadgeStatusFilter<"StudentBadge"> | $Enums.BadgeStatus
+  reviewedBy?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
+  reviewedAt?: Prisma.DateTimeNullableFilter<"StudentBadge"> | Date | string | null
   awardedBy?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
-  awardedAt?: Prisma.DateTimeFilter<"StudentBadge"> | Date | string
+  awardedAt?: Prisma.DateTimeNullableFilter<"StudentBadge"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"StudentBadge"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"StudentBadge"> | Date | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
+  badgeCatalog?: Prisma.XOR<Prisma.BadgeCatalogNullableScalarRelationFilter, Prisma.BadgeCatalogWhereInput> | null
 }
 
 export type StudentBadgeOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
+  badgeId?: Prisma.SortOrderInput | Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  proofUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  screenshotUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
+  reviewedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   awardedBy?: Prisma.SortOrderInput | Prisma.SortOrder
-  awardedAt?: Prisma.SortOrder
+  awardedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   student?: Prisma.StudentOrderByWithRelationInput
+  badgeCatalog?: Prisma.BadgeCatalogOrderByWithRelationInput
 }
 
 export type StudentBadgeWhereUniqueInput = Prisma.AtLeast<{
@@ -227,24 +292,39 @@ export type StudentBadgeWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.StudentBadgeWhereInput[]
   NOT?: Prisma.StudentBadgeWhereInput | Prisma.StudentBadgeWhereInput[]
   studentId?: Prisma.StringFilter<"StudentBadge"> | string
+  badgeId?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
   title?: Prisma.StringFilter<"StudentBadge"> | string
   description?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
+  proofUrl?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
+  screenshotUrl?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
+  status?: Prisma.EnumBadgeStatusFilter<"StudentBadge"> | $Enums.BadgeStatus
+  reviewedBy?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
+  reviewedAt?: Prisma.DateTimeNullableFilter<"StudentBadge"> | Date | string | null
   awardedBy?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
-  awardedAt?: Prisma.DateTimeFilter<"StudentBadge"> | Date | string
+  awardedAt?: Prisma.DateTimeNullableFilter<"StudentBadge"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"StudentBadge"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"StudentBadge"> | Date | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
+  badgeCatalog?: Prisma.XOR<Prisma.BadgeCatalogNullableScalarRelationFilter, Prisma.BadgeCatalogWhereInput> | null
 }, "id">
 
 export type StudentBadgeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
+  badgeId?: Prisma.SortOrderInput | Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  proofUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  screenshotUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
+  reviewedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   awardedBy?: Prisma.SortOrderInput | Prisma.SortOrder
-  awardedAt?: Prisma.SortOrder
+  awardedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.StudentBadgeCountOrderByAggregateInput
   _max?: Prisma.StudentBadgeMaxOrderByAggregateInput
   _min?: Prisma.StudentBadgeMinOrderByAggregateInput
@@ -256,12 +336,19 @@ export type StudentBadgeScalarWhereWithAggregatesInput = {
   NOT?: Prisma.StudentBadgeScalarWhereWithAggregatesInput | Prisma.StudentBadgeScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"StudentBadge"> | string
   studentId?: Prisma.StringWithAggregatesFilter<"StudentBadge"> | string
+  badgeId?: Prisma.StringNullableWithAggregatesFilter<"StudentBadge"> | string | null
   title?: Prisma.StringWithAggregatesFilter<"StudentBadge"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"StudentBadge"> | string | null
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"StudentBadge"> | string | null
+  proofUrl?: Prisma.StringNullableWithAggregatesFilter<"StudentBadge"> | string | null
+  screenshotUrl?: Prisma.StringNullableWithAggregatesFilter<"StudentBadge"> | string | null
+  status?: Prisma.EnumBadgeStatusWithAggregatesFilter<"StudentBadge"> | $Enums.BadgeStatus
+  reviewedBy?: Prisma.StringNullableWithAggregatesFilter<"StudentBadge"> | string | null
+  reviewedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"StudentBadge"> | Date | string | null
   awardedBy?: Prisma.StringNullableWithAggregatesFilter<"StudentBadge"> | string | null
-  awardedAt?: Prisma.DateTimeWithAggregatesFilter<"StudentBadge"> | Date | string
+  awardedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"StudentBadge"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"StudentBadge"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"StudentBadge"> | Date | string
 }
 
 export type StudentBadgeCreateInput = {
@@ -269,21 +356,35 @@ export type StudentBadgeCreateInput = {
   title: string
   description?: string | null
   imageUrl?: string | null
+  proofUrl?: string | null
+  screenshotUrl?: string | null
+  status?: $Enums.BadgeStatus
+  reviewedBy?: string | null
+  reviewedAt?: Date | string | null
   awardedBy?: string | null
-  awardedAt?: Date | string
+  awardedAt?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   student: Prisma.StudentCreateNestedOneWithoutBadgesInput
+  badgeCatalog?: Prisma.BadgeCatalogCreateNestedOneWithoutBadgesInput
 }
 
 export type StudentBadgeUncheckedCreateInput = {
   id?: string
   studentId: string
+  badgeId?: string | null
   title: string
   description?: string | null
   imageUrl?: string | null
+  proofUrl?: string | null
+  screenshotUrl?: string | null
+  status?: $Enums.BadgeStatus
+  reviewedBy?: string | null
+  reviewedAt?: Date | string | null
   awardedBy?: string | null
-  awardedAt?: Date | string
+  awardedAt?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type StudentBadgeUpdateInput = {
@@ -291,32 +392,53 @@ export type StudentBadgeUpdateInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  screenshotUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumBadgeStatusFieldUpdateOperationsInput | $Enums.BadgeStatus
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  awardedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   student?: Prisma.StudentUpdateOneRequiredWithoutBadgesNestedInput
+  badgeCatalog?: Prisma.BadgeCatalogUpdateOneWithoutBadgesNestedInput
 }
 
 export type StudentBadgeUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  screenshotUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumBadgeStatusFieldUpdateOperationsInput | $Enums.BadgeStatus
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  awardedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StudentBadgeCreateManyInput = {
   id?: string
   studentId: string
+  badgeId?: string | null
   title: string
   description?: string | null
   imageUrl?: string | null
+  proofUrl?: string | null
+  screenshotUrl?: string | null
+  status?: $Enums.BadgeStatus
+  reviewedBy?: string | null
+  reviewedAt?: Date | string | null
   awardedBy?: string | null
-  awardedAt?: Date | string
+  awardedAt?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type StudentBadgeUpdateManyMutationInput = {
@@ -324,20 +446,33 @@ export type StudentBadgeUpdateManyMutationInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  screenshotUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumBadgeStatusFieldUpdateOperationsInput | $Enums.BadgeStatus
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  awardedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StudentBadgeUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  screenshotUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumBadgeStatusFieldUpdateOperationsInput | $Enums.BadgeStatus
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  awardedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StudentBadgeListRelationFilter = {
@@ -353,34 +488,55 @@ export type StudentBadgeOrderByRelationAggregateInput = {
 export type StudentBadgeCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
+  badgeId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  proofUrl?: Prisma.SortOrder
+  screenshotUrl?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  reviewedBy?: Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrder
   awardedBy?: Prisma.SortOrder
   awardedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type StudentBadgeMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
+  badgeId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  proofUrl?: Prisma.SortOrder
+  screenshotUrl?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  reviewedBy?: Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrder
   awardedBy?: Prisma.SortOrder
   awardedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type StudentBadgeMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
+  badgeId?: Prisma.SortOrder
   title?: Prisma.SortOrder
   description?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
+  proofUrl?: Prisma.SortOrder
+  screenshotUrl?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  reviewedBy?: Prisma.SortOrder
+  reviewedAt?: Prisma.SortOrder
   awardedBy?: Prisma.SortOrder
   awardedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type StudentBadgeCreateNestedManyWithoutStudentInput = {
@@ -425,24 +581,84 @@ export type StudentBadgeUncheckedUpdateManyWithoutStudentNestedInput = {
   deleteMany?: Prisma.StudentBadgeScalarWhereInput | Prisma.StudentBadgeScalarWhereInput[]
 }
 
+export type StudentBadgeCreateNestedManyWithoutBadgeCatalogInput = {
+  create?: Prisma.XOR<Prisma.StudentBadgeCreateWithoutBadgeCatalogInput, Prisma.StudentBadgeUncheckedCreateWithoutBadgeCatalogInput> | Prisma.StudentBadgeCreateWithoutBadgeCatalogInput[] | Prisma.StudentBadgeUncheckedCreateWithoutBadgeCatalogInput[]
+  connectOrCreate?: Prisma.StudentBadgeCreateOrConnectWithoutBadgeCatalogInput | Prisma.StudentBadgeCreateOrConnectWithoutBadgeCatalogInput[]
+  createMany?: Prisma.StudentBadgeCreateManyBadgeCatalogInputEnvelope
+  connect?: Prisma.StudentBadgeWhereUniqueInput | Prisma.StudentBadgeWhereUniqueInput[]
+}
+
+export type StudentBadgeUncheckedCreateNestedManyWithoutBadgeCatalogInput = {
+  create?: Prisma.XOR<Prisma.StudentBadgeCreateWithoutBadgeCatalogInput, Prisma.StudentBadgeUncheckedCreateWithoutBadgeCatalogInput> | Prisma.StudentBadgeCreateWithoutBadgeCatalogInput[] | Prisma.StudentBadgeUncheckedCreateWithoutBadgeCatalogInput[]
+  connectOrCreate?: Prisma.StudentBadgeCreateOrConnectWithoutBadgeCatalogInput | Prisma.StudentBadgeCreateOrConnectWithoutBadgeCatalogInput[]
+  createMany?: Prisma.StudentBadgeCreateManyBadgeCatalogInputEnvelope
+  connect?: Prisma.StudentBadgeWhereUniqueInput | Prisma.StudentBadgeWhereUniqueInput[]
+}
+
+export type StudentBadgeUpdateManyWithoutBadgeCatalogNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentBadgeCreateWithoutBadgeCatalogInput, Prisma.StudentBadgeUncheckedCreateWithoutBadgeCatalogInput> | Prisma.StudentBadgeCreateWithoutBadgeCatalogInput[] | Prisma.StudentBadgeUncheckedCreateWithoutBadgeCatalogInput[]
+  connectOrCreate?: Prisma.StudentBadgeCreateOrConnectWithoutBadgeCatalogInput | Prisma.StudentBadgeCreateOrConnectWithoutBadgeCatalogInput[]
+  upsert?: Prisma.StudentBadgeUpsertWithWhereUniqueWithoutBadgeCatalogInput | Prisma.StudentBadgeUpsertWithWhereUniqueWithoutBadgeCatalogInput[]
+  createMany?: Prisma.StudentBadgeCreateManyBadgeCatalogInputEnvelope
+  set?: Prisma.StudentBadgeWhereUniqueInput | Prisma.StudentBadgeWhereUniqueInput[]
+  disconnect?: Prisma.StudentBadgeWhereUniqueInput | Prisma.StudentBadgeWhereUniqueInput[]
+  delete?: Prisma.StudentBadgeWhereUniqueInput | Prisma.StudentBadgeWhereUniqueInput[]
+  connect?: Prisma.StudentBadgeWhereUniqueInput | Prisma.StudentBadgeWhereUniqueInput[]
+  update?: Prisma.StudentBadgeUpdateWithWhereUniqueWithoutBadgeCatalogInput | Prisma.StudentBadgeUpdateWithWhereUniqueWithoutBadgeCatalogInput[]
+  updateMany?: Prisma.StudentBadgeUpdateManyWithWhereWithoutBadgeCatalogInput | Prisma.StudentBadgeUpdateManyWithWhereWithoutBadgeCatalogInput[]
+  deleteMany?: Prisma.StudentBadgeScalarWhereInput | Prisma.StudentBadgeScalarWhereInput[]
+}
+
+export type StudentBadgeUncheckedUpdateManyWithoutBadgeCatalogNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentBadgeCreateWithoutBadgeCatalogInput, Prisma.StudentBadgeUncheckedCreateWithoutBadgeCatalogInput> | Prisma.StudentBadgeCreateWithoutBadgeCatalogInput[] | Prisma.StudentBadgeUncheckedCreateWithoutBadgeCatalogInput[]
+  connectOrCreate?: Prisma.StudentBadgeCreateOrConnectWithoutBadgeCatalogInput | Prisma.StudentBadgeCreateOrConnectWithoutBadgeCatalogInput[]
+  upsert?: Prisma.StudentBadgeUpsertWithWhereUniqueWithoutBadgeCatalogInput | Prisma.StudentBadgeUpsertWithWhereUniqueWithoutBadgeCatalogInput[]
+  createMany?: Prisma.StudentBadgeCreateManyBadgeCatalogInputEnvelope
+  set?: Prisma.StudentBadgeWhereUniqueInput | Prisma.StudentBadgeWhereUniqueInput[]
+  disconnect?: Prisma.StudentBadgeWhereUniqueInput | Prisma.StudentBadgeWhereUniqueInput[]
+  delete?: Prisma.StudentBadgeWhereUniqueInput | Prisma.StudentBadgeWhereUniqueInput[]
+  connect?: Prisma.StudentBadgeWhereUniqueInput | Prisma.StudentBadgeWhereUniqueInput[]
+  update?: Prisma.StudentBadgeUpdateWithWhereUniqueWithoutBadgeCatalogInput | Prisma.StudentBadgeUpdateWithWhereUniqueWithoutBadgeCatalogInput[]
+  updateMany?: Prisma.StudentBadgeUpdateManyWithWhereWithoutBadgeCatalogInput | Prisma.StudentBadgeUpdateManyWithWhereWithoutBadgeCatalogInput[]
+  deleteMany?: Prisma.StudentBadgeScalarWhereInput | Prisma.StudentBadgeScalarWhereInput[]
+}
+
+export type EnumBadgeStatusFieldUpdateOperationsInput = {
+  set?: $Enums.BadgeStatus
+}
+
 export type StudentBadgeCreateWithoutStudentInput = {
   id?: string
   title: string
   description?: string | null
   imageUrl?: string | null
+  proofUrl?: string | null
+  screenshotUrl?: string | null
+  status?: $Enums.BadgeStatus
+  reviewedBy?: string | null
+  reviewedAt?: Date | string | null
   awardedBy?: string | null
-  awardedAt?: Date | string
+  awardedAt?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
+  badgeCatalog?: Prisma.BadgeCatalogCreateNestedOneWithoutBadgesInput
 }
 
 export type StudentBadgeUncheckedCreateWithoutStudentInput = {
   id?: string
+  badgeId?: string | null
   title: string
   description?: string | null
   imageUrl?: string | null
+  proofUrl?: string | null
+  screenshotUrl?: string | null
+  status?: $Enums.BadgeStatus
+  reviewedBy?: string | null
+  reviewedAt?: Date | string | null
   awardedBy?: string | null
-  awardedAt?: Date | string
+  awardedAt?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type StudentBadgeCreateOrConnectWithoutStudentInput = {
@@ -477,22 +693,96 @@ export type StudentBadgeScalarWhereInput = {
   NOT?: Prisma.StudentBadgeScalarWhereInput | Prisma.StudentBadgeScalarWhereInput[]
   id?: Prisma.StringFilter<"StudentBadge"> | string
   studentId?: Prisma.StringFilter<"StudentBadge"> | string
+  badgeId?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
   title?: Prisma.StringFilter<"StudentBadge"> | string
   description?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
+  proofUrl?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
+  screenshotUrl?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
+  status?: Prisma.EnumBadgeStatusFilter<"StudentBadge"> | $Enums.BadgeStatus
+  reviewedBy?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
+  reviewedAt?: Prisma.DateTimeNullableFilter<"StudentBadge"> | Date | string | null
   awardedBy?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
-  awardedAt?: Prisma.DateTimeFilter<"StudentBadge"> | Date | string
+  awardedAt?: Prisma.DateTimeNullableFilter<"StudentBadge"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"StudentBadge"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"StudentBadge"> | Date | string
 }
 
-export type StudentBadgeCreateManyStudentInput = {
+export type StudentBadgeCreateWithoutBadgeCatalogInput = {
   id?: string
   title: string
   description?: string | null
   imageUrl?: string | null
+  proofUrl?: string | null
+  screenshotUrl?: string | null
+  status?: $Enums.BadgeStatus
+  reviewedBy?: string | null
+  reviewedAt?: Date | string | null
   awardedBy?: string | null
-  awardedAt?: Date | string
+  awardedAt?: Date | string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
+  student: Prisma.StudentCreateNestedOneWithoutBadgesInput
+}
+
+export type StudentBadgeUncheckedCreateWithoutBadgeCatalogInput = {
+  id?: string
+  studentId: string
+  title: string
+  description?: string | null
+  imageUrl?: string | null
+  proofUrl?: string | null
+  screenshotUrl?: string | null
+  status?: $Enums.BadgeStatus
+  reviewedBy?: string | null
+  reviewedAt?: Date | string | null
+  awardedBy?: string | null
+  awardedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type StudentBadgeCreateOrConnectWithoutBadgeCatalogInput = {
+  where: Prisma.StudentBadgeWhereUniqueInput
+  create: Prisma.XOR<Prisma.StudentBadgeCreateWithoutBadgeCatalogInput, Prisma.StudentBadgeUncheckedCreateWithoutBadgeCatalogInput>
+}
+
+export type StudentBadgeCreateManyBadgeCatalogInputEnvelope = {
+  data: Prisma.StudentBadgeCreateManyBadgeCatalogInput | Prisma.StudentBadgeCreateManyBadgeCatalogInput[]
+  skipDuplicates?: boolean
+}
+
+export type StudentBadgeUpsertWithWhereUniqueWithoutBadgeCatalogInput = {
+  where: Prisma.StudentBadgeWhereUniqueInput
+  update: Prisma.XOR<Prisma.StudentBadgeUpdateWithoutBadgeCatalogInput, Prisma.StudentBadgeUncheckedUpdateWithoutBadgeCatalogInput>
+  create: Prisma.XOR<Prisma.StudentBadgeCreateWithoutBadgeCatalogInput, Prisma.StudentBadgeUncheckedCreateWithoutBadgeCatalogInput>
+}
+
+export type StudentBadgeUpdateWithWhereUniqueWithoutBadgeCatalogInput = {
+  where: Prisma.StudentBadgeWhereUniqueInput
+  data: Prisma.XOR<Prisma.StudentBadgeUpdateWithoutBadgeCatalogInput, Prisma.StudentBadgeUncheckedUpdateWithoutBadgeCatalogInput>
+}
+
+export type StudentBadgeUpdateManyWithWhereWithoutBadgeCatalogInput = {
+  where: Prisma.StudentBadgeScalarWhereInput
+  data: Prisma.XOR<Prisma.StudentBadgeUpdateManyMutationInput, Prisma.StudentBadgeUncheckedUpdateManyWithoutBadgeCatalogInput>
+}
+
+export type StudentBadgeCreateManyStudentInput = {
+  id?: string
+  badgeId?: string | null
+  title: string
+  description?: string | null
+  imageUrl?: string | null
+  proofUrl?: string | null
+  screenshotUrl?: string | null
+  status?: $Enums.BadgeStatus
+  reviewedBy?: string | null
+  reviewedAt?: Date | string | null
+  awardedBy?: string | null
+  awardedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type StudentBadgeUpdateWithoutStudentInput = {
@@ -500,29 +790,118 @@ export type StudentBadgeUpdateWithoutStudentInput = {
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  screenshotUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumBadgeStatusFieldUpdateOperationsInput | $Enums.BadgeStatus
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  awardedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  badgeCatalog?: Prisma.BadgeCatalogUpdateOneWithoutBadgesNestedInput
 }
 
 export type StudentBadgeUncheckedUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  screenshotUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumBadgeStatusFieldUpdateOperationsInput | $Enums.BadgeStatus
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  awardedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type StudentBadgeUncheckedUpdateManyWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  badgeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   title?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  screenshotUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumBadgeStatusFieldUpdateOperationsInput | $Enums.BadgeStatus
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  awardedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StudentBadgeCreateManyBadgeCatalogInput = {
+  id?: string
+  studentId: string
+  title: string
+  description?: string | null
+  imageUrl?: string | null
+  proofUrl?: string | null
+  screenshotUrl?: string | null
+  status?: $Enums.BadgeStatus
+  reviewedBy?: string | null
+  reviewedAt?: Date | string | null
+  awardedBy?: string | null
+  awardedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type StudentBadgeUpdateWithoutBadgeCatalogInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  screenshotUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumBadgeStatusFieldUpdateOperationsInput | $Enums.BadgeStatus
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  student?: Prisma.StudentUpdateOneRequiredWithoutBadgesNestedInput
+}
+
+export type StudentBadgeUncheckedUpdateWithoutBadgeCatalogInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  screenshotUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumBadgeStatusFieldUpdateOperationsInput | $Enums.BadgeStatus
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StudentBadgeUncheckedUpdateManyWithoutBadgeCatalogInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  screenshotUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumBadgeStatusFieldUpdateOperationsInput | $Enums.BadgeStatus
+  reviewedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  awardedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -530,75 +909,117 @@ export type StudentBadgeUncheckedUpdateManyWithoutStudentInput = {
 export type StudentBadgeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   studentId?: boolean
+  badgeId?: boolean
   title?: boolean
   description?: boolean
   imageUrl?: boolean
+  proofUrl?: boolean
+  screenshotUrl?: boolean
+  status?: boolean
+  reviewedBy?: boolean
+  reviewedAt?: boolean
   awardedBy?: boolean
   awardedAt?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
+  badgeCatalog?: boolean | Prisma.StudentBadge$badgeCatalogArgs<ExtArgs>
 }, ExtArgs["result"]["studentBadge"]>
 
 export type StudentBadgeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   studentId?: boolean
+  badgeId?: boolean
   title?: boolean
   description?: boolean
   imageUrl?: boolean
+  proofUrl?: boolean
+  screenshotUrl?: boolean
+  status?: boolean
+  reviewedBy?: boolean
+  reviewedAt?: boolean
   awardedBy?: boolean
   awardedAt?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
+  badgeCatalog?: boolean | Prisma.StudentBadge$badgeCatalogArgs<ExtArgs>
 }, ExtArgs["result"]["studentBadge"]>
 
 export type StudentBadgeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   studentId?: boolean
+  badgeId?: boolean
   title?: boolean
   description?: boolean
   imageUrl?: boolean
+  proofUrl?: boolean
+  screenshotUrl?: boolean
+  status?: boolean
+  reviewedBy?: boolean
+  reviewedAt?: boolean
   awardedBy?: boolean
   awardedAt?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
+  badgeCatalog?: boolean | Prisma.StudentBadge$badgeCatalogArgs<ExtArgs>
 }, ExtArgs["result"]["studentBadge"]>
 
 export type StudentBadgeSelectScalar = {
   id?: boolean
   studentId?: boolean
+  badgeId?: boolean
   title?: boolean
   description?: boolean
   imageUrl?: boolean
+  proofUrl?: boolean
+  screenshotUrl?: boolean
+  status?: boolean
+  reviewedBy?: boolean
+  reviewedAt?: boolean
   awardedBy?: boolean
   awardedAt?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type StudentBadgeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "title" | "description" | "imageUrl" | "awardedBy" | "awardedAt" | "createdAt", ExtArgs["result"]["studentBadge"]>
+export type StudentBadgeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "badgeId" | "title" | "description" | "imageUrl" | "proofUrl" | "screenshotUrl" | "status" | "reviewedBy" | "reviewedAt" | "awardedBy" | "awardedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["studentBadge"]>
 export type StudentBadgeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
+  badgeCatalog?: boolean | Prisma.StudentBadge$badgeCatalogArgs<ExtArgs>
 }
 export type StudentBadgeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
+  badgeCatalog?: boolean | Prisma.StudentBadge$badgeCatalogArgs<ExtArgs>
 }
 export type StudentBadgeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
+  badgeCatalog?: boolean | Prisma.StudentBadge$badgeCatalogArgs<ExtArgs>
 }
 
 export type $StudentBadgePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "StudentBadge"
   objects: {
     student: Prisma.$StudentPayload<ExtArgs>
+    badgeCatalog: Prisma.$BadgeCatalogPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     studentId: string
+    badgeId: string | null
     title: string
     description: string | null
     imageUrl: string | null
+    proofUrl: string | null
+    screenshotUrl: string | null
+    status: $Enums.BadgeStatus
+    reviewedBy: string | null
+    reviewedAt: Date | null
     awardedBy: string | null
-    awardedAt: Date
+    awardedAt: Date | null
     createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["studentBadge"]>
   composites: {}
 }
@@ -994,6 +1415,7 @@ readonly fields: StudentBadgeFieldRefs;
 export interface Prisma__StudentBadgeClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   student<T extends Prisma.StudentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentDefaultArgs<ExtArgs>>): Prisma.Prisma__StudentClient<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  badgeCatalog<T extends Prisma.StudentBadge$badgeCatalogArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentBadge$badgeCatalogArgs<ExtArgs>>): Prisma.Prisma__BadgeCatalogClient<runtime.Types.Result.GetResult<Prisma.$BadgeCatalogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1025,12 +1447,19 @@ export interface Prisma__StudentBadgeClient<T, Null = never, ExtArgs extends run
 export interface StudentBadgeFieldRefs {
   readonly id: Prisma.FieldRef<"StudentBadge", 'String'>
   readonly studentId: Prisma.FieldRef<"StudentBadge", 'String'>
+  readonly badgeId: Prisma.FieldRef<"StudentBadge", 'String'>
   readonly title: Prisma.FieldRef<"StudentBadge", 'String'>
   readonly description: Prisma.FieldRef<"StudentBadge", 'String'>
   readonly imageUrl: Prisma.FieldRef<"StudentBadge", 'String'>
+  readonly proofUrl: Prisma.FieldRef<"StudentBadge", 'String'>
+  readonly screenshotUrl: Prisma.FieldRef<"StudentBadge", 'String'>
+  readonly status: Prisma.FieldRef<"StudentBadge", 'BadgeStatus'>
+  readonly reviewedBy: Prisma.FieldRef<"StudentBadge", 'String'>
+  readonly reviewedAt: Prisma.FieldRef<"StudentBadge", 'DateTime'>
   readonly awardedBy: Prisma.FieldRef<"StudentBadge", 'String'>
   readonly awardedAt: Prisma.FieldRef<"StudentBadge", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"StudentBadge", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"StudentBadge", 'DateTime'>
 }
     
 
@@ -1429,6 +1858,25 @@ export type StudentBadgeDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Limit how many StudentBadges to delete.
    */
   limit?: number
+}
+
+/**
+ * StudentBadge.badgeCatalog
+ */
+export type StudentBadge$badgeCatalogArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the BadgeCatalog
+   */
+  select?: Prisma.BadgeCatalogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the BadgeCatalog
+   */
+  omit?: Prisma.BadgeCatalogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.BadgeCatalogInclude<ExtArgs> | null
+  where?: Prisma.BadgeCatalogWhereInput
 }
 
 /**

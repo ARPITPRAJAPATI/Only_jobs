@@ -27,6 +27,7 @@ export type AggregateStaffRegistry = {
 export type StaffRegistryMinAggregateOutputType = {
   id: string | null
   name: string | null
+  staffId: string | null
   email: string | null
   role: $Enums.StaffRole | null
   userId: string | null
@@ -38,6 +39,7 @@ export type StaffRegistryMinAggregateOutputType = {
 export type StaffRegistryMaxAggregateOutputType = {
   id: string | null
   name: string | null
+  staffId: string | null
   email: string | null
   role: $Enums.StaffRole | null
   userId: string | null
@@ -49,6 +51,7 @@ export type StaffRegistryMaxAggregateOutputType = {
 export type StaffRegistryCountAggregateOutputType = {
   id: number
   name: number
+  staffId: number
   email: number
   role: number
   userId: number
@@ -62,6 +65,7 @@ export type StaffRegistryCountAggregateOutputType = {
 export type StaffRegistryMinAggregateInputType = {
   id?: true
   name?: true
+  staffId?: true
   email?: true
   role?: true
   userId?: true
@@ -73,6 +77,7 @@ export type StaffRegistryMinAggregateInputType = {
 export type StaffRegistryMaxAggregateInputType = {
   id?: true
   name?: true
+  staffId?: true
   email?: true
   role?: true
   userId?: true
@@ -84,6 +89,7 @@ export type StaffRegistryMaxAggregateInputType = {
 export type StaffRegistryCountAggregateInputType = {
   id?: true
   name?: true
+  staffId?: true
   email?: true
   role?: true
   userId?: true
@@ -167,7 +173,8 @@ export type StaffRegistryGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
 
 export type StaffRegistryGroupByOutputType = {
   id: string
-  name: string
+  name: string | null
+  staffId: string | null
   email: string
   role: $Enums.StaffRole
   userId: string | null
@@ -199,7 +206,8 @@ export type StaffRegistryWhereInput = {
   OR?: Prisma.StaffRegistryWhereInput[]
   NOT?: Prisma.StaffRegistryWhereInput | Prisma.StaffRegistryWhereInput[]
   id?: Prisma.StringFilter<"StaffRegistry"> | string
-  name?: Prisma.StringFilter<"StaffRegistry"> | string
+  name?: Prisma.StringNullableFilter<"StaffRegistry"> | string | null
+  staffId?: Prisma.StringNullableFilter<"StaffRegistry"> | string | null
   email?: Prisma.StringFilter<"StaffRegistry"> | string
   role?: Prisma.EnumStaffRoleFilter<"StaffRegistry"> | $Enums.StaffRole
   userId?: Prisma.StringNullableFilter<"StaffRegistry"> | string | null
@@ -211,7 +219,8 @@ export type StaffRegistryWhereInput = {
 
 export type StaffRegistryOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  name?: Prisma.SortOrderInput | Prisma.SortOrder
+  staffId?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrder
   role?: Prisma.SortOrder
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -223,22 +232,24 @@ export type StaffRegistryOrderByWithRelationInput = {
 
 export type StaffRegistryWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  staffId?: string
   email?: string
   userId?: string
   AND?: Prisma.StaffRegistryWhereInput | Prisma.StaffRegistryWhereInput[]
   OR?: Prisma.StaffRegistryWhereInput[]
   NOT?: Prisma.StaffRegistryWhereInput | Prisma.StaffRegistryWhereInput[]
-  name?: Prisma.StringFilter<"StaffRegistry"> | string
+  name?: Prisma.StringNullableFilter<"StaffRegistry"> | string | null
   role?: Prisma.EnumStaffRoleFilter<"StaffRegistry"> | $Enums.StaffRole
   isActive?: Prisma.BoolFilter<"StaffRegistry"> | boolean
   createdAt?: Prisma.DateTimeFilter<"StaffRegistry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StaffRegistry"> | Date | string
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-}, "id" | "email" | "userId">
+}, "id" | "staffId" | "email" | "userId">
 
 export type StaffRegistryOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  name?: Prisma.SortOrderInput | Prisma.SortOrder
+  staffId?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrder
   role?: Prisma.SortOrder
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -255,7 +266,8 @@ export type StaffRegistryScalarWhereWithAggregatesInput = {
   OR?: Prisma.StaffRegistryScalarWhereWithAggregatesInput[]
   NOT?: Prisma.StaffRegistryScalarWhereWithAggregatesInput | Prisma.StaffRegistryScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"StaffRegistry"> | string
-  name?: Prisma.StringWithAggregatesFilter<"StaffRegistry"> | string
+  name?: Prisma.StringNullableWithAggregatesFilter<"StaffRegistry"> | string | null
+  staffId?: Prisma.StringNullableWithAggregatesFilter<"StaffRegistry"> | string | null
   email?: Prisma.StringWithAggregatesFilter<"StaffRegistry"> | string
   role?: Prisma.EnumStaffRoleWithAggregatesFilter<"StaffRegistry"> | $Enums.StaffRole
   userId?: Prisma.StringNullableWithAggregatesFilter<"StaffRegistry"> | string | null
@@ -266,7 +278,8 @@ export type StaffRegistryScalarWhereWithAggregatesInput = {
 
 export type StaffRegistryCreateInput = {
   id?: string
-  name: string
+  name?: string | null
+  staffId?: string | null
   email: string
   role: $Enums.StaffRole
   isActive?: boolean
@@ -277,7 +290,8 @@ export type StaffRegistryCreateInput = {
 
 export type StaffRegistryUncheckedCreateInput = {
   id?: string
-  name: string
+  name?: string | null
+  staffId?: string | null
   email: string
   role: $Enums.StaffRole
   userId?: string | null
@@ -288,7 +302,8 @@ export type StaffRegistryUncheckedCreateInput = {
 
 export type StaffRegistryUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumStaffRoleFieldUpdateOperationsInput | $Enums.StaffRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -299,7 +314,8 @@ export type StaffRegistryUpdateInput = {
 
 export type StaffRegistryUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumStaffRoleFieldUpdateOperationsInput | $Enums.StaffRole
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -310,7 +326,8 @@ export type StaffRegistryUncheckedUpdateInput = {
 
 export type StaffRegistryCreateManyInput = {
   id?: string
-  name: string
+  name?: string | null
+  staffId?: string | null
   email: string
   role: $Enums.StaffRole
   userId?: string | null
@@ -321,7 +338,8 @@ export type StaffRegistryCreateManyInput = {
 
 export type StaffRegistryUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumStaffRoleFieldUpdateOperationsInput | $Enums.StaffRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -331,7 +349,8 @@ export type StaffRegistryUpdateManyMutationInput = {
 
 export type StaffRegistryUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumStaffRoleFieldUpdateOperationsInput | $Enums.StaffRole
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -348,6 +367,7 @@ export type StaffRegistryNullableScalarRelationFilter = {
 export type StaffRegistryCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  staffId?: Prisma.SortOrder
   email?: Prisma.SortOrder
   role?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -359,6 +379,7 @@ export type StaffRegistryCountOrderByAggregateInput = {
 export type StaffRegistryMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  staffId?: Prisma.SortOrder
   email?: Prisma.SortOrder
   role?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -370,6 +391,7 @@ export type StaffRegistryMaxOrderByAggregateInput = {
 export type StaffRegistryMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  staffId?: Prisma.SortOrder
   email?: Prisma.SortOrder
   role?: Prisma.SortOrder
   userId?: Prisma.SortOrder
@@ -416,7 +438,8 @@ export type EnumStaffRoleFieldUpdateOperationsInput = {
 
 export type StaffRegistryCreateWithoutUserInput = {
   id?: string
-  name: string
+  name?: string | null
+  staffId?: string | null
   email: string
   role: $Enums.StaffRole
   isActive?: boolean
@@ -426,7 +449,8 @@ export type StaffRegistryCreateWithoutUserInput = {
 
 export type StaffRegistryUncheckedCreateWithoutUserInput = {
   id?: string
-  name: string
+  name?: string | null
+  staffId?: string | null
   email: string
   role: $Enums.StaffRole
   isActive?: boolean
@@ -452,7 +476,8 @@ export type StaffRegistryUpdateToOneWithWhereWithoutUserInput = {
 
 export type StaffRegistryUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumStaffRoleFieldUpdateOperationsInput | $Enums.StaffRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -462,7 +487,8 @@ export type StaffRegistryUpdateWithoutUserInput = {
 
 export type StaffRegistryUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  staffId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumStaffRoleFieldUpdateOperationsInput | $Enums.StaffRole
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -475,6 +501,7 @@ export type StaffRegistryUncheckedUpdateWithoutUserInput = {
 export type StaffRegistrySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  staffId?: boolean
   email?: boolean
   role?: boolean
   userId?: boolean
@@ -487,6 +514,7 @@ export type StaffRegistrySelect<ExtArgs extends runtime.Types.Extensions.Interna
 export type StaffRegistrySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  staffId?: boolean
   email?: boolean
   role?: boolean
   userId?: boolean
@@ -499,6 +527,7 @@ export type StaffRegistrySelectCreateManyAndReturn<ExtArgs extends runtime.Types
 export type StaffRegistrySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
+  staffId?: boolean
   email?: boolean
   role?: boolean
   userId?: boolean
@@ -511,6 +540,7 @@ export type StaffRegistrySelectUpdateManyAndReturn<ExtArgs extends runtime.Types
 export type StaffRegistrySelectScalar = {
   id?: boolean
   name?: boolean
+  staffId?: boolean
   email?: boolean
   role?: boolean
   userId?: boolean
@@ -519,7 +549,7 @@ export type StaffRegistrySelectScalar = {
   updatedAt?: boolean
 }
 
-export type StaffRegistryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "role" | "userId" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["staffRegistry"]>
+export type StaffRegistryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "staffId" | "email" | "role" | "userId" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["staffRegistry"]>
 export type StaffRegistryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.StaffRegistry$userArgs<ExtArgs>
 }
@@ -537,7 +567,8 @@ export type $StaffRegistryPayload<ExtArgs extends runtime.Types.Extensions.Inter
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    name: string
+    name: string | null
+    staffId: string | null
     email: string
     role: $Enums.StaffRole
     userId: string | null
@@ -970,6 +1001,7 @@ export interface Prisma__StaffRegistryClient<T, Null = never, ExtArgs extends ru
 export interface StaffRegistryFieldRefs {
   readonly id: Prisma.FieldRef<"StaffRegistry", 'String'>
   readonly name: Prisma.FieldRef<"StaffRegistry", 'String'>
+  readonly staffId: Prisma.FieldRef<"StaffRegistry", 'String'>
   readonly email: Prisma.FieldRef<"StaffRegistry", 'String'>
   readonly role: Prisma.FieldRef<"StaffRegistry", 'StaffRole'>
   readonly userId: Prisma.FieldRef<"StaffRegistry", 'String'>

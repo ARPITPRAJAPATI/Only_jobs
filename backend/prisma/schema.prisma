@@ -21,13 +21,18 @@ enum StaffRole {
     TPO
 }
 
+enum BadgeStatus {
+    PENDING
+    APPROVED
+    REJECTED
+}
+
 model User {
-    id                 String   @id @default(uuid())
-    email              String   @unique
-    passwordHash       String
-    role               UserRole
-    isActive           Boolean  @default(true)
-    mustChangePassword Boolean  @default(false)
+    id           String   @id @default(uuid())
+    email        String   @unique
+    passwordHash String
+    role         UserRole
+    isActive     Boolean  @default(true)
 
     student      Student?
     staff        StaffRegistry?
@@ -57,15 +62,16 @@ model StaffProfile {
 }
 
 model Student {
-    id          String  @id @default(uuid())
-    name        String
-    email       String  @unique
-    collegeName String
-    rollNumber  String  @unique
-    libraryId   String? @unique
-    course      String
-    branch      String
-    batch       Int
+    id              String  @id @default(uuid())
+    name            String
+    email           String  @unique
+    collegeName     String
+    rollNumber      String  @unique
+    libraryId       String? @unique
+    course          String
+    branch          String
+    batch           Int
+    currentSemester Int?    @default(1)
 
     // Authentication relation
     userId String? @unique
@@ -180,18 +186,41 @@ model Certification {
     updatedAt DateTime @updatedAt
 }
 
-model StudentBadge {
-    id        String @id @default(uuid())
-    studentId String
+model BadgeCatalog {
+    id          String   @id @default(uuid())
+    title       String   @unique
+    description String
+    imageUrl    String?
+    category    String?
 
-    student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+    badges StudentBadge[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model StudentBadge {
+    id        String  @id @default(uuid())
+    studentId String
+    student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+    badgeId      String?
+    badgeCatalog BadgeCatalog? @relation(fields: [badgeId], references: [id], onDelete: SetNull)
 
     title       String
     description String?
     imageUrl    String?
 
+    proofUrl      String?
+    screenshotUrl String?
+
+    status     BadgeStatus @default(PENDING)
+    reviewedBy String?
+    reviewedAt DateTime?
+
     awardedBy String?
-    awardedAt DateTime @default(now())
+    awardedAt DateTime?
 
     createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }

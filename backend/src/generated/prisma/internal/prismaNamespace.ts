@@ -398,12 +398,14 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   User: 'User',
+  StaffProfile: 'StaffProfile',
   Student: 'Student',
   StaffRegistry: 'StaffRegistry',
   StudentProfile: 'StudentProfile',
   AcademicRecord: 'AcademicRecord',
   Project: 'Project',
   Certification: 'Certification',
+  BadgeCatalog: 'BadgeCatalog',
   StudentBadge: 'StudentBadge'
 } as const
 
@@ -420,7 +422,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "student" | "staffRegistry" | "studentProfile" | "academicRecord" | "project" | "certification" | "studentBadge"
+    modelProps: "user" | "staffProfile" | "student" | "staffRegistry" | "studentProfile" | "academicRecord" | "project" | "certification" | "badgeCatalog" | "studentBadge"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -495,6 +497,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
+    StaffProfile: {
+      payload: Prisma.$StaffProfilePayload<ExtArgs>
+      fields: Prisma.StaffProfileFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.StaffProfileFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffProfilePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.StaffProfileFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffProfilePayload>
+        }
+        findFirst: {
+          args: Prisma.StaffProfileFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffProfilePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.StaffProfileFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffProfilePayload>
+        }
+        findMany: {
+          args: Prisma.StaffProfileFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffProfilePayload>[]
+        }
+        create: {
+          args: Prisma.StaffProfileCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffProfilePayload>
+        }
+        createMany: {
+          args: Prisma.StaffProfileCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.StaffProfileCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffProfilePayload>[]
+        }
+        delete: {
+          args: Prisma.StaffProfileDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffProfilePayload>
+        }
+        update: {
+          args: Prisma.StaffProfileUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffProfilePayload>
+        }
+        deleteMany: {
+          args: Prisma.StaffProfileDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.StaffProfileUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.StaffProfileUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffProfilePayload>[]
+        }
+        upsert: {
+          args: Prisma.StaffProfileUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StaffProfilePayload>
+        }
+        aggregate: {
+          args: Prisma.StaffProfileAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateStaffProfile>
+        }
+        groupBy: {
+          args: Prisma.StaffProfileGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StaffProfileGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.StaffProfileCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StaffProfileCountAggregateOutputType> | number
         }
       }
     }
@@ -942,6 +1018,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    BadgeCatalog: {
+      payload: Prisma.$BadgeCatalogPayload<ExtArgs>
+      fields: Prisma.BadgeCatalogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.BadgeCatalogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BadgeCatalogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.BadgeCatalogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BadgeCatalogPayload>
+        }
+        findFirst: {
+          args: Prisma.BadgeCatalogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BadgeCatalogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.BadgeCatalogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BadgeCatalogPayload>
+        }
+        findMany: {
+          args: Prisma.BadgeCatalogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BadgeCatalogPayload>[]
+        }
+        create: {
+          args: Prisma.BadgeCatalogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BadgeCatalogPayload>
+        }
+        createMany: {
+          args: Prisma.BadgeCatalogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.BadgeCatalogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BadgeCatalogPayload>[]
+        }
+        delete: {
+          args: Prisma.BadgeCatalogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BadgeCatalogPayload>
+        }
+        update: {
+          args: Prisma.BadgeCatalogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BadgeCatalogPayload>
+        }
+        deleteMany: {
+          args: Prisma.BadgeCatalogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.BadgeCatalogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.BadgeCatalogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BadgeCatalogPayload>[]
+        }
+        upsert: {
+          args: Prisma.BadgeCatalogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$BadgeCatalogPayload>
+        }
+        aggregate: {
+          args: Prisma.BadgeCatalogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateBadgeCatalog>
+        }
+        groupBy: {
+          args: Prisma.BadgeCatalogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BadgeCatalogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.BadgeCatalogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.BadgeCatalogCountAggregateOutputType> | number
+        }
+      }
+    }
     StudentBadge: {
       payload: Prisma.$StudentBadgePayload<ExtArgs>
       fields: Prisma.StudentBadgeFieldRefs
@@ -1068,6 +1218,23 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const StaffProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  fullName: 'fullName',
+  profileImage: 'profileImage',
+  designation: 'designation',
+  department: 'department',
+  about: 'about',
+  areasOfExpertise: 'areasOfExpertise',
+  subjects: 'subjects',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StaffProfileScalarFieldEnum = (typeof StaffProfileScalarFieldEnum)[keyof typeof StaffProfileScalarFieldEnum]
+
+
 export const StudentScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -1078,6 +1245,7 @@ export const StudentScalarFieldEnum = {
   course: 'course',
   branch: 'branch',
   batch: 'batch',
+  currentSemester: 'currentSemester',
   userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -1089,6 +1257,7 @@ export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeo
 export const StaffRegistryScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  staffId: 'staffId',
   email: 'email',
   role: 'role',
   userId: 'userId',
@@ -1173,15 +1342,35 @@ export const CertificationScalarFieldEnum = {
 export type CertificationScalarFieldEnum = (typeof CertificationScalarFieldEnum)[keyof typeof CertificationScalarFieldEnum]
 
 
-export const StudentBadgeScalarFieldEnum = {
+export const BadgeCatalogScalarFieldEnum = {
   id: 'id',
-  studentId: 'studentId',
   title: 'title',
   description: 'description',
   imageUrl: 'imageUrl',
+  category: 'category',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BadgeCatalogScalarFieldEnum = (typeof BadgeCatalogScalarFieldEnum)[keyof typeof BadgeCatalogScalarFieldEnum]
+
+
+export const StudentBadgeScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  badgeId: 'badgeId',
+  title: 'title',
+  description: 'description',
+  imageUrl: 'imageUrl',
+  proofUrl: 'proofUrl',
+  screenshotUrl: 'screenshotUrl',
+  status: 'status',
+  reviewedBy: 'reviewedBy',
+  reviewedAt: 'reviewedAt',
   awardedBy: 'awardedBy',
   awardedAt: 'awardedAt',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type StudentBadgeScalarFieldEnum = (typeof StudentBadgeScalarFieldEnum)[keyof typeof StudentBadgeScalarFieldEnum]
@@ -1305,6 +1494,20 @@ export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, '
  * Reference to a field of type 'Float[]'
  */
 export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+/**
+ * Reference to a field of type 'BadgeStatus'
+ */
+export type EnumBadgeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BadgeStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'BadgeStatus[]'
+ */
+export type ListEnumBadgeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BadgeStatus[]'>
     
 
 /**
@@ -1459,12 +1662,14 @@ export interface PrismaClientOptionsWithAdapter extends PrismaClientBaseOptions 
 export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaClientOptionsWithAdapter
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
+  staffProfile?: Prisma.StaffProfileOmit
   student?: Prisma.StudentOmit
   staffRegistry?: Prisma.StaffRegistryOmit
   studentProfile?: Prisma.StudentProfileOmit
   academicRecord?: Prisma.AcademicRecordOmit
   project?: Prisma.ProjectOmit
   certification?: Prisma.CertificationOmit
+  badgeCatalog?: Prisma.BadgeCatalogOmit
   studentBadge?: Prisma.StudentBadgeOmit
 }
 

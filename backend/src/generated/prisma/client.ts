@@ -47,6 +47,11 @@ export { Prisma }
  */
 export type User = Prisma.UserModel
 /**
+ * Model StaffProfile
+ * 
+ */
+export type StaffProfile = Prisma.StaffProfileModel
+/**
  * Model Student
  * 
  */
@@ -76,6 +81,11 @@ export type Project = Prisma.ProjectModel
  * 
  */
 export type Certification = Prisma.CertificationModel
+/**
+ * Model BadgeCatalog
+ * 
+ */
+export type BadgeCatalog = Prisma.BadgeCatalogModel
 /**
  * Model StudentBadge
  * 

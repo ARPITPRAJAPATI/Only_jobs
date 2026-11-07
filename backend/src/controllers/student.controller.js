@@ -148,6 +148,15 @@ export const getFullStudentProfile = async (req, res) => {
             });
         }
 
+        // Unverified certificates and pending badge applications are only visible to the student owner and Admin
+        const isOwner = student.userId === req.user.id;
+        const isAdmin = req.user.role === "ADMIN";
+
+        if (!isOwner && !isAdmin) {
+            student.certifications = student.certifications.filter((c) => c.isVerified);
+            student.badges = student.badges.filter((b) => b.status === "APPROVED");
+        }
+
         return res.status(200).json({
             success: true,
             message: "Full student profile fetched successfully",

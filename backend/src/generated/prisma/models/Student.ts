@@ -28,10 +28,12 @@ export type AggregateStudent = {
 
 export type StudentAvgAggregateOutputType = {
   batch: number | null
+  currentSemester: number | null
 }
 
 export type StudentSumAggregateOutputType = {
   batch: number | null
+  currentSemester: number | null
 }
 
 export type StudentMinAggregateOutputType = {
@@ -44,6 +46,7 @@ export type StudentMinAggregateOutputType = {
   course: string | null
   branch: string | null
   batch: number | null
+  currentSemester: number | null
   userId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -59,6 +62,7 @@ export type StudentMaxAggregateOutputType = {
   course: string | null
   branch: string | null
   batch: number | null
+  currentSemester: number | null
   userId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -74,6 +78,7 @@ export type StudentCountAggregateOutputType = {
   course: number
   branch: number
   batch: number
+  currentSemester: number
   userId: number
   createdAt: number
   updatedAt: number
@@ -83,10 +88,12 @@ export type StudentCountAggregateOutputType = {
 
 export type StudentAvgAggregateInputType = {
   batch?: true
+  currentSemester?: true
 }
 
 export type StudentSumAggregateInputType = {
   batch?: true
+  currentSemester?: true
 }
 
 export type StudentMinAggregateInputType = {
@@ -99,6 +106,7 @@ export type StudentMinAggregateInputType = {
   course?: true
   branch?: true
   batch?: true
+  currentSemester?: true
   userId?: true
   createdAt?: true
   updatedAt?: true
@@ -114,6 +122,7 @@ export type StudentMaxAggregateInputType = {
   course?: true
   branch?: true
   batch?: true
+  currentSemester?: true
   userId?: true
   createdAt?: true
   updatedAt?: true
@@ -129,6 +138,7 @@ export type StudentCountAggregateInputType = {
   course?: true
   branch?: true
   batch?: true
+  currentSemester?: true
   userId?: true
   createdAt?: true
   updatedAt?: true
@@ -231,6 +241,7 @@ export type StudentGroupByOutputType = {
   course: string
   branch: string
   batch: number
+  currentSemester: number | null
   userId: string | null
   createdAt: Date
   updatedAt: Date
@@ -269,6 +280,7 @@ export type StudentWhereInput = {
   course?: Prisma.StringFilter<"Student"> | string
   branch?: Prisma.StringFilter<"Student"> | string
   batch?: Prisma.IntFilter<"Student"> | number
+  currentSemester?: Prisma.IntNullableFilter<"Student"> | number | null
   userId?: Prisma.StringNullableFilter<"Student"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Student"> | Date | string
@@ -290,6 +302,7 @@ export type StudentOrderByWithRelationInput = {
   course?: Prisma.SortOrder
   branch?: Prisma.SortOrder
   batch?: Prisma.SortOrder
+  currentSemester?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -315,6 +328,7 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
   course?: Prisma.StringFilter<"Student"> | string
   branch?: Prisma.StringFilter<"Student"> | string
   batch?: Prisma.IntFilter<"Student"> | number
+  currentSemester?: Prisma.IntNullableFilter<"Student"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -335,6 +349,7 @@ export type StudentOrderByWithAggregationInput = {
   course?: Prisma.SortOrder
   branch?: Prisma.SortOrder
   batch?: Prisma.SortOrder
+  currentSemester?: Prisma.SortOrderInput | Prisma.SortOrder
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -358,6 +373,7 @@ export type StudentScalarWhereWithAggregatesInput = {
   course?: Prisma.StringWithAggregatesFilter<"Student"> | string
   branch?: Prisma.StringWithAggregatesFilter<"Student"> | string
   batch?: Prisma.IntWithAggregatesFilter<"Student"> | number
+  currentSemester?: Prisma.IntNullableWithAggregatesFilter<"Student"> | number | null
   userId?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Student"> | Date | string
@@ -373,6 +389,7 @@ export type StudentCreateInput = {
   course: string
   branch: string
   batch: number
+  currentSemester?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user?: Prisma.UserCreateNestedOneWithoutStudentInput
@@ -393,6 +410,7 @@ export type StudentUncheckedCreateInput = {
   course: string
   branch: string
   batch: number
+  currentSemester?: number | null
   userId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -413,6 +431,7 @@ export type StudentUpdateInput = {
   course?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   batch?: Prisma.IntFieldUpdateOperationsInput | number
+  currentSemester?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneWithoutStudentNestedInput
@@ -433,6 +452,7 @@ export type StudentUncheckedUpdateInput = {
   course?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   batch?: Prisma.IntFieldUpdateOperationsInput | number
+  currentSemester?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -453,6 +473,7 @@ export type StudentCreateManyInput = {
   course: string
   branch: string
   batch: number
+  currentSemester?: number | null
   userId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -468,6 +489,7 @@ export type StudentUpdateManyMutationInput = {
   course?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   batch?: Prisma.IntFieldUpdateOperationsInput | number
+  currentSemester?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -482,6 +504,7 @@ export type StudentUncheckedUpdateManyInput = {
   course?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   batch?: Prisma.IntFieldUpdateOperationsInput | number
+  currentSemester?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -502,6 +525,7 @@ export type StudentCountOrderByAggregateInput = {
   course?: Prisma.SortOrder
   branch?: Prisma.SortOrder
   batch?: Prisma.SortOrder
+  currentSemester?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -509,6 +533,7 @@ export type StudentCountOrderByAggregateInput = {
 
 export type StudentAvgOrderByAggregateInput = {
   batch?: Prisma.SortOrder
+  currentSemester?: Prisma.SortOrder
 }
 
 export type StudentMaxOrderByAggregateInput = {
@@ -521,6 +546,7 @@ export type StudentMaxOrderByAggregateInput = {
   course?: Prisma.SortOrder
   branch?: Prisma.SortOrder
   batch?: Prisma.SortOrder
+  currentSemester?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -536,6 +562,7 @@ export type StudentMinOrderByAggregateInput = {
   course?: Prisma.SortOrder
   branch?: Prisma.SortOrder
   batch?: Prisma.SortOrder
+  currentSemester?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -543,6 +570,7 @@ export type StudentMinOrderByAggregateInput = {
 
 export type StudentSumOrderByAggregateInput = {
   batch?: Prisma.SortOrder
+  currentSemester?: Prisma.SortOrder
 }
 
 export type StudentScalarRelationFilter = {
@@ -582,12 +610,16 @@ export type StudentUncheckedUpdateOneWithoutUserNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.StudentUpdateToOneWithWhereWithoutUserInput, Prisma.StudentUpdateWithoutUserInput>, Prisma.StudentUncheckedUpdateWithoutUserInput>
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type IntFieldUpdateOperationsInput = {
   set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
   increment?: number
   decrement?: number
   multiply?: number
@@ -674,6 +706,7 @@ export type StudentCreateWithoutUserInput = {
   course: string
   branch: string
   batch: number
+  currentSemester?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutStudentInput
@@ -693,6 +726,7 @@ export type StudentUncheckedCreateWithoutUserInput = {
   course: string
   branch: string
   batch: number
+  currentSemester?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutStudentInput
@@ -728,6 +762,7 @@ export type StudentUpdateWithoutUserInput = {
   course?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   batch?: Prisma.IntFieldUpdateOperationsInput | number
+  currentSemester?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   studentProfile?: Prisma.StudentProfileUpdateOneWithoutStudentNestedInput
@@ -747,6 +782,7 @@ export type StudentUncheckedUpdateWithoutUserInput = {
   course?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   batch?: Prisma.IntFieldUpdateOperationsInput | number
+  currentSemester?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutStudentNestedInput
@@ -766,6 +802,7 @@ export type StudentCreateWithoutStudentProfileInput = {
   course: string
   branch: string
   batch: number
+  currentSemester?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user?: Prisma.UserCreateNestedOneWithoutStudentInput
@@ -785,6 +822,7 @@ export type StudentUncheckedCreateWithoutStudentProfileInput = {
   course: string
   branch: string
   batch: number
+  currentSemester?: number | null
   userId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -820,6 +858,7 @@ export type StudentUpdateWithoutStudentProfileInput = {
   course?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   batch?: Prisma.IntFieldUpdateOperationsInput | number
+  currentSemester?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneWithoutStudentNestedInput
@@ -839,6 +878,7 @@ export type StudentUncheckedUpdateWithoutStudentProfileInput = {
   course?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   batch?: Prisma.IntFieldUpdateOperationsInput | number
+  currentSemester?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -858,6 +898,7 @@ export type StudentCreateWithoutAcademicRecordsInput = {
   course: string
   branch: string
   batch: number
+  currentSemester?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user?: Prisma.UserCreateNestedOneWithoutStudentInput
@@ -877,6 +918,7 @@ export type StudentUncheckedCreateWithoutAcademicRecordsInput = {
   course: string
   branch: string
   batch: number
+  currentSemester?: number | null
   userId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -912,6 +954,7 @@ export type StudentUpdateWithoutAcademicRecordsInput = {
   course?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   batch?: Prisma.IntFieldUpdateOperationsInput | number
+  currentSemester?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneWithoutStudentNestedInput
@@ -931,6 +974,7 @@ export type StudentUncheckedUpdateWithoutAcademicRecordsInput = {
   course?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   batch?: Prisma.IntFieldUpdateOperationsInput | number
+  currentSemester?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -950,6 +994,7 @@ export type StudentCreateWithoutProjectsInput = {
   course: string
   branch: string
   batch: number
+  currentSemester?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user?: Prisma.UserCreateNestedOneWithoutStudentInput
@@ -969,6 +1014,7 @@ export type StudentUncheckedCreateWithoutProjectsInput = {
   course: string
   branch: string
   batch: number
+  currentSemester?: number | null
   userId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1004,6 +1050,7 @@ export type StudentUpdateWithoutProjectsInput = {
   course?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   batch?: Prisma.IntFieldUpdateOperationsInput | number
+  currentSemester?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneWithoutStudentNestedInput
@@ -1023,6 +1070,7 @@ export type StudentUncheckedUpdateWithoutProjectsInput = {
   course?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   batch?: Prisma.IntFieldUpdateOperationsInput | number
+  currentSemester?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1042,6 +1090,7 @@ export type StudentCreateWithoutCertificationsInput = {
   course: string
   branch: string
   batch: number
+  currentSemester?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user?: Prisma.UserCreateNestedOneWithoutStudentInput
@@ -1061,6 +1110,7 @@ export type StudentUncheckedCreateWithoutCertificationsInput = {
   course: string
   branch: string
   batch: number
+  currentSemester?: number | null
   userId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1096,6 +1146,7 @@ export type StudentUpdateWithoutCertificationsInput = {
   course?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   batch?: Prisma.IntFieldUpdateOperationsInput | number
+  currentSemester?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneWithoutStudentNestedInput
@@ -1115,6 +1166,7 @@ export type StudentUncheckedUpdateWithoutCertificationsInput = {
   course?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   batch?: Prisma.IntFieldUpdateOperationsInput | number
+  currentSemester?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1134,6 +1186,7 @@ export type StudentCreateWithoutBadgesInput = {
   course: string
   branch: string
   batch: number
+  currentSemester?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user?: Prisma.UserCreateNestedOneWithoutStudentInput
@@ -1153,6 +1206,7 @@ export type StudentUncheckedCreateWithoutBadgesInput = {
   course: string
   branch: string
   batch: number
+  currentSemester?: number | null
   userId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1188,6 +1242,7 @@ export type StudentUpdateWithoutBadgesInput = {
   course?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   batch?: Prisma.IntFieldUpdateOperationsInput | number
+  currentSemester?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneWithoutStudentNestedInput
@@ -1207,6 +1262,7 @@ export type StudentUncheckedUpdateWithoutBadgesInput = {
   course?: Prisma.StringFieldUpdateOperationsInput | string
   branch?: Prisma.StringFieldUpdateOperationsInput | string
   batch?: Prisma.IntFieldUpdateOperationsInput | number
+  currentSemester?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1284,6 +1340,7 @@ export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   course?: boolean
   branch?: boolean
   batch?: boolean
+  currentSemester?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1306,6 +1363,7 @@ export type StudentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   course?: boolean
   branch?: boolean
   batch?: boolean
+  currentSemester?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1322,6 +1380,7 @@ export type StudentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   course?: boolean
   branch?: boolean
   batch?: boolean
+  currentSemester?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1338,12 +1397,13 @@ export type StudentSelectScalar = {
   course?: boolean
   branch?: boolean
   batch?: boolean
+  currentSemester?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "collegeName" | "rollNumber" | "libraryId" | "course" | "branch" | "batch" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
+export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "collegeName" | "rollNumber" | "libraryId" | "course" | "branch" | "batch" | "currentSemester" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
 export type StudentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.Student$userArgs<ExtArgs>
   studentProfile?: boolean | Prisma.Student$studentProfileArgs<ExtArgs>
@@ -1380,6 +1440,7 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     course: string
     branch: string
     batch: number
+    currentSemester: number | null
     userId: string | null
     createdAt: Date
     updatedAt: Date
@@ -1821,6 +1882,7 @@ export interface StudentFieldRefs {
   readonly course: Prisma.FieldRef<"Student", 'String'>
   readonly branch: Prisma.FieldRef<"Student", 'String'>
   readonly batch: Prisma.FieldRef<"Student", 'Int'>
+  readonly currentSemester: Prisma.FieldRef<"Student", 'Int'>
   readonly userId: Prisma.FieldRef<"Student", 'String'>
   readonly createdAt: Prisma.FieldRef<"Student", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Student", 'DateTime'>

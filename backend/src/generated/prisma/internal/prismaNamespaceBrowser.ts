@@ -52,12 +52,14 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  StaffProfile: 'StaffProfile',
   Student: 'Student',
   StaffRegistry: 'StaffRegistry',
   StudentProfile: 'StudentProfile',
   AcademicRecord: 'AcademicRecord',
   Project: 'Project',
   Certification: 'Certification',
+  BadgeCatalog: 'BadgeCatalog',
   StudentBadge: 'StudentBadge'
 } as const
 
@@ -90,6 +92,23 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const StaffProfileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  fullName: 'fullName',
+  profileImage: 'profileImage',
+  designation: 'designation',
+  department: 'department',
+  about: 'about',
+  areasOfExpertise: 'areasOfExpertise',
+  subjects: 'subjects',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StaffProfileScalarFieldEnum = (typeof StaffProfileScalarFieldEnum)[keyof typeof StaffProfileScalarFieldEnum]
+
+
 export const StudentScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -100,6 +119,7 @@ export const StudentScalarFieldEnum = {
   course: 'course',
   branch: 'branch',
   batch: 'batch',
+  currentSemester: 'currentSemester',
   userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -111,6 +131,7 @@ export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeo
 export const StaffRegistryScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  staffId: 'staffId',
   email: 'email',
   role: 'role',
   userId: 'userId',
@@ -195,15 +216,35 @@ export const CertificationScalarFieldEnum = {
 export type CertificationScalarFieldEnum = (typeof CertificationScalarFieldEnum)[keyof typeof CertificationScalarFieldEnum]
 
 
-export const StudentBadgeScalarFieldEnum = {
+export const BadgeCatalogScalarFieldEnum = {
   id: 'id',
-  studentId: 'studentId',
   title: 'title',
   description: 'description',
   imageUrl: 'imageUrl',
+  category: 'category',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type BadgeCatalogScalarFieldEnum = (typeof BadgeCatalogScalarFieldEnum)[keyof typeof BadgeCatalogScalarFieldEnum]
+
+
+export const StudentBadgeScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  badgeId: 'badgeId',
+  title: 'title',
+  description: 'description',
+  imageUrl: 'imageUrl',
+  proofUrl: 'proofUrl',
+  screenshotUrl: 'screenshotUrl',
+  status: 'status',
+  reviewedBy: 'reviewedBy',
+  reviewedAt: 'reviewedAt',
   awardedBy: 'awardedBy',
   awardedAt: 'awardedAt',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type StudentBadgeScalarFieldEnum = (typeof StudentBadgeScalarFieldEnum)[keyof typeof StudentBadgeScalarFieldEnum]

@@ -9,11 +9,13 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User.ts'
+export type * from './models/StaffProfile.ts'
 export type * from './models/Student.ts'
 export type * from './models/StaffRegistry.ts'
 export type * from './models/StudentProfile.ts'
 export type * from './models/AcademicRecord.ts'
 export type * from './models/Project.ts'
 export type * from './models/Certification.ts'
+export type * from './models/BadgeCatalog.ts'
 export type * from './models/StudentBadge.ts'
 export type * from './commonInputTypes.ts'

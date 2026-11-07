@@ -27,3 +27,12 @@ export const StaffRole = {
 } as const
 
 export type StaffRole = (typeof StaffRole)[keyof typeof StaffRole]
+
+
+export const BadgeStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type BadgeStatus = (typeof BadgeStatus)[keyof typeof BadgeStatus]
