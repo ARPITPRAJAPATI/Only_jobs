@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  distDir: process.env.NODE_ENV === 'development' ? 'next-dev' : '.next',
   eslint: { ignoreDuringBuilds: true },
   images: { remotePatterns: [{ protocol: 'https', hostname: '**' }] },
   async redirects() {

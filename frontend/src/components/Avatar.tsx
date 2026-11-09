@@ -1,11 +1,30 @@
+'use client';
+
 /* eslint-disable @next/next/no-img-element */
+import { useEffect, useState } from 'react';
 import { cn, initials } from '@/lib/utils';
 
 export function Avatar({ name, src, size = 64, className }: { name: string; src?: string | null; size?: number; className?: string }) {
+  const [imageFailed, setImageFailed] = useState(false);
   const style = { width: size, height: size, fontSize: size * 0.36 };
-  if (src) {
-    return <img src={src} alt={name} style={style} className={cn('rounded-full object-cover', className)} />;
+  const imageSrc = src?.trim();
+
+  useEffect(() => {
+    setImageFailed(false);
+  }, [imageSrc]);
+
+  if (imageSrc && !imageFailed) {
+    return (
+      <img
+        src={imageSrc}
+        alt={name}
+        style={style}
+        onError={() => setImageFailed(true)}
+        className={cn('rounded-full object-cover', className)}
+      />
+    );
   }
+
   return (
     <span
       style={style}

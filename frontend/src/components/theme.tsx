@@ -14,7 +14,7 @@ export type ThemeId = (typeof THEMES)[number]['id'];
 const KEY = 'sp:theme';
 
 /** Runs before hydration (inlined in <head>) to avoid a flash of the wrong theme. */
-export const THEME_INIT_SCRIPT = `try{var t=localStorage.getItem('${KEY}');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}`;
+export const THEME_INIT_SCRIPT = `try{var t=localStorage.getItem('${KEY}');if(['indigo','forest','mono','midnight'].includes(t))document.documentElement.setAttribute('data-theme',t)}catch(e){}`;
 
 interface ThemeContextType {
   theme: ThemeId;
@@ -50,8 +50,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const isDark = theme === 'midnight';
   const toggleDark = useCallback(() => {
-    setTheme(theme === 'midnight' ? 'indigo' : 'midnight');
-  }, [theme, setTheme]);
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    setTheme(currentTheme === 'midnight' ? 'indigo' : 'midnight');
+  }, [setTheme]);
 
   return <Ctx.Provider value={{ theme, setTheme, isDark, toggleDark }}>{children}</Ctx.Provider>;
 }

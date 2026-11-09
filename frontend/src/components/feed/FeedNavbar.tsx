@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useStudent } from '@/components/store';
 import { useTheme } from '@/components/theme';
+import { Avatar } from '@/components/Avatar';
 import {
   Home,
   BookOpen,
@@ -304,19 +305,29 @@ export function FeedNavbar() {
             type="button"
             onClick={toggleDark}
             className={cn(
-              'grid h-9 w-9 place-items-center rounded-xl border transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40',
+              'relative grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-full border p-0 transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 motion-reduce:transition-none',
               isDark
-                ? 'border-white/10 bg-[#171f2d] text-[#f6d589] shadow-[inset_0_1px_0_rgba(255,255,255,0.06),0_6px_16px_rgba(15,23,42,0.28)] hover:bg-[#1d2739]'
+                ? 'border-white/10 bg-[#171f2d] text-[#f6d589] hover:bg-[#1d2739]'
                 : 'border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200'
             )}
             title={isDark ? 'Switch to GitHub Light mode' : 'Switch to GitHub Dark mode'}
             aria-label={isDark ? 'Switch to GitHub Light mode' : 'Switch to GitHub Dark mode'}
+            aria-pressed={isDark}
           >
-            {isDark ? (
-              <Sun className="h-4 w-4 transition-transform hover:rotate-45" />
-            ) : (
-              <Moon className="h-4 w-4 transition-transform hover:-rotate-12" />
-            )}
+            <Sun
+              aria-hidden="true"
+              className={cn(
+                'absolute h-4 w-4 transition-[opacity,transform] duration-300 motion-reduce:transition-none',
+                isDark ? 'rotate-0 scale-100 opacity-100' : '-rotate-90 scale-50 opacity-0'
+              )}
+            />
+            <Moon
+              aria-hidden="true"
+              className={cn(
+                'absolute h-4 w-4 transition-[opacity,transform] duration-300 motion-reduce:transition-none',
+                isDark ? 'rotate-90 scale-50 opacity-0' : 'rotate-0 scale-100 opacity-100'
+              )}
+            />
           </button>
 
           <span aria-hidden="true" className="hidden h-5 border-l border-line sm:block" />
@@ -324,32 +335,24 @@ export function FeedNavbar() {
           <Link
             href="/profile"
             className={cn(
-              'group flex items-center gap-2 rounded-full border py-1 pl-1 pr-3 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40',
+              'group grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-full border p-0 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40',
               isDark
-                ? 'border-white/10 bg-[#0f172a]/80 hover:border-sky-400/30 hover:bg-[#111c2d]'
-                : 'border-slate-200 bg-slate-100 hover:border-slate-300 hover:bg-slate-200',
+                ? 'border-white/10 bg-[#0f172a]/80 hover:border-sky-400/30'
+                : 'border-slate-200 bg-slate-100 hover:border-slate-300',
               pathname.startsWith('/profile') && 'border-accent/30'
             )}
-            title="View Student Profile"
+            title={`${student.name} — View profile`}
+            aria-label={`${student.name} — View profile`}
           >
-            <div className={cn(
-              'grid h-7 w-7 shrink-0 place-items-center overflow-hidden rounded-full border text-[10px] font-bold tracking-[0.12em]',
-              isDark
-                ? 'border-white/10 bg-[#1e293b] text-slate-100'
-                : 'border-slate-200 bg-slate-200 text-slate-800'
-            )}>
-              {student.avatarUrl ? (
-                <img src={student.avatarUrl} alt={student.name} className="h-full w-full object-cover" />
-              ) : (
-                student.name.split(' ').map((n) => n[0]).join('').slice(0, 2)
+            <Avatar
+              name={student.name}
+              src={student.avatarUrl}
+              size={36}
+              className={cn(
+                'shrink-0 border-0 text-[10px] font-bold tracking-[0.12em]',
+                isDark ? 'bg-[#1e293b] text-slate-100' : 'bg-slate-200 text-slate-800'
               )}
-            </div>
-            <span className={cn(
-              'hidden max-w-[110px] truncate text-sm font-semibold transition-colors sm:inline-block',
-              isDark ? 'text-slate-100 group-hover:text-sky-300' : 'text-slate-800 group-hover:text-accent'
-            )}>
-              {student.name}
-            </span>
+            />
           </Link>
 
           <button
