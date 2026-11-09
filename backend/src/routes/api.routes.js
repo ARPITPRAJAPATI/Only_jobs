@@ -11,7 +11,7 @@ import academicRoutes from "./academic.routes.js";
 import projectRoutes from "./project.routes.js";
 import certificationRoutes from "./certification.routes.js";
 import badgeRoutes from "./badge.routes.js";
-
+import feedRoutes from "./feed.routes.js";
 const router = Router();
 
 // Centralized authentication
@@ -26,5 +26,5 @@ router.use("/academics", academicRoutes);
 router.use("/projects", projectRoutes);
 router.use("/certifications", certificationRoutes);
 router.use("/badges", badgeRoutes);
-
+router.use("/feed", feedRoutes);
 export default router;

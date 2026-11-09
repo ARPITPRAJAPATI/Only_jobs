@@ -27,6 +27,14 @@ enum BadgeStatus {
     REJECTED
 }
 
+enum PostType {
+    DEAN_NOTICE
+    PROJECT_SHOWCASE
+    PLACEMENT_UPDATE
+    HACKATHON_WIN
+    GENERAL
+}
+
 model User {
     id           String   @id @default(uuid())
     email        String   @unique
@@ -37,6 +45,11 @@ model User {
     student      Student?
     staff        StaffRegistry?
     staffProfile StaffProfile?
+
+    // Feed relations
+    posts        Post[]
+    postLikes    PostLike[]
+    postComments PostComment[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -221,6 +234,71 @@ model StudentBadge {
     awardedBy String?
     awardedAt DateTime?
 
+    isPinned Boolean @default(false)
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+}
+
+// -------------------------------------------------------------
+// FEED MODULE
+// -------------------------------------------------------------
+
+model Post {
+    id     String @id @default(uuid())
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    type     PostType @default(GENERAL)
+    content  String
+    hashtags String[] @default([])
+    imageUrl String?
+    imageTag String?
+
+    // Optional Project Showcase metadata
+    projectRepo  String?
+    projectUrl   String?
+    projectStack String[] @default([])
+    projectStars Int?     @default(0)
+
+    isPinned Boolean @default(false)
+
+    likes    PostLike[]
+    comments PostComment[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model PostLike {
+    id     String @id @default(uuid())
+    postId String
+    post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+
+    @@unique([postId, userId])
+}
+
+model PostComment {
+    id     String @id @default(uuid())
+    postId String
+    post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    content   String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model CampusSignal {
+    id        String   @id @default(uuid())
+    title     String
+    category  String? // e.g. "CRPC", "ACADEMIC", "ENDORSEMENT"
+    timeText  String? // e.g. "15m ago"
+    linkUrl   String?
+    createdAt DateTime @default(now())
 }

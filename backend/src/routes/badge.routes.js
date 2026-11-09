@@ -6,6 +6,7 @@ import {
     applyForBadge,
     getStudentBadges,
     reviewBadgeRequest,
+    togglePinBadge,
 } from "../controllers/badge.controller.js";
 
 import { authorizeRoles } from "../auth/middlewares/role.middleware.js";
@@ -26,5 +27,8 @@ router.get("/:studentId", getStudentBadges);
 
 // 5. Admin reviews & approves/rejects badge request
 router.patch("/requests/:studentBadgeId/review", authorizeRoles("ADMIN"), reviewBadgeRequest);
+
+// 6. Student pins/unpins an earned badge (Max 2 pinned)
+router.patch("/:studentBadgeId/pin", authorizeRoles("STUDENT"), togglePinBadge);
 
 export default router;

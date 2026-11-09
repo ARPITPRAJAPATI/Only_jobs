@@ -286,3 +286,80 @@ export const reviewBadgeRequest = async (req, res) => {
         });
     }
 };
+// 6. Student pins/unpins an earned badge (Max 2 badges can be pinned to profile and posts)
+export const togglePinBadge = async (req, res) => {
+    try {
+        const { studentBadgeId } = req.params;
+
+        const badge = await prisma.studentBadge.findUnique({
+            where: { id: studentBadgeId },
+            include: {
+                student: {
+                    select: { userId: true },
+                },
+            },
+        });
+
+        if (!badge) {
+            return res.status(404).json({
+                success: false,
+                message: "Badge not found",
+            });
+        }
+
+        // Ownership check
+        if (badge.student.userId !== req.user.id) {
+            return res.status(403).json({
+                success: false,
+                message: "You can only pin your own badges",
+            });
+        }
+
+        // Must be an approved badge
+        if (badge.status !== "APPROVED") {
+            return res.status(400).json({
+                success: false,
+                message: "Only approved badges can be pinned to your profile and posts",
+            });
+        }
+
+        const willPin = !badge.isPinned;
+
+        // If trying to pin, check if already 2 pinned
+        if (willPin) {
+            const pinnedCount = await prisma.studentBadge.count({
+                where: {
+                    studentId: badge.studentId,
+                    isPinned: true,
+                },
+            });
+
+            if (pinnedCount >= 2) {
+                return res.status(400).json({
+                    success: false,
+                    message: "You can pin a maximum of 2 badges to your profile and posts",
+                });
+            }
+        }
+
+        const updatedBadge = await prisma.studentBadge.update({
+            where: { id: studentBadgeId },
+            data: {
+                isPinned: willPin,
+            },
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: willPin ? "Badge pinned successfully" : "Badge unpinned successfully",
+            data: updatedBadge,
+        });
+
+    } catch (error) {
+        console.error("Toggle pin badge error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to toggle badge pin status",
+        });
+    }
+};
