@@ -3,6 +3,11 @@ import {
     upsertStaffProfile,
 } from "../auth/services/staff-profile.service.js";
 
+import {
+    addStaffToRegistry,
+    getAllStaffFromRegistry,
+} from "../auth/services/registry/staff-registry.service.js";
+
 // GET /api/staff/profile
 export const getMyStaffProfile = async (req, res) => {
     try {
@@ -73,6 +78,70 @@ export const saveMyStaffProfile = async (req, res) => {
         return res.status(500).json({
             success: false,
             message: "Failed to save staff profile",
+        });
+    }
+};
+
+// POST /api/staff/registry (Admin pre-approves a staff member)
+export const addStaffMember = async (req, res) => {
+    try {
+        const { email, role, name } = req.body;
+
+        if (!email?.trim() || !role?.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: "Staff email and role (DEAN, TEACHER, TPO) are required",
+            });
+        }
+
+        const staff = await addStaffToRegistry({
+            email,
+            role,
+            name,
+        });
+
+        return res.status(201).json({
+            success: true,
+            message: "Staff member added to registry successfully",
+            data: staff,
+        });
+    } catch (error) {
+        if (error.message === "Invalid staff role") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid role. Allowed roles: DEAN, TEACHER, TPO",
+            });
+        }
+
+        if (error.message === "Staff email or Staff ID already exists") {
+            return res.status(409).json({
+                success: false,
+                message: error.message,
+            });
+        }
+
+        console.error("Add staff to registry error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to add staff to registry",
+        });
+    }
+};
+
+// GET /api/staff/registry (Admin views all pre-approved staff)
+export const getStaffRegistry = async (req, res) => {
+    try {
+        const staffList = await getAllStaffFromRegistry();
+
+        return res.status(200).json({
+            success: true,
+            data: staffList,
+        });
+    } catch (error) {
+        console.error("Get staff registry error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to fetch staff registry",
         });
     }
 };
