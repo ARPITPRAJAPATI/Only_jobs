@@ -63,7 +63,7 @@ export default function ContactPage() {
                 <MessageSquare className="h-3.5 w-3.5" aria-hidden="true" />
                 Student support
               </p>
-              <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl lg:text-[2.75rem]">
+              <h1 className="mt-4 text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">
                 Support that gets you unstuck.
               </h1>
               <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted sm:text-base">
@@ -72,21 +72,36 @@ export default function ContactPage() {
               </p>
             </div>
 
-            <div className="flex flex-col gap-4 rounded-xl border border-line bg-bg/80 p-4 sm:flex-row sm:items-center md:min-w-64 md:flex-col md:items-stretch">
-              <div className="flex flex-1 items-center justify-between gap-6 sm:justify-start md:justify-between">
-                <div>
-                  <p className="text-xs text-muted">Open requests</p>
-                  <p className="mt-1 text-2xl font-semibold tabular-nums">{openTicketCount}</p>
+            <div className="w-full max-w-[420px] rounded-2xl border border-[#2d3c52] bg-[#111c2d] p-4 shadow-[0_18px_40px_rgba(15,23,42,0.35)] sm:p-5">
+              <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
+                <div className="min-w-0 text-left">
+                  <p className="text-xs font-medium text-slate-300/90">Open requests</p>
+                  <p className="mt-2 text-4xl font-medium leading-none tracking-[-0.04em] text-white tabular-nums">
+                    {openTicketCount}
+                  </p>
                 </div>
-                <div className="h-9 border-l border-line sm:mx-2" aria-hidden="true" />
-                <div>
-                  <p className="text-xs text-muted">Total requests</p>
-                  <p className="mt-1 text-2xl font-semibold tabular-nums">{tickets.length}</p>
+                <div className="h-14 w-px bg-white/10" aria-hidden="true" />
+                <div className="min-w-0 text-left">
+                  <p className="text-xs font-medium text-slate-300/90">Total requests</p>
+                  <p className="mt-2 text-4xl font-medium leading-none tracking-[-0.04em] text-white tabular-nums">
+                    {tickets.length}
+                  </p>
                 </div>
               </div>
+
               <a
                 href="#new-request"
-                className="inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-accent-ink transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                onClick={(event) => {
+                  event.preventDefault();
+                  document.getElementById('new-request')?.scrollIntoView({
+                    behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+                      ? 'auto'
+                      : 'smooth',
+                    block: 'start',
+                  });
+                  window.history.replaceState(null, '', '#new-request');
+                }}
+                className="mt-4 inline-flex w-full items-center justify-center rounded-lg bg-[#5ea3f5] px-3 py-2.5 text-sm font-semibold text-[#0e1a2a] shadow-[0_6px_16px_rgba(94,163,245,0.28)] transition-transform duration-200 hover:-translate-y-0.5 hover:bg-[#73b0ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7cb7ff]"
               >
                 Create a request
               </a>

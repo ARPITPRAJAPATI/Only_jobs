@@ -798,7 +798,7 @@ export default function JobsPage() {
                     key={job.id}
                     className="group flex h-full flex-col rounded-xl border border-line bg-surface p-4 transition-colors hover:border-accent/40 sm:p-5"
                   >
-                    <div className="flex-1">
+                    <div className="flex flex-1 flex-col">
                       {/* Top Company Row */}
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex items-center gap-3 min-w-0">
@@ -848,17 +848,19 @@ export default function JobsPage() {
                         </dd>
                       </dl>
 
-                      {/* Eligibility Transparency Layer Banner */}
-                      <div className="mt-3">
+                      {/* Eligibility status */}
+                      <div className="mt-auto flex h-10 items-center pt-3">
                         {evalResult.eligible ? (
-                          <div className="flex min-h-10 min-w-0 items-start gap-2 rounded-lg border border-good/25 bg-good/5 px-3 py-2.5 text-sm font-medium leading-snug text-good">
-                            <Check className="mt-0.5 h-4 w-4 shrink-0" />
-                            <span className="min-w-0">Meets academic and badge criteria</span>
+                          <div className="flex min-w-0 items-center gap-2 text-xs font-medium text-good">
+                            <Check className="h-4 w-4 shrink-0" />
+                            <span className="min-w-0">Eligible to apply</span>
                           </div>
                         ) : (
-                          <div className="flex min-h-10 min-w-0 items-start gap-2 rounded-lg border border-warn/25 bg-warn/5 px-3 py-2.5 text-sm leading-snug text-warn">
-                            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
-                            <span className="min-w-0 break-words">Ineligible: {evalResult.reason}</span>
+                          <div className="flex min-w-0 items-center gap-2 text-xs text-warn">
+                            <AlertTriangle className="h-4 w-4 shrink-0" />
+                            <span className="min-w-0 truncate" title={evalResult.reason}>
+                              Not eligible: {evalResult.reason}
+                            </span>
                           </div>
                         )}
                       </div>
@@ -1058,7 +1060,7 @@ export default function JobsPage() {
               {SUGGESTED_JOBS.map((job) => (
                 <div
                   key={job.id}
-                  className="space-y-4 rounded-xl border border-line bg-surface p-5 transition-colors hover:border-accent/40 sm:p-6"
+                  className="group flex h-full min-w-0 flex-col rounded-xl border border-line bg-surface p-4 transition-[border-color,box-shadow] hover:border-accent/40 hover:shadow-card sm:p-5"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex min-w-0 items-center gap-3">
@@ -1067,46 +1069,48 @@ export default function JobsPage() {
                       </div>
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
-                          <h3 className="truncate text-sm font-semibold text-ink">{job.company}</h3>
+                          <h3 className="truncate text-sm font-semibold text-ink transition-colors group-hover:text-accent">{job.company}</h3>
                           <span className="rounded-md border border-line bg-surface2 px-2 py-0.5 text-[10px] font-medium text-muted">
                             {job.type === 'TPO_DRIVE' ? 'Campus' : 'Off-campus'}
                           </span>
                         </div>
-                        <p className="mt-1 text-xs text-muted">{job.role}</p>
+                        <p className="mt-1 min-h-8 line-clamp-2 text-xs leading-relaxed text-muted">{job.role}</p>
                       </div>
                     </div>
 
-                    <div className="shrink-0 text-right">
+                    <div className="shrink-0 whitespace-nowrap text-right">
                       <span className="text-sm font-semibold text-ink">{job.compensation}</span>
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <h4 className="text-xs font-semibold text-ink">
-                      Role highlights
-                    </h4>
-                    <ul className="space-y-1.5 text-sm text-muted">
-                      {job.matchReasons.map((reason, idx) => (
-                        <li key={idx} className="flex items-start gap-2">
-                          <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-good" />
-                          <span className="leading-relaxed">{reason}</span>
-                        </li>
+                  <div className="mt-4 flex flex-1 flex-col">
+                    <div className="space-y-2">
+                      <h4 className="text-xs font-semibold text-ink">
+                        Role highlights
+                      </h4>
+                      <ul className="space-y-1.5 text-sm text-muted">
+                        {job.matchReasons.map((reason, idx) => (
+                          <li key={idx} className="flex items-start gap-2">
+                            <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-good" />
+                            <span className="leading-relaxed">{reason}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-4">
+                      {job.skillsMatched.map((skill) => (
+                        <span
+                          key={skill}
+                          className="rounded-md border border-line bg-surface2 px-2 py-1 text-[11px] font-medium text-muted"
+                        >
+                          {skill}
+                        </span>
                       ))}
-                    </ul>
+                    </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    {job.skillsMatched.map((skill) => (
-                      <span
-                        key={skill}
-                        className="rounded-md border border-line bg-surface2 px-2 py-1 text-[11px] font-medium text-muted"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-
-                  <div className="flex justify-end border-t border-line pt-3">
+                  <div className="mt-4 flex justify-end border-t border-line pt-3">
                     {job.type === 'TPO_DRIVE' ? (
                       <button
                         type="button"
@@ -1114,7 +1118,7 @@ export default function JobsPage() {
                           const original = TPO_DRIVES_DATA.find((d) => d.id === job.originalDriveId);
                           if (original) setSelectedDriveForModal(original);
                         }}
-                        className="inline-flex items-center gap-1.5 rounded-md bg-[#0969da] px-3.5 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#0860ca]"
+                        className="inline-flex items-center gap-1.5 rounded-md bg-[#0969da] px-3.5 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#0860ca] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0969da]/50 focus-visible:ring-offset-2"
                       >
                         <span>View campus drive</span>
                         <ArrowRight className="h-3 w-3" />
@@ -1124,7 +1128,7 @@ export default function JobsPage() {
                         href={job.externalUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 rounded-md bg-[#0969da] px-3.5 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#0860ca]"
+                        className="inline-flex items-center gap-1.5 rounded-md bg-[#0969da] px-3.5 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#0860ca] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0969da]/50 focus-visible:ring-offset-2"
                       >
                         <span>Apply on Portal</span>
                         <ExternalLink className="h-3 w-3" />
@@ -1141,170 +1145,212 @@ export default function JobsPage() {
         {/* SECTION 4: MY JOB APPLICATION (ONLY FOR COLLEGE PLACEMENT DRIVE) */}
         {/* ========================================================================= */}
         {activeTab === 'APPLICATIONS' && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between pb-3 border-b border-line">
+          <div className="space-y-5">
+            <header className="flex flex-col gap-4 border-b border-line pb-5 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <h2 className="text-lg font-bold text-ink flex items-center gap-2">
-                  <Building2 className="h-5 w-5 text-[#0969da]" />
-                  <span>My Job Applications (College Placement Drives Only)</span>
-                </h2>
-                <p className="text-xs text-muted mt-0.5">
-                  Follow recruitment progress across official KIET on-campus placement drives (OA, Technical Interviews, HR Round, and Final Offer).
+                <p className="text-xs font-semibold tracking-wide text-accent">PLACEMENT TRACKER</p>
+                <h2 className="mt-1 text-xl font-semibold text-ink">My applications</h2>
+                <p className="mt-1 max-w-2xl text-sm text-muted">
+                  Follow your on-campus applications from submission through the final decision.
                 </p>
               </div>
+              <div className="flex items-baseline gap-2 self-start rounded-lg border border-line bg-surface px-3.5 py-2 sm:self-auto">
+                <span className="text-xl font-semibold tabular-nums text-ink">{collegeApplications.length}</span>
+                <span className="text-xs text-muted">
+                  {collegeApplications.length === 1 ? 'application' : 'applications'}
+                </span>
+              </div>
+            </header>
 
-              <span className="text-xs font-mono font-bold text-muted bg-surface2 px-3 py-1 rounded-md border border-line">
-                {collegeApplications.length} Drives Active
-              </span>
-            </div>
+            <dl className="grid grid-cols-3 gap-2 sm:gap-3">
+              {[
+                { label: 'In progress', count: collegeApplications.filter((app) => !['OFFERED', 'REJECTED'].includes(app.currentStage)).length },
+                { label: 'Interviews', count: collegeApplications.filter((app) => ['OA_SHORTLISTED', 'TECHNICAL_INTERVIEW', 'HR_ROUND'].includes(app.currentStage)).length },
+                { label: 'Offers', count: collegeApplications.filter((app) => app.currentStage === 'OFFERED').length },
+              ].map((stat) => (
+                <div key={stat.label} className="rounded-lg border border-line bg-surface px-3 py-3 sm:px-4">
+                  <dt className="text-xs text-muted">{stat.label}</dt>
+                  <dd className="mt-1 text-lg font-semibold tabular-nums text-ink">{stat.count}</dd>
+                </div>
+              ))}
+            </dl>
 
-            {/* Note about external jobs */}
-            <div className="p-3 rounded-lg bg-surface2 border border-line text-xs text-muted flex items-start gap-2.5">
-              <ShieldCheck className="h-4 w-4 text-[#0969da] shrink-0 mt-0.5" />
+            <p className="flex items-start gap-2 text-xs leading-relaxed text-muted">
+              <ShieldCheck aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
               <span>
-                <strong>College Placement Policy:</strong> This pipeline tracks institutional placement drives organized through the Training & Placement Office (TPO). External off-campus applications are managed directly on the respective company portals.
+                Only applications submitted through KIET’s Training &amp; Placement Office appear here. Off-campus applications are tracked on each company’s site.
               </span>
-            </div>
+            </p>
 
             {collegeApplications.length === 0 ? (
-              <div className="rounded-xl border border-line bg-surface p-12 text-center">
-                <Briefcase className="h-8 w-8 text-muted mx-auto mb-2" />
-                <h3 className="font-bold text-sm text-ink">No College Placement Applications Yet</h3>
-                <p className="text-xs text-muted max-w-sm mx-auto mt-1 mb-4">
-                  Browse eligible TPO placement drives in Section 1 and submit your standardized audited resume in 1-click.
+              <div className="rounded-xl border border-dashed border-line bg-surface px-5 py-12 text-center">
+                <Briefcase aria-hidden="true" className="mx-auto mb-3 h-8 w-8 text-muted" />
+                <h3 className="text-sm font-semibold text-ink">No applications yet</h3>
+                <p className="mx-auto mt-1 mb-4 max-w-sm text-sm text-muted">
+                  Browse current placement drives to find an opportunity that fits.
                 </p>
                 <button
                   onClick={() => setActiveTab('TPO_DRIVES')}
-                  className="px-4 py-2 rounded-md bg-[#0969da] text-white text-xs font-semibold shadow-2xs hover:bg-[#0860ca] transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded-md bg-accent px-3.5 py-2 text-sm font-medium text-accentInk transition-opacity hover:opacity-90"
                 >
-                  Explore Jobs by TPO
+                  Browse placement drives
+                  <ArrowRight aria-hidden="true" className="h-4 w-4" />
                 </button>
               </div>
             ) : (
-              <div className="space-y-5">
+              <div className="space-y-4">
                 {collegeApplications.map((app) => {
                   const currentStageObj = PIPELINE_STAGES.find((s) => s.stage === app.currentStage) || PIPELINE_STAGES[0];
                   const currentStepNum = currentStageObj.stepNumber;
                   const isOffered = app.currentStage === 'OFFERED';
+                  const isRejected = app.currentStage === 'REJECTED';
+                  const isAccepted = !!app.isOfferAccepted;
 
                   return (
-                    <div
+                    <article
                       key={app.id}
-                      className="rounded-xl border border-line bg-surface p-5 sm:p-6 shadow-2xs space-y-5 transition-all hover:border-[#0969da]/30"
+                      className="overflow-hidden rounded-xl border border-line bg-surface transition-colors hover:border-accent/40"
                     >
-                      {/* Top Application Header */}
-                      <div className="flex flex-wrap items-start justify-between gap-3">
-                        <div>
-                          <div className="flex items-center gap-2.5">
-                            <h3 className="text-base font-bold text-ink">{app.company}</h3>
-                            <span className="text-xs font-mono font-bold text-[#1a7f37] bg-[#dafbe1] px-2.5 py-0.5 rounded-full border border-[#4ac26b]/40">
-                              {app.ctc}
-                            </span>
-                            {app.isOfferAccepted && (
-                              <span className="text-[11px] font-bold text-white bg-[#1f883d] px-2 py-0.5 rounded">
-                                Offer Accepted & Locked
+                      <div className="p-4 sm:p-5">
+                        <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                          <div className="flex min-w-0 items-start gap-3">
+                            <div aria-hidden="true" className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-line bg-surface2 text-xs font-semibold text-ink">
+                            {TPO_DRIVES_DATA.find((drive) => drive.id === app.driveId)?.logoLetter ?? app.company.slice(0, 2).toUpperCase()}
+                            </div>
+                            <div className="min-w-0">
+                            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                              <h3 className="text-base font-semibold text-ink">{app.company}</h3>
+                              <span className="text-xs font-medium text-muted">{app.ctc}</span>
+                              <span
+                                className={cn(
+                                  'rounded-full border px-2 py-0.5 text-[11px] font-medium',
+                                  isAccepted || isOffered
+                                    ? 'border-good/25 bg-good/10 text-good'
+                                    : isRejected
+                                    ? 'border-warn/25 bg-warn/10 text-warn'
+                                    : 'border-accent/20 bg-accent/10 text-accent'
+                                )}
+                              >
+                                {isAccepted ? 'Offer accepted' : isOffered ? 'Offer received' : isRejected ? 'Not selected' : currentStageObj.label}
                               </span>
-                            )}
+                            </div>
+                            <p className="mt-0.5 text-sm text-muted">{app.role}</p>
+                            <p className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted">
+                              <span className="inline-flex items-center gap-1">
+                                <Calendar aria-hidden="true" className="h-3.5 w-3.5" />
+                                Applied {app.appliedDate}
+                              </span>
+                              <span aria-hidden="true" className="hidden sm:inline">·</span>
+                              <span>KIET placement drive</span>
+                            </p>
+                            </div>
                           </div>
-                          <p className="text-xs text-muted mt-0.5">
-                            {app.role} · Applied on {app.appliedDate} · KIET TPO Drive
-                          </p>
-                        </div>
 
-                        <div className="flex items-center gap-2">
                           <button
+                            type="button"
                             onClick={() => handleWithdrawApplication(app.id)}
-                            className="text-[11px] text-muted hover:text-red-500 transition-colors px-2.5 py-1 rounded border border-line bg-surface2 cursor-pointer"
+                            className="self-start rounded-md px-2.5 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-warn/10 hover:text-warn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
                           >
                             Withdraw
                           </button>
-                        </div>
-                      </div>
+                        </header>
 
-                      {/* 5-Step Visual Stepper */}
-                      <div className="pt-2 pb-1">
-                        <div className="grid grid-cols-5 gap-1.5 sm:gap-2">
-                          {PIPELINE_STAGES.map((s) => {
-                            const isCompleted = s.stepNumber < currentStepNum || (isOffered && s.stepNumber <= 5);
-                            const isCurrent = s.stepNumber === currentStepNum && !isOffered;
+                        <div className="mt-5 border-t border-line pt-4">
+                          <div
+                            aria-label={`Application progress: ${isAccepted ? 'Offer accepted' : isRejected ? 'Not selected' : currentStageObj.label}`}
+                            className="grid grid-cols-5"
+                          >
+                            {PIPELINE_STAGES.map((stage) => {
+                            const isCompleted = stage.stepNumber < currentStepNum || isOffered || isAccepted;
+                            const isCurrent = stage.stepNumber === currentStepNum && !isOffered && !isAccepted && !isRejected;
 
                             return (
-                              <div key={s.stage} className="flex flex-col items-center text-center">
-                                {/* Bar indicator */}
-                                <div
-                                  className={cn(
-                                    'h-1.5 w-full rounded-full transition-all mb-2',
-                                    isCompleted || (isOffered && s.stepNumber === 5)
-                                      ? 'bg-[#1f883d]'
-                                      : isCurrent
-                                      ? 'bg-[#0969da]'
-                                      : 'bg-surface2'
-                                  )}
-                                />
+                              <div key={stage.stage} className="relative flex min-w-0 flex-col items-center text-center">
+                                {stage.stepNumber > 1 && (
+                                  <span
+                                    aria-hidden="true"
+                                    className={cn(
+                                      'absolute left-[-50%] right-1/2 top-3 h-px',
+                                      isCompleted || isCurrent ? 'bg-good/70' : 'bg-line'
+                                    )}
+                                  />
+                                )}
                                 <span
                                   className={cn(
-                                    'text-[10px] sm:text-xs font-bold leading-tight truncate w-full',
-                                    isCurrent ? 'text-[#0969da]' : isCompleted ? 'text-ink' : 'text-muted'
+                                    'relative z-10 grid h-6 w-6 place-items-center rounded-full border text-[10px] font-semibold',
+                                    isCompleted
+                                      ? 'border-good bg-good text-white'
+                                      : isCurrent
+                                      ? 'border-accent bg-accent text-accentInk'
+                                      : 'border-line bg-surface text-muted'
                                   )}
                                 >
-                                  {s.label}
+                                  {isCompleted ? <Check aria-hidden="true" className="h-3.5 w-3.5" /> : stage.stepNumber}
                                 </span>
-                                <span className="text-[9.5px] font-mono text-muted hidden sm:inline">
-                                  Stage {s.stepNumber}
+                                <span
+                                  className={cn(
+                                    'mt-2 w-full truncate text-[10px] leading-tight sm:text-xs',
+                                    isCurrent ? 'font-semibold text-accent' : isCompleted ? 'font-medium text-ink' : 'text-muted'
+                                  )}
+                                >
+                                  {stage.label}
                                 </span>
                               </div>
                             );
-                          })}
+                            })}
+                          </div>
                         </div>
                       </div>
 
-                      {/* Live Next Round Action Box */}
-                      <div className="rounded-lg bg-surface2/60 border border-line/70 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        <div className="space-y-1">
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-muted block">
-                            Current Stage & Interview Details
-                          </span>
-                          <div className="text-xs font-bold text-ink flex items-center gap-2">
-                            <span>{app.nextRoundTitle || 'Evaluation in Progress'}</span>
+                      <div className="border-t border-line bg-surface2/35 px-4 py-4 sm:px-5">
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                          <div className="min-w-0">
+                            <p className="text-xs font-medium text-muted">
+                            {isAccepted ? 'Offer accepted' : isOffered ? 'Offer details' : isRejected ? 'Application closed' : 'Next step'}
+                            </p>
+                            <p className="mt-1 text-sm font-medium text-ink">
+                            {app.nextRoundTitle || 'Your application is being reviewed'}
+                            </p>
                             {app.nextRoundDate && (
-                              <span className="text-[11px] font-mono text-[#0969da] bg-surface px-2 py-0.5 rounded border border-line">
-                                {app.nextRoundDate}
-                              </span>
+                            <p className="mt-1 inline-flex items-center gap-1.5 text-xs text-muted">
+                              <Clock aria-hidden="true" className="h-3.5 w-3.5" />
+                              {app.nextRoundDate}
+                            </p>
+                            )}
+                            {app.interviewerNotes && (
+                            <p className="mt-2 max-w-3xl text-xs leading-relaxed text-muted">
+                              <span className="font-medium text-ink">TPO note: </span>
+                              {app.interviewerNotes}
+                            </p>
                             )}
                           </div>
-                          {app.interviewerNotes && (
-                            <p className="text-[11px] text-muted leading-relaxed pt-0.5">
-                              <strong>TPO Feedback / Notes:</strong> {app.interviewerNotes}
-                            </p>
-                          )}
-                        </div>
 
-                        <div className="flex items-center gap-2 shrink-0">
-                          {app.meetLink && (
+                          {app.meetLink && !isRejected && !isAccepted && (
                             <a
-                              href={app.meetLink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#0969da] hover:bg-[#0860ca] text-white text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
+                            href={app.meetLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-md bg-accent px-3.5 py-2 text-sm font-medium text-accentInk transition-opacity hover:opacity-90"
                             >
-                              <Video className="h-3.5 w-3.5" />
-                              <span>Join Interview Meet</span>
-                              <ExternalLink className="h-3 w-3 opacity-70" />
+                            <Video aria-hidden="true" className="h-4 w-4" />
+                            Join interview
+                            <ExternalLink aria-hidden="true" className="h-3.5 w-3.5" />
                             </a>
                           )}
 
-                          {isOffered && !app.isOfferAccepted && (
+                          {isOffered && !isAccepted && (
                             <button
-                              onClick={() => handleAcceptOffer(app.id)}
-                              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-[#1f883d] hover:bg-[#1a7f37] text-white text-xs font-bold shadow-2xs transition-all active:scale-95 cursor-pointer"
+                            type="button"
+                            onClick={() => handleAcceptOffer(app.id)}
+                            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-md bg-good px-3.5 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
                             >
-                              <CheckCircle2 className="h-3.5 w-3.5" />
-                              <span>Accept Offer & Freeze Profile</span>
+                            <CheckCircle2 aria-hidden="true" className="h-4 w-4" />
+                            Accept offer
                             </button>
                           )}
                         </div>
                       </div>
-                    </div>
+                    </article>
                   );
                 })}
               </div>
