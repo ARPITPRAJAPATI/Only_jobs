@@ -187,8 +187,8 @@ model Certification {
 }
 
 model BadgeCatalog {
-    id          String   @id @default(uuid())
-    title       String   @unique
+    id          String  @id @default(uuid())
+    title       String  @unique
     description String
     imageUrl    String?
     category    String?
