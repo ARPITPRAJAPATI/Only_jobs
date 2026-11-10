@@ -905,7 +905,7 @@ export default function ClassPage() {
 
         <main className="mx-auto max-w-7xl space-y-8 px-4 py-6 text-ink animate-fade-in sm:px-6 lg:px-8">
           {/* Filter and Search Bar */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
             <div className="relative w-full sm:w-96">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
               <input
@@ -913,29 +913,29 @@ export default function ClassPage() {
                 placeholder="Search by class name, subject code, or faculty..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-10 rounded-xl bg-surface border border-line pl-9 pr-4 text-xs font-medium text-ink placeholder:text-muted outline-none focus:border-[#0969da] transition-all shadow-2xs"
+                className="h-10 w-full rounded-lg border border-line bg-surface pl-9 pr-4 text-sm text-ink outline-none transition-colors placeholder:text-muted focus:border-accent focus:ring-2 focus:ring-accent/10"
               />
             </div>
-            <div className="flex items-center gap-2 text-xs font-semibold text-muted self-end sm:self-auto">
-              <span>Showing {filteredClasses.length} active laboratory classes</span>
+            <div className="flex items-center gap-2 text-xs text-muted">
+              <span className="font-semibold text-ink">{filteredClasses.length}</span>
+              <span>{filteredClasses.length === 1 ? 'class' : 'classes'} this semester</span>
             </div>
           </div>
 
           {/* Classes Cards Grid */}
           <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-2 xl:gap-5">
             {filteredClasses.map((item) => (
-            <div
+            <article
               key={item.id}
-              onClick={() => setSelectedClassId(item.id)}
-              className="group flex min-h-[320px] cursor-pointer flex-col justify-between rounded-xl border border-line bg-surface p-4 shadow-xs transition-colors duration-200 hover:border-[#0969da]/60 sm:p-5"
+              className="group flex min-h-[320px] flex-col justify-between border border-line bg-surface transition-colors hover:border-accent/50"
             >
               <div>
                 {/* Header: Short Name badge + Subject Code + Students */}
-                <div className="mb-4 flex items-start justify-between gap-3">
+                <div className="flex items-start justify-between gap-3 border-b border-line px-4 py-4 sm:px-5">
                   <div className="flex min-w-0 items-center gap-3">
                     <div
                       className={cn(
-                        'flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border text-sm font-bold shadow-2xs',
+                        'flex h-10 w-10 shrink-0 items-center justify-center rounded-md border text-xs font-bold',
                         item.accentBg,
                         item.accentColor,
                         'border-black/5'
@@ -944,74 +944,74 @@ export default function ClassPage() {
                       {item.shortName.substring(0, 3).toUpperCase()}
                     </div>
                     <div className="min-w-0">
-                      <h2 className="flex items-center gap-1.5 text-lg font-bold text-ink transition-colors group-hover:text-[#0969da] sm:text-xl">
+                      <button
+                        type="button"
+                        onClick={() => setSelectedClassId(item.id)}
+                        className="flex max-w-full items-center gap-1.5 text-left text-base font-semibold text-ink transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 sm:text-lg"
+                      >
                         <span className="truncate">{item.shortName}</span>
                         <ChevronRight className="h-4 w-4 shrink-0 text-muted transition-transform group-hover:translate-x-0.5" />
-                      </h2>
-                      <span className="mt-0.5 block truncate text-[11px] font-mono font-medium text-muted">
-                        {item.code} • {item.semester}
+                      </button>
+                      <span className="mt-0.5 block truncate text-[11px] text-muted">
+                        <span className="font-mono">{item.code}</span>
+                        <span className="mx-1.5">·</span>
+                        {item.semester}
                       </span>
                     </div>
                   </div>
 
-                  <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-line bg-surface2 px-2.5 py-1 text-[11px] font-semibold text-ink">
-                    <Users className="h-3.5 w-3.5 text-accent" />
-                    <span>{item.totalStudents} enrolled</span>
-                  </span>
+                  <div className="shrink-0 text-right">
+                    <span className="block font-mono text-sm font-semibold text-ink">{item.totalStudents}</span>
+                    <span className="text-[10px] text-muted">enrolled</span>
+                  </div>
                 </div>
 
-                <p className="mb-4 line-clamp-1 text-xs font-medium text-muted" title={item.fullName}>
+                <div className="px-4 pt-3 sm:px-5">
+                <p className="mb-3 line-clamp-1 text-xs font-medium text-muted" title={item.fullName}>
                   {item.fullName}
                 </p>
 
                 {/* Faculty & Timing Info */}
-                <div className="mb-4 space-y-2 rounded-lg border border-line/70 bg-surface2/50 px-3 py-3 text-xs">
-                  <div className="flex items-start justify-between gap-4">
-                    <span className="shrink-0 text-muted">Faculty</span>
-                    <strong className="min-w-0 text-right font-semibold text-ink">{item.teacher}</strong>
-                  </div>
-                  <div className="flex items-start justify-between gap-4">
-                    <span className="shrink-0 text-muted">Schedule</span>
-                    <span className="min-w-0 text-right font-mono text-[10px] leading-5 text-ink sm:text-[11px]">{item.timing}</span>
-                  </div>
-                  <div className="flex items-start justify-between gap-4">
-                    <span className="shrink-0 text-muted">Location</span>
-                    <span className="min-w-0 text-right font-medium text-ink">{item.labRoom}</span>
-                  </div>
+                <div className="mb-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 py-2 text-xs">
+                  <span className="text-muted">Faculty</span>
+                  <strong className="text-right font-medium text-ink">{item.teacher}</strong>
+                  <span className="text-muted">Schedule</span>
+                  <span className="text-right font-mono text-[10px] text-ink sm:text-[11px]">{item.timing}</span>
+                  <span className="text-muted">Location</span>
+                  <span className="text-right font-medium text-ink">{item.labRoom}</span>
                 </div>
 
                 {/* Today's Topic Banner */}
-                <div className="mb-4 flex min-h-11 items-start gap-2 rounded-lg border border-line bg-surface2/60 px-3 py-2.5 text-xs">
-                  <Flame className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
-                  <div className="min-w-0 leading-5">
-                    <span className="mr-1.5 font-semibold text-accent">Today</span>
-                    <span className="font-medium text-ink" title={item.todayTopic}>{item.todayTopic}</span>
-                  </div>
+                <div className="mb-4 border-l-2 border-accent/50 bg-surface2/50 px-3 py-2.5 text-xs">
+                  <span className="mb-1 block text-[10px] font-semibold uppercase tracking-wide text-accent">Today in class</span>
+                  <span className="line-clamp-2 leading-relaxed text-ink" title={item.todayTopic}>{item.todayTopic}</span>
+                </div>
                 </div>
               </div>
 
               {/* Bottom Quick Stats & Enter CTA */}
-              <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4 text-xs">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line px-4 py-3 text-xs sm:px-5">
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
                   <span className="flex items-center gap-1.5 text-muted">
                     <FileText className="h-3.5 w-3.5 text-accent" />
                     <span>{item.notesCount} notes</span>
                   </span>
                   <span className="flex items-center gap-1.5 text-muted">
-                    <Timer className="h-3.5 w-3.5 text-[#cf222e]" />
+                    <Timer className="h-3.5 w-3.5 text-bad" />
                     <span>{item.upcomingTestsCount} upcoming tests</span>
                   </span>
                 </div>
 
                 <button
                   type="button"
-                  className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-[#0969da] px-3.5 py-2 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-[#0854b0]"
+                  onClick={() => setSelectedClassId(item.id)}
+                  className="inline-flex shrink-0 items-center gap-1.5 px-2 py-1.5 text-xs font-semibold text-accent transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
                 >
-                  <span>Enter Class</span>
+                  <span>Open class</span>
                   <ArrowRight className="h-3.5 w-3.5" />
                 </button>
               </div>
-            </div>
+            </article>
             ))}
           </div>
         </main>
@@ -1027,13 +1027,13 @@ export default function ClassPage() {
   const absentStudentsToday = currentClass.students.filter((s) => s.attendance === 'absent').length;
 
   return (
-    <div className="max-w-[1536px] mx-auto p-2 sm:p-4 lg:p-6 text-ink animate-fade-in">
+    <div className="mx-auto max-w-[1536px] p-2 text-ink animate-fade-in sm:p-4 lg:p-6">
       {/* Top Breadcrumb & Navigation Bar */}
-      <div className="mb-4 flex flex-col md:flex-row md:items-center justify-between gap-3 bg-surface p-3 sm:p-4 rounded-2xl border border-line shadow-2xs">
-        <div className="flex items-center gap-3">
+      <div className="mb-4 flex flex-col justify-between gap-3 border-y border-line bg-surface px-3 py-3 sm:flex-row sm:items-center sm:px-4">
+        <div className="flex min-w-0 items-center gap-3">
           <button
             onClick={() => setSelectedClassId(null)}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface hover:bg-surface2 px-3 py-1.5 text-xs font-bold text-ink transition-colors shadow-2xs"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-md px-2 py-2 text-xs font-medium text-muted transition-colors hover:bg-surface2 hover:text-ink"
             title="Return to My Sem Classes"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
@@ -1042,10 +1042,10 @@ export default function ClassPage() {
 
           <div className="h-4 w-px bg-line hidden sm:block" />
 
-          <div className="flex items-center gap-2">
+          <div className="flex min-w-0 items-center gap-2">
             <span
               className={cn(
-                'h-7 w-7 rounded-lg flex items-center justify-center font-bold text-xs',
+                'flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-line/60 font-bold text-xs',
                 currentClass.accentBg,
                 currentClass.accentColor
               )}
@@ -1054,18 +1054,18 @@ export default function ClassPage() {
             </span>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="font-extrabold text-sm sm:text-base text-ink">
+                <h1 className="truncate font-bold text-sm text-ink sm:text-base">
                   {currentClass.shortName}
                 </h1>
-                <span className="text-xs font-mono font-semibold text-muted">
+                <span className="hidden text-xs font-mono font-semibold text-muted sm:inline">
                   ({currentClass.code})
                 </span>
-                <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold text-[#1a7f37] bg-[#dafbe1] px-2 py-0.5 rounded-full border border-[#4ac26b]/40">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#1a7f37]" />
-                  Live Lab Active
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-good">
+                  <span className="h-1.5 w-1.5 rounded-full bg-good" />
+                  Live
                 </span>
               </div>
-              <p className="text-[11px] text-muted font-medium hidden sm:block">
+              <p className="hidden truncate text-[11px] font-medium text-muted sm:block">
                 {currentClass.teacher} • {currentClass.section} • {currentClass.labRoom}
               </p>
             </div>
@@ -1074,53 +1074,59 @@ export default function ClassPage() {
 
         {/* Role Toggle Switcher */}
         <div className="flex items-center gap-2 self-start md:self-center">
-          <span className="text-xs font-semibold text-muted">Active Role:</span>
+          <span className="text-[11px] text-muted">Viewing as</span>
           <button
             onClick={() => {
               const next = userRole === 'student' ? 'teacher' : 'student';
               setUserRole(next);
               toast(`Switched to ${next === 'student' ? 'Student View' : 'Teacher View'}`, 'info');
             }}
-            className="inline-flex items-center gap-2 rounded-lg border border-line bg-surface hover:bg-surface2 px-3 py-1.5 text-xs font-bold text-ink transition-all shadow-2xs"
+            className="inline-flex items-center gap-2 rounded-md border border-line px-2.5 py-1.5 text-xs font-medium text-ink transition-colors hover:bg-surface2"
           >
-            <span>{userRole === 'student' ? '👨‍🎓 Student Mode (Arpit)' : '👨‍🏫 Teacher Mode (Faculty)'}</span>
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#0969da] bg-[#ddf4ff] border border-[#54aeff]/40 px-1.5 py-0.5 rounded">
-              Switch
-            </span>
+            <span>{userRole === 'student' ? 'Student' : 'Faculty'}</span>
+            <RefreshCw className="h-3 w-3 text-muted" />
           </button>
+        </div>
+      </div>
+
+      <div className="mb-4 grid gap-3 border-b border-line bg-surface px-4 py-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+        <div className="min-w-0 border-l-2 border-accent pl-3">
+          <span className="mb-1 block text-[10px] font-semibold uppercase tracking-[0.12em] text-muted">
+            Today’s lab focus
+          </span>
+          <p className="text-sm font-medium leading-relaxed text-ink">{currentClass.todayTopic}</p>
+        </div>
+        <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-muted sm:justify-end">
+          <span>{currentClass.timing}</span>
+          <span>{currentClass.labRoom}</span>
         </div>
       </div>
 
       {/* 3:4 SPLIT WORKSPACE */}
       {/* Grid: 8 Cols (Chat) : 4 Cols (Sidebar) on LG, or 9 Cols : 3 Cols on XL */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start min-h-[calc(100vh-12rem)]">
+      <div className="grid min-h-[calc(100vh-12rem)] grid-cols-1 items-start gap-4 lg:grid-cols-12">
         {/* ========================================================= */}
         {/* SECTION 1: CLASS ROOM CHAT (3:4 ratio ~ 70-75% width) */}
         {/* ========================================================= */}
-        <div className="lg:col-span-8 xl:col-span-9 rounded-2xl border border-line bg-surface shadow-2xs overflow-hidden flex flex-col h-[780px]">
+        <div className="flex min-h-[620px] flex-col overflow-hidden border border-line bg-surface lg:col-span-8 lg:h-[min(780px,calc(100dvh-12rem))] lg:min-h-[560px] xl:col-span-9">
           {/* Chat Header */}
-          <div className="px-4 py-3 border-b border-line bg-surface2/40 flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <MessageSquare className="h-4 w-4 text-[#0969da]" />
-              <span className="font-extrabold text-xs sm:text-sm text-ink">
-                Classroom Project & Code Stream
-              </span>
-              <span className="text-xs text-muted">• {currentMessages.length} Messages</span>
+          <div className="flex flex-col items-start justify-between gap-2 border-b border-line px-4 py-3 sm:flex-row sm:items-center">
+            <div className="flex min-w-0 items-center gap-2">
+              <MessageSquare className="h-4 w-4 shrink-0 text-accent" />
+              <span className="truncate text-xs font-semibold text-ink sm:text-sm">Class stream</span>
+              <span className="text-[11px] text-muted">{currentMessages.length} messages</span>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-[11px] text-muted font-medium hidden sm:inline">
-                AST Plagiarism Verification:
-              </span>
-              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#1a7f37] bg-[#dafbe1] px-2 py-0.5 rounded-full border border-[#4ac26b]/40">
-                <ShieldCheck className="h-3.5 w-3.5" />
-                Active & Enforced
+              <span className="inline-flex items-center gap-1.5 text-[10px] font-medium text-muted">
+                <span className="h-1.5 w-1.5 rounded-full bg-good" />
+                AST checks active
               </span>
             </div>
           </div>
 
           {/* Messages Stream */}
-          <div className="flex-1 p-4 sm:p-5 overflow-y-auto space-y-5 bg-surface/50">
+          <div className="flex-1 space-y-5 overflow-y-auto p-4 sm:p-5">
             {currentMessages.map((msg) => {
               const isTeacher = msg.senderRole === 'teacher';
 
@@ -1128,19 +1134,19 @@ export default function ClassPage() {
                 <div
                   key={msg.id}
                   className={cn(
-                    'flex gap-3 group animate-fade-in',
+                    'group flex gap-3 animate-fade-in',
                     msg.isCurrentUser ? 'flex-row-reverse' : 'flex-row'
                   )}
                 >
                   {/* Avatar */}
                   <div
                     className={cn(
-                      'h-9 w-9 rounded-full flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs border',
+                      'flex h-8 w-8 shrink-0 items-center justify-center rounded-md border text-[10px] font-semibold',
                       isTeacher
-                        ? 'bg-[#0969da] text-white border-[#0969da]'
+                        ? 'border-accent/30 bg-accent text-accentInk'
                         : msg.isCurrentUser
-                        ? 'bg-[#1a7f37] text-white border-[#1a7f37]'
-                        : 'bg-surface2 text-ink border-line'
+                        ? 'border-good bg-good text-white'
+                        : 'border-line bg-surface2 text-muted'
                     )}
                   >
                     {msg.senderAvatar}
@@ -1149,39 +1155,39 @@ export default function ClassPage() {
                   {/* Message Bubble Container */}
                   <div
                     className={cn(
-                      'max-w-[92%] sm:max-w-[85%] space-y-1.5',
+                      'flex max-w-[94%] flex-col space-y-1.5 sm:max-w-[82%] xl:max-w-[760px]',
                       msg.isCurrentUser ? 'items-end' : 'items-start'
                     )}
                   >
                     {/* Header info */}
                     <div
                       className={cn(
-                        'flex items-center gap-2 text-xs',
+                        'flex flex-wrap items-center gap-x-2 gap-y-1 text-xs',
                         msg.isCurrentUser ? 'justify-end' : 'justify-start'
                       )}
                     >
-                      <span className="font-bold text-ink">{msg.senderName}</span>
+                      <span className="font-semibold text-ink">{msg.senderName}</span>
                       {msg.senderRoll && (
                         <span className="text-[10px] font-mono text-muted">({msg.senderRoll})</span>
                       )}
                       {isTeacher && (
-                        <span className="text-[10px] font-bold text-[#0969da] bg-[#ddf4ff] border border-[#54aeff]/40 px-1.5 rounded">
+                        <span className="rounded border border-accent/30 bg-accent/10 px-1.5 text-[10px] font-bold text-accent">
                           Faculty
                         </span>
                       )}
-                      <span className="text-[10.5px] text-muted">{msg.timestamp}</span>
+                      <time className="text-[10.5px] text-muted">{msg.timestamp}</time>
                     </div>
 
                     {/* Text Message Content */}
                     {msg.text && (
                       <div
                         className={cn(
-                          'p-3.5 rounded-2xl text-xs sm:text-[13px] leading-relaxed shadow-2xs border',
+                          'max-w-full border px-3.5 py-3 text-xs leading-relaxed sm:text-[13px]',
                           msg.isCurrentUser
-                            ? 'bg-[#0969da] text-white border-[#0969da]'
+                            ? 'rounded-lg rounded-tr-sm border-accent bg-accent text-accentInk'
                             : isTeacher
-                            ? 'bg-surface2/90 text-ink border-line'
-                            : 'bg-surface text-ink border-line'
+                            ? 'rounded-r-lg rounded-bl-lg border-l-2 border-y-line border-r-line border-l-accent bg-surface text-ink'
+                            : 'rounded-r-lg rounded-bl-lg border-line bg-surface2/50 text-ink'
                         )}
                       >
                         {msg.text}
@@ -1190,21 +1196,21 @@ export default function ClassPage() {
 
                     {/* Interactive Project Submission Card */}
                     {msg.project && (
-                      <div className="rounded-2xl border border-line bg-surface p-4 space-y-3 shadow-xs">
-                        <div className="flex items-start justify-between gap-2">
-                          <div>
-                            <span className="text-[10.5px] font-mono font-bold uppercase tracking-wider text-[#0969da] block">
-                              Project Submission Proof
+                      <div className="space-y-3 border border-line bg-surface p-4 sm:p-5">
+                        <div className="flex flex-col items-start justify-between gap-3 sm:flex-row">
+                          <div className="min-w-0">
+                            <span className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-muted">
+                              Project
                             </span>
-                            <h3 className="font-bold text-sm text-ink mt-0.5">
+                            <h3 className="text-sm font-bold leading-snug text-ink">
                               {msg.project.title}
                             </h3>
                           </div>
 
                           {/* Plagiarism Badge */}
-                          <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-[#dafbe1] border border-[#4ac26b]/40 text-[#1a7f37] text-xs font-mono font-bold">
+                          <div className="inline-flex shrink-0 items-center gap-1.5 border-l-2 border-good bg-good/5 px-2.5 py-1.5 text-[11px] font-medium text-good">
                             <ShieldCheck className="h-3.5 w-3.5" />
-                            <span>AST Plag: {msg.project.astPlagScore}%</span>
+                            <span>AST check {msg.project.astPlagScore}%</span>
                           </div>
                         </div>
 
@@ -1216,7 +1222,7 @@ export default function ClassPage() {
                                 key={pIdx}
                                 type="button"
                                 onClick={() => setSelectedPhoto(url)}
-                                className="relative rounded-lg overflow-hidden border border-line h-28 group/img bg-surface2 block w-full"
+                                className="group/img relative block h-28 w-full overflow-hidden rounded-lg border border-line bg-surface2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                               >
                                 <img
                                   src={url}
@@ -1238,7 +1244,7 @@ export default function ClassPage() {
                             href={msg.project.githubUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-line bg-surface2 hover:bg-surface text-ink text-xs font-mono font-semibold transition-colors"
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface2 px-3 py-2 text-xs font-semibold text-ink transition-colors hover:bg-surface"
                           >
                             <FolderGit2 className="h-3.5 w-3.5 text-[#0969da]" />
                             <span>GitHub Repo</span>
@@ -1250,7 +1256,7 @@ export default function ClassPage() {
                               href={msg.project.liveUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-line bg-surface2 hover:bg-surface text-ink text-xs font-mono font-semibold transition-colors"
+                              className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-surface2 px-3 py-2 text-xs font-semibold text-ink transition-colors hover:bg-surface"
                             >
                               <ExternalLink className="h-3.5 w-3.5 text-[#1a7f37]" />
                               <span>Live Demo</span>
@@ -1260,16 +1266,16 @@ export default function ClassPage() {
 
                         {/* Status, Feedback & Grade */}
                         <div className="pt-2 border-t border-line/60 flex items-center justify-between text-xs">
-                          <div className="flex items-center gap-2">
+                          <div className="flex flex-wrap items-center gap-2">
                             <span className="text-muted font-medium">Status:</span>
                             <span
                               className={cn(
-                                'px-2 py-0.5 rounded-full font-bold text-[11px] border',
+                                'rounded-full border px-2.5 py-1 text-[10px] font-bold',
                                 msg.project.status === 'APPROVED'
-                                  ? 'bg-[#dafbe1] text-[#1a7f37] border-[#4ac26b]/40'
+                                  ? 'bg-good/10 text-good border-good/30'
                                   : msg.project.status === 'NEEDS_REVISION'
-                                  ? 'bg-[#ffebe9] text-[#cf222e] border-[#ff8182]/40'
-                                  : 'bg-[#fff8c5] text-[#9a6700] border-[#d4a72c]/40'
+                                  ? 'bg-bad/10 text-bad border-bad/30'
+                                  : 'bg-warn/10 text-warn border-warn/30'
                               )}
                             >
                               {msg.project.status}
@@ -1346,10 +1352,10 @@ export default function ClassPage() {
           </div>
 
           {/* Bottom Chat Input & Project Drop Drawer */}
-          <div className="p-3 sm:p-4 border-t border-line bg-surface">
+          <div className="border-t border-line bg-surface p-3 sm:p-4">
             {/* Expandable Project Attachment Drawer */}
             {attachProjectOpen && (
-              <div className="mb-3 p-4 rounded-xl border border-[#0969da]/40 bg-[#ddf4ff]/20 space-y-3 animate-fade-in text-ink">
+              <div className="mb-3 space-y-3 border border-line bg-surface2/40 p-3 text-ink animate-fade-in">
                 <div className="flex items-center justify-between pb-2 border-b border-line/60">
                   <span className="font-bold text-xs flex items-center gap-1.5 text-ink">
                     <FolderGit2 className="h-4 w-4 text-[#0969da]" />
@@ -1374,7 +1380,7 @@ export default function ClassPage() {
                       placeholder="e.g. Distributed Task Queue with Redis"
                       value={projectTitle}
                       onChange={(e) => setProjectTitle(e.target.value)}
-                      className="w-full h-8 rounded-lg bg-surface border border-line px-2.5 text-xs text-ink placeholder:text-muted outline-none focus:border-[#0969da]"
+                      className="w-full h-9 rounded-lg border border-line bg-surface px-2.5 text-xs text-ink placeholder:text-muted outline-none focus:border-accent"
                     />
                   </div>
 
@@ -1387,7 +1393,7 @@ export default function ClassPage() {
                       placeholder="https://github.com/username/repo"
                       value={projectGithub}
                       onChange={(e) => setProjectGithub(e.target.value)}
-                      className="w-full h-8 rounded-lg bg-surface border border-line px-2.5 text-xs font-mono text-ink placeholder:text-muted outline-none focus:border-[#0969da]"
+                      className="w-full h-9 rounded-lg border border-line bg-surface px-2.5 text-xs font-mono text-ink placeholder:text-muted outline-none focus:border-accent"
                     />
                   </div>
                 </div>
@@ -1401,7 +1407,7 @@ export default function ClassPage() {
                     placeholder="https://project.render.com"
                     value={projectLive}
                     onChange={(e) => setProjectLive(e.target.value)}
-                    className="w-full h-8 rounded-lg bg-surface border border-line px-2.5 text-xs font-mono text-ink placeholder:text-muted outline-none focus:border-[#0969da]"
+                    className="w-full h-9 rounded-lg border border-line bg-surface px-2.5 text-xs font-mono text-ink placeholder:text-muted outline-none focus:border-accent"
                   />
                 </div>
               </div>
@@ -1413,9 +1419,9 @@ export default function ClassPage() {
                 type="button"
                 onClick={() => setAttachProjectOpen(!attachProjectOpen)}
                 className={cn(
-                  'h-9 px-3 rounded-lg border text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 shadow-2xs',
+                  'flex h-9 shrink-0 items-center gap-1.5 rounded-lg border px-3 text-xs font-semibold shadow-2xs transition-all',
                   attachProjectOpen
-                    ? 'bg-[#0969da] text-white border-[#0969da]'
+                  ? 'bg-accent text-accentInk border-accent'
                     : 'bg-surface2 hover:bg-surface border-line text-ink'
                 )}
                 title="Attach GitHub Project Proof"
@@ -1433,13 +1439,13 @@ export default function ClassPage() {
                 }
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
-                className="flex-1 h-9 rounded-lg bg-surface2/60 border border-line px-3 text-xs text-ink placeholder:text-muted outline-none focus:border-[#0969da] transition-colors"
+                className="h-10 min-w-0 flex-1 rounded-lg border border-line bg-surface2/60 px-3 text-xs text-ink placeholder:text-muted outline-none transition-colors focus:border-accent"
               />
 
               <button
                 type="submit"
                 disabled={!inputText.trim() && !attachProjectOpen}
-                className="h-9 px-4 rounded-lg bg-[#0969da] hover:bg-[#0854b0] disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-bold transition-colors flex items-center gap-1.5 shrink-0 shadow-2xs"
+                className="flex h-10 shrink-0 items-center gap-1.5 rounded-lg bg-accent px-4 text-xs font-semibold text-accentInk shadow-2xs transition-colors hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <span>Send</span>
                 <Send className="h-3.5 w-3.5" />
@@ -1453,39 +1459,41 @@ export default function ClassPage() {
         {/* STUDENT VIEW: [Class Notes & Class Tests] */}
         {/* TEACHER VIEW: ["Today" Live Class & Attendance Activity Metrics] */}
         {/* ========================================================= */}
-        <div className="lg:col-span-4 xl:col-span-3 rounded-2xl border border-line bg-surface shadow-2xs overflow-hidden flex flex-col h-[780px]">
+        <div className="flex min-h-[520px] flex-col overflow-hidden border border-line bg-surface lg:col-span-4 lg:h-[min(780px,calc(100dvh-12rem))] lg:min-h-[560px] xl:col-span-3">
           {/* ------------------------------------------------------------- */}
           {/* STUDENT SIDEBAR: [Class Notes] & [Class Tests] */}
           {/* ------------------------------------------------------------- */}
           {userRole === 'student' ? (
             <div className="flex flex-col h-full">
               {/* Tab Switcher: Class Notes vs Class Tests */}
-              <div className="p-2.5 border-b border-line bg-surface2/50 flex items-center gap-1.5">
+              <div className="flex items-center gap-1 border-b border-line px-2 py-1.5">
                 <button
                   type="button"
+                  aria-pressed={studentSideTab === 'notes'}
                   onClick={() => setStudentSideTab('notes')}
                   className={cn(
-                    'flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-2xs',
+                    'flex flex-1 items-center justify-center gap-1.5 border-b-2 px-2 py-2 text-xs font-medium transition-colors',
                     studentSideTab === 'notes'
-                      ? 'bg-surface text-ink border border-line'
-                      : 'text-muted hover:text-ink'
+                      ? 'border-accent text-ink'
+                      : 'border-transparent text-muted hover:text-ink'
                   )}
                 >
-                  <FileText className="h-3.5 w-3.5 text-[#0969da]" />
+                  <FileText className="h-3.5 w-3.5 text-accent" />
                   <span>Class Notes ({currentClass.notes.length})</span>
                 </button>
 
                 <button
                   type="button"
+                  aria-pressed={studentSideTab === 'tests'}
                   onClick={() => setStudentSideTab('tests')}
                   className={cn(
-                    'flex-1 py-1.5 px-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 shadow-2xs',
+                    'flex flex-1 items-center justify-center gap-1.5 border-b-2 px-2 py-2 text-xs font-medium transition-colors',
                     studentSideTab === 'tests'
-                      ? 'bg-surface text-ink border border-line'
-                      : 'text-muted hover:text-ink'
+                      ? 'border-accent text-ink'
+                      : 'border-transparent text-muted hover:text-ink'
                   )}
                 >
-                  <Timer className="h-3.5 w-3.5 text-[#cf222e]" />
+                  <Timer className="h-3.5 w-3.5 text-bad" />
                   <span>Class Tests ({currentClass.tests.length})</span>
                 </button>
               </div>
@@ -1505,7 +1513,7 @@ export default function ClassPage() {
                   {currentClass.notes.map((note) => (
                     <div
                       key={note.id}
-                      className="p-3 rounded-xl border border-line bg-surface2/40 hover:bg-surface2 transition-colors space-y-2 group"
+                      className="group space-y-3 border-b border-line px-1 py-3.5 transition-colors hover:bg-surface2/40"
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex items-center gap-2">
@@ -1513,19 +1521,19 @@ export default function ClassPage() {
                             className={cn(
                               'p-1.5 rounded-lg border text-xs font-bold shrink-0',
                               note.fileType === 'pdf'
-                                ? 'bg-[#ffebe9] text-[#cf222e] border-[#ff8182]/40'
+                                ? 'bg-bad/10 text-bad border-bad/30'
                                 : note.fileType === 'slides'
-                                ? 'bg-[#fff8c5] text-[#9a6700] border-[#d4a72c]/40'
-                                : 'bg-[#ddf4ff] text-[#0969da] border-[#54aeff]/40'
+                                ? 'bg-warn/10 text-warn border-warn/30'
+                                : 'bg-accent/10 text-accent border-accent/30'
                             )}
                           >
                             <FileCode className="h-4 w-4" />
                           </span>
                           <div>
-                            <span className="text-[10px] font-bold text-[#0969da] uppercase block">
+                            <span className="mb-0.5 block text-[10px] font-bold uppercase tracking-wide text-accent">
                               {note.unit}
                             </span>
-                            <h4 className="font-bold text-xs text-ink leading-snug">
+                            <h4 className="text-xs font-semibold leading-relaxed text-ink">
                               {note.title}
                             </h4>
                           </div>
@@ -1537,7 +1545,7 @@ export default function ClassPage() {
                         <button
                           type="button"
                           onClick={() => toast(`Downloading ${note.title}...`, 'success')}
-                          className="inline-flex items-center gap-1 text-[11px] font-bold text-[#0969da] hover:underline"
+                          className="inline-flex items-center gap-1 rounded px-1.5 py-1 text-[11px] font-semibold text-accent hover:bg-accent/10"
                         >
                           <Download className="h-3 w-3" />
                           <span>PDF</span>
@@ -1561,46 +1569,43 @@ export default function ClassPage() {
                   </div>
 
                   {currentClass.tests.map((test) => (
-                    <div
-                      key={test.id}
-                      className="p-3.5 rounded-xl border border-line bg-surface2/40 hover:bg-surface2 transition-colors space-y-2.5"
-                    >
+                    <div key={test.id} className="space-y-3 border-b border-line px-1 py-3.5">
                       <div className="flex items-start justify-between gap-2">
-                        <div>
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-[#cf222e] block">
+                        <div className="min-w-0">
+                          <span className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-muted">
                             {test.unit}
                           </span>
-                          <h4 className="font-bold text-xs text-ink">{test.title}</h4>
+                          <h4 className="text-xs font-semibold leading-relaxed text-ink">{test.title}</h4>
                         </div>
 
                         <span
                           className={cn(
-                            'px-2 py-0.5 rounded-full text-[10px] font-bold border shrink-0',
+                            'shrink-0 border-l-2 px-2 py-0.5 text-[10px] font-semibold',
                             test.status === 'completed'
-                              ? 'bg-[#dafbe1] text-[#1a7f37] border-[#4ac26b]/40'
-                              : 'bg-[#ddf4ff] text-[#0969da] border-[#54aeff]/40'
+                              ? 'border-good text-good'
+                              : 'border-accent text-accent'
                           )}
                         >
                           {test.status === 'completed' ? 'Completed' : 'Upcoming'}
                         </span>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-1.5 text-[11px] text-muted bg-surface/70 p-2 rounded-lg border border-line/60">
-                        <div>
-                          <span className="block text-[10px]">Date & Time</span>
+                      <div className="grid grid-cols-2 gap-3 border-y border-line py-2 text-[11px] text-muted">
+                        <div className="min-w-0">
+                          <span className="mb-0.5 block text-[10px] uppercase tracking-wide">Date & Time</span>
                           <strong className="text-ink font-semibold">{test.date}</strong>
                         </div>
                         <div>
-                          <span className="block text-[10px]">Duration</span>
+                          <span className="mb-0.5 block text-[10px] uppercase tracking-wide">Duration</span>
                           <strong className="text-ink font-semibold">{test.duration}</strong>
                         </div>
                       </div>
 
                       {/* Score or Syllabus Topics */}
                       {test.status === 'completed' && test.studentScore !== undefined ? (
-                        <div className="flex items-center justify-between p-2 rounded-lg bg-[#dafbe1]/60 border border-[#4ac26b]/30 text-xs">
-                          <span className="font-medium text-[#1a7f37]">Your Score:</span>
-                          <strong className="font-bold text-[#1a7f37]">
+                        <div className="flex items-center justify-between border-l-2 border-good bg-good/5 px-2.5 py-2 text-xs">
+                          <span className="font-medium text-good">Your Score:</span>
+                          <strong className="font-bold text-good">
                             {test.studentScore} / {test.maxMarks} Marks
                           </strong>
                         </div>
@@ -1609,13 +1614,13 @@ export default function ClassPage() {
                           <span className="text-[10.5px] font-semibold text-muted block">
                             Syllabus Topics:
                           </span>
-                          <div className="flex flex-wrap gap-1">
+                          <div className="flex flex-wrap gap-x-2 gap-y-1">
                             {test.topics.map((t, ti) => (
                               <span
                                 key={ti}
-                                className="px-1.5 py-0.2 rounded bg-surface border border-line text-[10px] text-ink"
+                                className="text-[10px] leading-relaxed text-muted"
                               >
-                                {t}
+                                {t}{ti < test.topics.length - 1 ? ' ·' : ''}
                               </span>
                             ))}
                           </div>
@@ -1626,7 +1631,7 @@ export default function ClassPage() {
                         <button
                           type="button"
                           onClick={() => toast('Test portal will open 10 mins before schedule', 'info')}
-                          className="w-full py-1.5 rounded-lg bg-surface border border-line hover:border-[#0969da] text-ink text-xs font-bold transition-all text-center block"
+                          className="block w-full border border-line px-3 py-2 text-left text-xs font-medium text-muted transition-colors hover:border-accent/40 hover:text-accent"
                         >
                           View Test Syllabus & Instructions
                         </button>
@@ -1642,62 +1647,53 @@ export default function ClassPage() {
             // -------------------------------------------------------------
             <div className="flex flex-col h-full">
               {/* Header: "Today" Live Activity Overview */}
-              <div className="p-3.5 border-b border-line bg-surface2/60">
-                <div className="flex items-center justify-between mb-1">
+              <div className="border-b border-line px-4 py-3">
+                <div className="mb-1 flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5">
-                    <Radio className="h-4 w-4 text-[#1a7f37] animate-pulse" />
-                    <h3 className="font-extrabold text-xs sm:text-sm text-ink">
-                      Today's Live Class Activity
-                    </h3>
+                    <Radio className="h-4 w-4 text-good" />
+                    <h3 className="text-xs font-semibold text-ink sm:text-sm">Live attendance</h3>
                   </div>
-                  <span className="text-[10.5px] font-mono font-bold text-[#1a7f37] bg-[#dafbe1] px-2 py-0.5 rounded-full border border-[#4ac26b]/40">
-                    Live Session
+                  <span className="inline-flex items-center gap-1.5 text-[10px] font-medium text-good">
+                    <span className="h-1.5 w-1.5 rounded-full bg-good" />
+                    Session active
                   </span>
                 </div>
-                <p className="text-[11px] text-muted">
-                  Real-time student attendance & active project turn-ins
-                </p>
+                <p className="text-[11px] text-muted">Attendance and project turn-ins for this session</p>
               </div>
 
               {/* Today's KPI Counters */}
-              <div className="p-3 border-b border-line bg-surface grid grid-cols-3 gap-2 text-center">
-                <div className="p-2 rounded-xl bg-surface2/60 border border-line/60">
-                  <span className="text-[10px] font-semibold text-muted block">Enrolled</span>
-                  <strong className="text-sm font-extrabold text-ink font-mono">
-                    {currentClass.totalStudents}
-                  </strong>
+              <div className="grid grid-cols-3 border-b border-line py-3 text-center">
+                <div className="border-r border-line">
+                  <span className="mb-1 block text-[10px] font-medium text-muted">Enrolled</span>
+                  <strong className="font-mono text-sm font-semibold text-ink">{currentClass.totalStudents}</strong>
                 </div>
 
-                <div className="p-2 rounded-xl bg-[#dafbe1]/40 border border-[#4ac26b]/30">
-                  <span className="text-[10px] font-semibold text-[#1a7f37] block">Active Now</span>
-                  <strong className="text-sm font-extrabold text-[#1a7f37] font-mono">
-                    {activeStudentsToday}
-                  </strong>
+                <div className="border-r border-line">
+                  <span className="mb-1 block text-[10px] font-medium text-muted">Present</span>
+                  <strong className="font-mono text-sm font-semibold text-good">{activeStudentsToday}</strong>
                 </div>
 
-                <div className="p-2 rounded-xl bg-[#ffebe9]/40 border border-[#ff8182]/30">
-                  <span className="text-[10px] font-semibold text-[#cf222e] block">Absent</span>
-                  <strong className="text-sm font-extrabold text-[#cf222e] font-mono">
-                    {absentStudentsToday}
-                  </strong>
+                <div>
+                  <span className="mb-1 block text-[10px] font-medium text-muted">Absent</span>
+                  <strong className="font-mono text-sm font-semibold text-bad">{absentStudentsToday}</strong>
                 </div>
               </div>
 
               {/* Quick Teacher Actions */}
-              <div className="p-2.5 border-b border-line bg-surface2/30 flex items-center justify-between gap-2">
+              <div className="flex items-center justify-between gap-2 border-b border-line px-3 py-2">
                 <button
                   type="button"
                   onClick={handleMarkAllPresent}
-                  className="flex-1 py-1 px-2 rounded-lg bg-surface border border-line hover:border-[#1a7f37] text-ink text-xs font-bold transition-all shadow-2xs flex items-center justify-center gap-1"
+                  className="flex flex-1 items-center justify-center gap-1.5 border border-line px-2 py-1.5 text-xs font-medium text-ink transition-colors hover:border-good hover:text-good"
                 >
-                  <UserCheck className="h-3.5 w-3.5 text-[#1a7f37]" />
+                  <UserCheck className="h-3.5 w-3.5 text-good" />
                   <span>Mark All Present</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => toast('Exporting Today’s Attendance to CSV...', 'success')}
-                  className="py-1 px-2.5 rounded-lg bg-surface border border-line hover:bg-surface2 text-muted hover:text-ink text-xs font-semibold transition-colors flex items-center gap-1 shadow-2xs"
+                  className="flex items-center gap-1 border border-line px-2.5 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-surface2 hover:text-ink"
                   title="Export Attendance Sheet"
                 >
                   <Download className="h-3.5 w-3.5" />
@@ -1706,7 +1702,7 @@ export default function ClassPage() {
               </div>
 
               {/* Today's Student Roster List */}
-              <div className="flex-1 p-3 overflow-y-auto space-y-2">
+              <div className="flex-1 space-y-0 overflow-y-auto px-3 py-2">
                 <div className="flex items-center justify-between pb-1">
                   <span className="text-[10.5px] font-bold uppercase tracking-wider text-muted">
                     Student Roster ({currentClass.students.length})
@@ -1715,20 +1711,17 @@ export default function ClassPage() {
                 </div>
 
                 {currentClass.students.map((st) => (
-                  <div
-                    key={st.id}
-                    className="p-2.5 rounded-xl border border-line bg-surface hover:bg-surface2/40 transition-colors space-y-1.5"
-                  >
+                  <div key={st.id} className="space-y-1.5 border-b border-line py-3 last:border-b-0">
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2 truncate">
                         <div className="relative">
-                          <div className="h-7 w-7 rounded-full bg-surface2 border border-line flex items-center justify-center font-bold text-[11px] text-ink">
+                          <div className="flex h-7 w-7 items-center justify-center rounded-md border border-line bg-surface2 text-[11px] font-semibold text-ink">
                             {st.avatar}
                           </div>
                           {st.isActiveNow ? (
-                            <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-[#1a7f37] border-2 border-surface" />
+                            <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-surface bg-good" />
                           ) : (
-                            <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-muted/40 border-2 border-surface" />
+                            <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-surface bg-muted/40" />
                           )}
                         </div>
 
@@ -1754,12 +1747,12 @@ export default function ClassPage() {
                           handleToggleAttendance(st.id, nextStatus[st.attendance]);
                         }}
                         className={cn(
-                          'px-2 py-0.5 rounded-full text-[10.5px] font-bold border transition-all cursor-pointer shadow-2xs',
+                          'border px-2 py-1 text-[10px] font-medium transition-colors',
                           st.attendance === 'present'
-                            ? 'bg-[#dafbe1] text-[#1a7f37] border-[#4ac26b]/40'
+                            ? 'border-good/30 text-good hover:bg-good/5'
                             : st.attendance === 'late'
-                            ? 'bg-[#fff8c5] text-[#9a6700] border-[#d4a72c]/40'
-                            : 'bg-[#ffebe9] text-[#cf222e] border-[#ff8182]/40'
+                            ? 'border-warn/30 text-warn hover:bg-warn/5'
+                            : 'border-bad/30 text-bad hover:bg-bad/5'
                         )}
                         title="Click to cycle Present -> Late -> Absent"
                       >
@@ -1773,8 +1766,8 @@ export default function ClassPage() {
 
                     {/* Today Submission Status */}
                     {st.submittedToday && (
-                      <div className="p-1.5 rounded-md bg-[#ddf4ff]/50 border border-[#54aeff]/30 text-[10.5px] flex items-center justify-between">
-                        <span className="text-[#0969da] font-medium truncate">
+                      <div className="flex items-center justify-between border-l-2 border-accent bg-surface2/40 px-2 py-1.5 text-[10.5px]">
+                        <span className="truncate font-medium text-accent">
                           Submitted: {st.submittedToday.title}
                         </span>
                         <span className="font-mono text-muted text-[10px] shrink-0 ml-1">

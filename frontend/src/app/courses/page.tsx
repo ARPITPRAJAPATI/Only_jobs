@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { CourseHeroBanner } from '@/components/courses/CourseHeroBanner';
 import { CourseFilterBar, COURSE_CATEGORIES } from '@/components/courses/CourseFilterBar';
 import { CourseCard } from '@/components/courses/CourseCard';
@@ -16,6 +16,14 @@ export default function CoursesPage() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedCourse, setSelectedCourse] = useState<CourseItem | null>(null);
   const [isRecommendedOnly, setIsRecommendedOnly] = useState<boolean>(false);
+
+  useEffect(() => {
+    const category = new URLSearchParams(window.location.search).get('category');
+    if (category && COURSE_CATEGORIES.some((option) => option.id === category.toUpperCase())) {
+      setSelectedCategory(category.toUpperCase());
+      setCurrentPage(1);
+    }
+  }, []);
 
   // Filter & Sort Logic
   const filteredCourses = useMemo(() => {

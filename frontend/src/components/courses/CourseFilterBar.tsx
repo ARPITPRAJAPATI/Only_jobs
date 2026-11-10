@@ -11,6 +11,7 @@ export interface CategoryOption {
 
 export const COURSE_CATEGORIES: CategoryOption[] = [
   { id: 'ALL', label: 'All Tracks' },
+  { id: 'DEVELOPMENT', label: 'Development' },
   { id: 'DEVOPS', label: 'Cloud & DevOps' },
   { id: 'FULLSTACK', label: 'Full Stack & Web' },
   { id: 'DSA', label: 'DSA & Algorithms' },

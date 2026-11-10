@@ -32,6 +32,7 @@ import {
   Check,
   X,
   Share2,
+  Quote,
 } from 'lucide-react';
 import {
   COURSES_DATA,
@@ -151,7 +152,7 @@ export default function CourseWorkspacePage() {
           </p>
           <Link
             href="/courses"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-[#0969da] hover:bg-[#0854b0] text-white text-xs font-bold transition-all shadow-2xs"
+            className="inline-flex items-center gap-2 rounded-md bg-accent px-5 py-2.5 text-xs font-bold text-accentInk shadow-2xs transition-all hover:opacity-90"
           >
             <ArrowLeft className="h-4 w-4" />
             <span>Back to All Courses</span>
@@ -265,45 +266,50 @@ export default function CourseWorkspacePage() {
   };
 
   return (
-    <div className="min-h-screen bg-bg text-ink font-sans flex flex-col transition-colors selection:bg-[#0969da]/20 selection:text-[#0969da]">
+    <div className="min-h-screen bg-bg text-ink font-sans flex flex-col transition-colors selection:bg-accent/20 selection:text-accent">
       {/* 1. Top Breadcrumb & Navigation Bar */}
       <header className="sticky top-0 z-30 border-b border-line bg-surface/90 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-xs text-muted truncate">
+        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
+          <div className="flex min-w-0 items-center gap-2 truncate text-xs text-muted">
             <Link
               href="/courses"
-              className="hover:text-ink flex items-center gap-1.5 transition-colors font-medium shrink-0"
+              className="flex shrink-0 items-center gap-1.5 font-medium text-ink transition-colors hover:text-accent"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               <span>All Courses</span>
             </Link>
             <ChevronRight className="h-3.5 w-3.5 shrink-0 opacity-40" />
-            <span className="font-semibold text-muted shrink-0 uppercase tracking-wider text-[11px]">
+            <Link
+              href={`/courses?category=${encodeURIComponent(course.categoryLabel)}`}
+              className="shrink-0 rounded px-1.5 py-1 uppercase tracking-[0.18em] text-[10px] font-semibold text-muted transition-colors hover:bg-surface2 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+              aria-label={`Browse ${course.categoryLabel} courses`}
+            >
               {course.categoryLabel}
-            </span>
+            </Link>
             <ChevronRight className="h-3.5 w-3.5 shrink-0 opacity-40 hidden sm:inline-block" />
-            <span className="text-ink font-semibold truncate hidden sm:inline-block max-w-[260px] md:max-w-[400px]">
+            <span className="hidden max-w-[280px] truncate text-ink font-semibold sm:inline-block md:max-w-[480px]">
               {course.title}
             </span>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
-            {/* Share / Back */}
+          <div className="flex shrink-0 items-center gap-3">
             <button
+              type="button"
               onClick={() => {
                 if (typeof window !== 'undefined') {
                   navigator.clipboard.writeText(window.location.href);
                   toast('Course workspace link copied to clipboard!', 'success');
                 }
               }}
-              className="p-1.5 rounded-md border border-line bg-surface hover:bg-surface2 text-muted hover:text-ink transition-colors cursor-pointer"
+              className="flex h-8 w-8 items-center justify-center rounded-md border border-line bg-surface text-muted transition-colors hover:bg-surface2 hover:text-ink"
               title="Share Course Link"
+              aria-label="Share course"
             >
               <Share2 className="h-4 w-4" />
             </button>
             <Link
               href="/courses"
-              className="px-3 py-1.5 rounded-md border border-line bg-surface hover:bg-surface2 text-xs font-semibold text-ink transition-colors"
+              className="inline-flex items-center justify-center rounded-md border border-line bg-surface px-3 py-1.5 text-xs font-semibold text-ink transition-colors hover:bg-surface2"
             >
               Catalog
             </Link>
@@ -314,77 +320,69 @@ export default function CourseWorkspacePage() {
       {/* 2. Main Course Workspace Body */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-12">
         {/* HERO SECTION */}
-        <section className="rounded-2xl border border-line bg-surface p-6 sm:p-8 shadow-xs">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Left Content Column */}
-            <div className="lg:col-span-8 space-y-4">
+        <section className="rounded-2xl border border-line bg-surface p-5 shadow-sm sm:p-7 lg:p-8">
+          <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-12 lg:gap-8">
+            <div className="min-w-0 space-y-4 lg:col-span-7">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-[#0969da]/10 text-[#0969da] border border-[#0969da]/30">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-accent">
                   <Sparkles className="h-3 w-3" />
                   <span>{course.categoryLabel} Track</span>
                 </span>
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-surface2 text-muted border border-line">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface2 px-2.5 py-1 text-[10px] font-medium text-muted">
                   <Clock className="h-3 w-3" />
                   <span>{course.labHours} Hands-On Lab Hours</span>
                 </span>
               </div>
 
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-ink tracking-tight leading-tight">
+              <h1 className="max-w-3xl text-2xl font-bold leading-tight tracking-tight text-ink sm:text-3xl lg:text-4xl">
                 {course.title}
               </h1>
 
-              <p className="text-sm sm:text-base text-muted leading-relaxed max-w-3xl">
+              <p className="max-w-3xl text-sm leading-relaxed text-muted sm:text-[15px]">
                 {course.overview}
               </p>
 
-              {/* TPO Partner & Accreditation Callout */}
-              <div className="p-3.5 rounded-xl bg-surface2/60 border border-line flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-2.5">
-                  <div className="h-8 w-8 rounded-lg bg-[#0969da]/10 border border-[#0969da]/20 flex items-center justify-center shrink-0">
-                    <Building2 className="h-4 w-4 text-[#0969da]" />
+              <div className="flex flex-col gap-3 rounded-xl border border-line bg-surface2/60 p-3.5 xl:flex-row xl:items-center xl:justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-accent/20 bg-accent/10 text-accent">
+                    <Building2 className="h-4 w-4" />
                   </div>
                   <div>
-                    <p className="text-xs font-semibold text-ink">
-                      TPO Placement Partner Accreditation
-                    </p>
-                    <p className="text-[11px] text-muted">
-                      {course.tpoPartner}
-                    </p>
+                    <p className="text-xs font-semibold text-ink">TPO Placement Partner Accreditation</p>
+                    <p className="text-[11px] text-muted">{course.tpoPartner}</p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 text-xs text-muted">
-                  <div className="flex items-center gap-1 text-[#9a6700]">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted">
+                  <div className="flex items-center gap-1 text-warn">
                     <Star className="h-3.5 w-3.5 fill-current" />
                     <span className="font-bold text-ink">{course.rating.toFixed(1)}</span>
-                    <span className="text-[11px] text-muted">({course.reviewCount} reviews)</span>
+                    <span className="text-[10px] text-muted">({course.reviewCount} reviews)</span>
                   </div>
-                  <span>•</span>
+                  <span className="hidden text-muted sm:inline-block">•</span>
                   <span>{course.studentsCount} Students Enrolled</span>
                 </div>
               </div>
             </div>
 
-            {/* Right Mentor & Quick Status Card */}
-            <div className="lg:col-span-4 rounded-xl border border-line bg-surface2/40 p-5 space-y-5">
+            <div className="w-full min-w-0 rounded-xl border border-line bg-surface2/40 p-4 sm:p-5 lg:col-span-5">
               <div className="flex items-center gap-3">
                 <img
                   src={course.mentor.avatarUrl}
                   alt={course.mentor.name}
-                  className="h-12 w-12 rounded-full object-cover border border-line shadow-2xs"
+                  className="h-11 w-11 rounded-full border border-line object-cover"
                 />
                 <div>
                   <h4 className="text-sm font-bold text-ink">{course.mentor.name}</h4>
                   <p className="text-xs text-muted">{course.mentor.title}</p>
-                  <p className="text-[11px] text-muted/80">{course.mentor.department}</p>
+                  <p className="text-[11px] text-muted">Dept of {course.mentor.department}</p>
                 </div>
               </div>
 
-              {/* Overall Track Progression Mini Dashboard */}
-              <div className="pt-3 border-t border-line space-y-2">
-                <div className="flex items-center justify-between text-xs">
+              <div className="mt-5 space-y-2 border-t border-line pt-4">
+                <div className="flex items-center justify-between gap-4 text-xs">
                   <span className="font-medium text-muted">Certification Status</span>
-                  <span className="font-bold text-ink font-mono">
+                  <span className="text-right font-bold text-ink font-mono text-[11px]">
                     {phase3Passed
                       ? '100% (Mastery)'
                       : phase2Passed
@@ -394,10 +392,17 @@ export default function CourseWorkspacePage() {
                       : '0% (Phase 1 In-Progress)'}
                   </span>
                 </div>
-                {/* Visual Progress Bar */}
-                <div className="h-2 w-full rounded-full bg-surface2 overflow-hidden border border-line">
+
+                <div
+                  className="h-1.5 w-full overflow-hidden rounded-full border border-line bg-surface2"
+                  role="progressbar"
+                  aria-label="Certification progress"
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-valuenow={phase3Passed ? 100 : phase2Passed ? 66 : phase1Passed ? 33 : 0}
+                >
                   <div
-                    className="h-full bg-[#1f883d] transition-all duration-500 rounded-full"
+                    className="h-full rounded-full bg-good transition-all duration-500"
                     style={{
                       width: phase3Passed ? '100%' : phase2Passed ? '66%' : phase1Passed ? '33%' : '5%',
                     }}
@@ -405,30 +410,26 @@ export default function CourseWorkspacePage() {
                 </div>
               </div>
 
-              {/* Verified Certificate Minted Badge if any */}
               {phase1Passed && (
-                <div className="p-3 rounded-lg bg-[#dafbe1]/40 border border-[#4ac26b]/30 flex items-start gap-2.5">
-                  <ShieldCheck className="h-5 w-5 text-[#1a7f37] shrink-0 mt-0.5" />
-                  <div className="text-xs">
-                    <p className="font-bold text-[#1a7f37]">Verified Credential Active</p>
-                    <p className="text-[11px] font-mono text-muted mt-0.5">
-                      Hash: {certHashes[0] || 'CERT-KIET-VERIFIED'}
-                    </p>
+                <div className="mt-4 flex items-start gap-2.5 rounded-xl border border-good/30 bg-good/10 p-3 text-xs">
+                  <ShieldCheck className="mt-0.5 h-5 w-5 text-good" />
+                  <div>
+                    <p className="font-bold text-good">Verified Credential Active</p>
+                    <p className="mt-0.5 font-mono text-muted">Hash: {certHashes[0] || 'CERT-KIET-VERIFIED'}</p>
                   </div>
                 </div>
               )}
 
-              {/* Quick Jump Buttons */}
-              <div className="pt-2 flex flex-col gap-2">
+              <div className="mt-4 flex flex-col gap-2 pt-1">
                 <a
                   href="#phases-section"
-                  className="w-full py-2 px-3 rounded-md bg-[#0969da] hover:bg-[#0854b0] text-white text-xs font-bold text-center transition-all shadow-2xs"
+                  className="w-full rounded-lg bg-accent px-3 py-2.5 text-center text-xs font-semibold text-accentInk shadow-sm transition-all hover:-translate-y-0.5 hover:opacity-95"
                 >
                   Go to 3-Phase Gatekeeper ↓
                 </a>
                 <a
                   href="#notes-section"
-                  className="w-full py-2 px-3 rounded-md bg-surface border border-line hover:bg-surface2 text-ink text-xs font-semibold text-center transition-all"
+                  className="w-full rounded-lg border border-line bg-surface px-3 py-2.5 text-center text-xs font-semibold text-ink transition-colors hover:bg-surface2"
                 >
                   View Notes & Cheatsheets
                 </a>
@@ -440,29 +441,29 @@ export default function CourseWorkspacePage() {
         {/* ========================================================================= */}
         {/* 3-PHASE GATEKEEPER ENGINE (THE CORE USER REQUIREMENT)                     */}
         {/* ========================================================================= */}
-        <section id="phases-section" className="space-y-6">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 border-b border-line pb-4">
+        <section id="phases-section" className="scroll-mt-20 space-y-6 rounded-2xl border border-line bg-surface p-4 shadow-sm sm:p-6 lg:p-7">
+          <div className="flex flex-col gap-4 border-b border-line pb-5 md:flex-row md:items-end md:justify-between">
             <div>
               <div className="flex items-center gap-2">
-                <span className="p-1 rounded bg-[#0969da]/10 text-[#0969da] border border-[#0969da]/20">
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 text-accent ring-1 ring-accent/20">
                   <Layers className="h-4 w-4" />
                 </span>
-                <h2 className="text-xl sm:text-2xl font-extrabold text-ink tracking-tight">
+                <h2 className="text-xl font-extrabold tracking-tight text-ink sm:text-2xl">
                   3-Phase Gatekeeper Certification Engine
                 </h2>
               </div>
-              <p className="text-xs sm:text-sm text-muted mt-1 max-w-2xl">
+              <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
                 Mandatory sequential mastery. Pass each timed exam to unlock the next phase, mint cryptographic institutional certificates, and unlock top campus placement shortlists.
               </p>
             </div>
 
-            <div className="flex items-center gap-2 text-xs font-mono font-semibold text-muted">
-              <span>Cutoff Policy: 70%+ To Unlock Next Phase</span>
+            <div className="inline-flex w-fit items-center gap-2 rounded-lg border border-line bg-surface2 px-3 py-2 text-xs font-semibold text-muted">
+              <ShieldCheck className="h-4 w-4 text-accent" />
+              <span>Pass the phase cutoff to unlock the next phase</span>
             </div>
           </div>
 
-          {/* Stepper Tabs */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             {course.phases.map((ph, idx) => {
               const unlocked = isPhaseUnlocked(idx);
               const passed = isPhasePassed(idx);
@@ -472,32 +473,45 @@ export default function CourseWorkspacePage() {
                 <button
                   key={idx}
                   onClick={() => setSelectedPhaseIndex(idx)}
+                  aria-pressed={isSelected}
+                  aria-label={`Phase ${idx + 1}: ${ph.title}${passed ? ', certified' : unlocked ? ', unlocked' : ', locked'}`}
                   className={cn(
-                    'p-4 rounded-xl border text-left transition-all relative flex flex-col justify-between cursor-pointer',
+                    'group relative flex min-h-[168px] cursor-pointer flex-col justify-between overflow-hidden rounded-xl border p-4 text-left transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface',
                     isSelected
-                      ? 'border-[#0969da] bg-surface ring-2 ring-[#0969da]/20 shadow-xs'
-                      : 'border-line bg-surface hover:bg-surface2/60',
-                    !unlocked && 'opacity-70 bg-surface2/20'
+                      ? 'border-accent bg-accent/5 shadow-sm'
+                      : 'border-line bg-surface hover:border-accent/40 hover:bg-surface2/60',
+                    !unlocked && !isSelected && 'bg-surface2/40'
                   )}
                 >
-                  <div className="flex items-center justify-between gap-2 mb-2">
-                    <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-muted">
-                      Phase 0{idx + 1}
+                  <span
+                    className={cn(
+                      'absolute inset-x-0 top-0 h-1 transition-colors',
+                      passed ? 'bg-good' : isSelected ? 'bg-accent' : 'bg-transparent'
+                    )}
+                  />
+                  <div className="mb-3 flex items-center justify-between gap-2 pt-1">
+                    <span className="flex items-center gap-2 text-[11px] font-mono font-bold uppercase tracking-[0.16em] text-muted">
+                      <span className={cn(
+                        'flex h-6 w-6 items-center justify-center rounded-full border text-[10px]',
+                        passed ? 'border-good/30 bg-good/10 text-good' : isSelected ? 'border-accent/30 bg-accent/10 text-accent' : 'border-line bg-surface2'
+                      )}>
+                        {passed ? <CheckCircle2 className="h-3.5 w-3.5" /> : `0${idx + 1}`}
+                      </span>
+                      Phase {idx + 1}
                     </span>
 
-                    {/* Status Badge */}
                     {passed ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#1a7f37] bg-[#dafbe1] px-2 py-0.5 rounded-full border border-[#4ac26b]/40">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-good/30 bg-good/10 px-2.5 py-1 text-[10px] font-bold text-good">
                         <CheckCircle2 className="h-3 w-3" />
                         <span>Certified</span>
                       </span>
                     ) : unlocked ? (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-[#0969da] bg-[#0969da]/10 px-2 py-0.5 rounded-full border border-[#0969da]/30">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-accent/30 bg-accent/10 px-2.5 py-1 text-[10px] font-bold text-accent">
                         <Unlock className="h-3 w-3" />
                         <span>Unlocked</span>
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-bold text-muted bg-surface2 px-2 py-0.5 rounded-full border border-line">
+                      <span className="inline-flex items-center gap-1 rounded-full border border-line bg-surface2 px-2.5 py-1 text-[10px] font-bold text-muted">
                         <Lock className="h-3 w-3" />
                         <span>Locked</span>
                       </span>
@@ -505,17 +519,17 @@ export default function CourseWorkspacePage() {
                   </div>
 
                   <div>
-                    <h3 className="text-sm font-bold text-ink leading-snug line-clamp-1">
+                    <h3 className="line-clamp-2 text-sm font-bold leading-snug text-ink">
                       {ph.title}
                     </h3>
-                    <p className="text-xs text-muted mt-1 line-clamp-2">
+                    <p className="mt-1 line-clamp-2 text-xs text-muted">
                       {ph.description}
                     </p>
                   </div>
 
-                  <div className="pt-3 mt-3 border-t border-line/60 flex items-center justify-between text-[11px] text-muted">
+                  <div className="mt-4 flex items-center justify-between gap-2 border-t border-line pt-3 text-[11px] text-muted">
                     <span>{ph.duration}</span>
-                    <span className="font-semibold text-ink">Cutoff {ph.examCutoff}%</span>
+                    <span className="rounded-md bg-surface2 px-2 py-1 font-semibold text-ink">Cutoff {ph.examCutoff}%</span>
                   </div>
                 </button>
               );
@@ -530,28 +544,29 @@ export default function CourseWorkspacePage() {
             const certHash = certHashes[selectedPhaseIndex];
 
             return (
-              <div className="rounded-2xl border border-line bg-surface p-6 sm:p-8 space-y-6">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-line pb-5">
+              <div className="space-y-6 rounded-2xl border border-line bg-surface2/40 p-5 sm:p-7">
+                <div className="flex flex-col gap-4 border-b border-line pb-5 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <div className="flex items-center gap-2">
-                      <span className="px-2.5 py-0.5 rounded-md text-xs font-mono font-bold bg-[#0969da]/10 text-[#0969da] border border-[#0969da]/30">
-                        Phase {selectedPhaseIndex + 1} of 3
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-2.5 py-1 text-[11px] font-bold text-accent">
+                        <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                        Phase {selectedPhaseIndex + 1} of {course.phases.length}
                       </span>
-                      <span className="text-xs font-bold uppercase tracking-wider text-muted">
-                        Level: {currentPhase.level}
+                      <span className="rounded-full border border-line bg-surface px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-muted">
+                        {currentPhase.level}
                       </span>
                     </div>
-                    <h3 className="text-xl sm:text-2xl font-extrabold text-ink tracking-tight mt-1.5">
+                    <h3 className="mt-3 text-xl font-extrabold tracking-tight text-ink sm:text-2xl">
                       {currentPhase.title}
                     </h3>
                   </div>
 
                   {/* Certified Hash Pill */}
                   {passed && certHash && (
-                    <div className="p-2.5 rounded-lg bg-[#dafbe1] border border-[#4ac26b]/40 text-xs flex items-center gap-2">
-                      <Award className="h-4 w-4 text-[#1a7f37]" />
+                    <div className="flex items-center gap-2 rounded-lg border border-good/30 bg-good/10 p-2.5 text-xs">
+                      <Award className="h-4 w-4 text-good" />
                       <div>
-                        <span className="font-bold text-[#1a7f37]">Exam Cleared</span>
+                        <span className="font-bold text-good">Exam Cleared</span>
                         <p className="font-mono text-[11px] text-muted">{certHash}</p>
                       </div>
                     </div>
@@ -568,13 +583,13 @@ export default function CourseWorkspacePage() {
                       <h4 className="text-base font-bold text-ink">
                         Phase {selectedPhaseIndex + 1} is Currently Locked
                       </h4>
-                      <p className="text-xs text-muted mt-1 leading-relaxed">
-                        To unlock this phase, you must complete Phase {selectedPhaseIndex} syllabus and score $\ge${course.phases[selectedPhaseIndex - 1]?.examCutoff}% on the Phase {selectedPhaseIndex} Certification Exam.
+                      <p className="mt-1 text-sm leading-relaxed text-muted">
+                        Complete Phase {selectedPhaseIndex} and score at least {course.phases[selectedPhaseIndex - 1]?.examCutoff}% on its certification exam to unlock this phase.
                       </p>
                     </div>
                     <button
                       onClick={() => setSelectedPhaseIndex(selectedPhaseIndex - 1)}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[#0969da] hover:bg-[#0854b0] text-white text-xs font-bold transition-all cursor-pointer shadow-2xs"
+                      className="inline-flex cursor-pointer items-center gap-2 rounded-md bg-accent px-4 py-2 text-xs font-bold text-accentInk shadow-2xs transition-all hover:opacity-90"
                     >
                       <ArrowLeft className="h-3.5 w-3.5" />
                       <span>Switch to Phase {selectedPhaseIndex} Exam</span>
@@ -583,22 +598,22 @@ export default function CourseWorkspacePage() {
                 ) : (
                   /* Unlocked Phase Content & Actions */
                   <div className="space-y-6">
-                    <p className="text-sm text-ink leading-relaxed">
+                    <p className="max-w-4xl text-sm leading-relaxed text-muted sm:text-base">
                       {currentPhase.description}
                     </p>
 
                     {/* Competency & Skills Chips */}
                     <div>
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-muted mb-2.5">
+                      <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted">
                         Key Competencies & Tested Skills
                       </h4>
                       <div className="flex flex-wrap gap-2">
                         {currentPhase.skills.map((skill, sIdx) => (
                           <span
                             key={sIdx}
-                            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-surface2 border border-line text-xs font-medium text-ink"
+                            className="inline-flex items-center gap-2 rounded-lg border border-line bg-surface px-3 py-2 text-xs font-medium text-ink shadow-2xs"
                           >
-                            <Check className="h-3 w-3 text-[#1a7f37]" />
+                            <Check className="h-3 w-3 text-good" />
                             <span>{skill}</span>
                           </span>
                         ))}
@@ -606,49 +621,49 @@ export default function CourseWorkspacePage() {
                     </div>
 
                     {/* Phase Syllabus Modules */}
-                    <div className="rounded-xl border border-line bg-surface2/30 p-4 space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-ink flex items-center gap-2">
-                          <BookOpen className="h-4 w-4 text-[#0969da]" />
+                    <div className="space-y-4 rounded-xl border border-line bg-surface p-4 sm:p-5">
+                      <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                        <span className="flex items-center gap-2 text-sm font-bold text-ink">
+                          <BookOpen className="h-4 w-4 text-accent" />
                           <span>Curriculum Modules ({currentPhase.modulesCount} modules)</span>
                         </span>
-                        <span className="text-[11px] text-muted">Self-Paced with Mandatory Lab Checks</span>
+                        <span className="text-xs text-muted">Self-paced with mandatory lab checks</span>
                       </div>
                       <div className="space-y-2 text-xs">
-                        <div className="p-2.5 rounded-lg bg-surface border border-line flex items-center justify-between">
-                          <div className="flex items-center gap-2.5">
-                            <CheckCircle2 className="h-4 w-4 text-[#1a7f37]" />
+                        <div className="flex items-center justify-between gap-3 rounded-lg border border-line bg-surface2/50 p-3">
+                          <div className="flex min-w-0 items-center gap-2.5">
+                            <CheckCircle2 className="h-4 w-4 text-good" />
                             <span className="font-semibold text-ink">Module 1.1: Core Architecture & Theory</span>
                           </div>
-                          <span className="text-muted font-mono text-[11px]">Completed</span>
+                          <span className="shrink-0 rounded-full bg-good/10 px-2 py-1 text-[10px] font-semibold text-good">Completed</span>
                         </div>
-                        <div className="p-2.5 rounded-lg bg-surface border border-line flex items-center justify-between">
-                          <div className="flex items-center gap-2.5">
-                            <CheckCircle2 className="h-4 w-4 text-[#1a7f37]" />
+                        <div className="flex items-center justify-between gap-3 rounded-lg border border-line bg-surface2/50 p-3">
+                          <div className="flex min-w-0 items-center gap-2.5">
+                            <CheckCircle2 className="h-4 w-4 text-good" />
                             <span className="font-semibold text-ink">Module 1.2: Terminal Commands & Hands-on Diagnostics</span>
                           </div>
-                          <span className="text-muted font-mono text-[11px]">Completed</span>
+                          <span className="shrink-0 rounded-full bg-good/10 px-2 py-1 text-[10px] font-semibold text-good">Completed</span>
                         </div>
-                        <div className="p-2.5 rounded-lg bg-surface border border-line flex items-center justify-between">
-                          <div className="flex items-center gap-2.5">
-                            <Clock className="h-4 w-4 text-[#9a6700]" />
+                        <div className="flex items-center justify-between gap-3 rounded-lg border border-line bg-surface2/50 p-3">
+                          <div className="flex min-w-0 items-center gap-2.5">
+                            <Clock className="h-4 w-4 text-warn" />
                             <span className="font-semibold text-ink">Module 1.3: Production Hardening & Troubleshooting</span>
                           </div>
-                          <span className="text-muted font-mono text-[11px]">Ready for Exam</span>
+                          <span className="shrink-0 rounded-full bg-warn/10 px-2 py-1 text-[10px] font-semibold text-warn">Ready for exam</span>
                         </div>
                       </div>
                     </div>
 
                     {/* EXAM CALL TO ACTION BUTTONS (THE CORE REQUIREMENT) */}
-                    <div className="p-5 rounded-xl border border-[#0969da]/30 bg-[#0969da]/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="flex flex-col justify-between gap-4 rounded-xl border border-accent/30 bg-accent/5 p-4 sm:flex-row sm:items-center sm:p-5">
                       <div>
                         <div className="flex items-center gap-2">
-                          <Award className="h-4 w-4 text-[#0969da]" />
+                          <Award className="h-4 w-4 text-accent" />
                           <h4 className="text-sm font-bold text-ink">
                             Phase {selectedPhaseIndex + 1} Certification Assessment
                           </h4>
                         </div>
-                        <p className="text-xs text-muted mt-1">
+                        <p className="mt-1 max-w-2xl text-xs leading-relaxed text-muted">
                           Server-timed assessment ({currentPhase.examCutoff}% cutoff). Anti-cheating proctoring active.
                           {passed
                             ? ' You have already passed this phase!'
@@ -658,11 +673,11 @@ export default function CourseWorkspacePage() {
                         </p>
                       </div>
 
-                      <div className="flex items-center gap-3 shrink-0">
+                      <div className="flex w-full shrink-0 flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
                         {/* Practice Mock Button */}
                         <button
                           onClick={() => handleOpenExam(selectedPhaseIndex, 'PRACTICE_MOCK')}
-                          className="px-3.5 py-2 rounded-md border border-line bg-surface hover:bg-surface2 text-ink text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5"
+                          className="flex items-center justify-center gap-1.5 rounded-lg border border-line bg-surface px-3.5 py-2.5 text-xs font-bold text-ink transition-all hover:bg-surface2 cursor-pointer"
                         >
                           <Play className="h-3.5 w-3.5 text-muted" />
                           <span>Practice Mock</span>
@@ -672,10 +687,10 @@ export default function CourseWorkspacePage() {
                         <button
                           onClick={() => handleOpenExam(selectedPhaseIndex, 'OFFICIAL_EXAM')}
                           className={cn(
-                            'px-4 py-2 rounded-md text-white text-xs font-bold transition-all cursor-pointer shadow-2xs flex items-center gap-2 active:scale-95',
+                            'flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-xs font-bold text-white transition-all cursor-pointer shadow-2xs active:scale-[0.98]',
                             passed
-                              ? 'bg-[#1f883d] hover:bg-[#1a7f37]'
-                              : 'bg-[#0969da] hover:bg-[#0854b0]'
+                              ? 'bg-good hover:opacity-90'
+                              : 'bg-accent hover:opacity-90'
                           )}
                         >
                           <Award className="h-3.5 w-3.5" />
@@ -722,46 +737,46 @@ export default function CourseWorkspacePage() {
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-2">
             {notes.map((note) => (
               <div
                 key={note.id}
-                className="group rounded-xl border border-line bg-surface p-5 hover:border-[#8c959f] transition-all flex flex-col justify-between space-y-4"
+                className="group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-line bg-surface shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-md"
               >
-                <div className="space-y-2.5">
-                  <div className="flex items-center justify-between gap-2">
+                <div className="h-1 w-full bg-gradient-to-r from-warn/70 via-warn/20 to-transparent" />
+                <div className="flex flex-1 flex-col gap-4 p-5 sm:p-6">
+                  <div className="flex items-center justify-between gap-3">
                     <span
                       className={cn(
-                        'px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase',
+                        'rounded-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider',
                         note.format === 'CHEATSHEET'
-                          ? 'bg-amber-500/10 text-amber-500 border border-amber-500/30'
+                          ? 'border border-warn/30 bg-warn/10 text-warn'
                           : note.format === 'PDF'
-                          ? 'bg-red-500/10 text-red-500 border border-red-500/30'
-                          : 'bg-[#0969da]/10 text-[#0969da] border border-[#0969da]/30'
+                          ? 'border border-bad/30 bg-bad/10 text-bad'
+                          : 'border border-accent/30 bg-accent/10 text-accent'
                       )}
                     >
                       {note.format}
                     </span>
-                    <span className="text-[11px] text-muted flex items-center gap-1">
+                    <span className="flex items-center gap-1.5 rounded-full bg-surface2 px-2.5 py-1 text-[11px] text-muted">
                       <Clock className="h-3 w-3" />
                       <span>{note.readTime}</span>
                     </span>
                   </div>
 
-                  <h3 className="text-base font-bold text-ink group-hover:text-[#0969da] transition-colors leading-snug">
+                  <h3 className="text-lg font-bold leading-snug tracking-tight text-ink transition-colors group-hover:text-accent">
                     {note.title}
                   </h3>
 
-                  <p className="text-xs text-muted leading-relaxed line-clamp-2">
+                  <p className="text-sm leading-relaxed text-muted">
                     {note.contentSummary}
                   </p>
 
-                  {/* Topics Tags */}
-                  <div className="flex flex-wrap gap-1.5 pt-1">
+                  <div className="flex flex-wrap gap-2">
                     {note.topics.map((t, idx) => (
                       <span
                         key={idx}
-                        className="px-2 py-0.5 rounded bg-surface2 text-[11px] font-mono text-ink/80 border border-line"
+                        className="rounded-md border border-line bg-surface2 px-2.5 py-1 text-[11px] font-medium text-ink"
                       >
                         {t}
                       </span>
@@ -769,10 +784,10 @@ export default function CourseWorkspacePage() {
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-line flex items-center justify-between text-xs">
+                <div className="flex items-center justify-between gap-3 border-t border-line px-5 py-4 text-xs sm:px-6">
                   <button
                     onClick={() => setSelectedNote(note)}
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0969da] hover:underline cursor-pointer"
+                    className="inline-flex cursor-pointer items-center gap-2 font-semibold text-accent transition-colors hover:opacity-80"
                   >
                     <Eye className="h-3.5 w-3.5" />
                     <span>Read Cheatsheet</span>
@@ -782,7 +797,7 @@ export default function CourseWorkspacePage() {
                     onClick={() => {
                       toast(`Downloaded "${note.title}" offline copy.`, 'success');
                     }}
-                    className="p-1.5 rounded hover:bg-surface2 text-muted hover:text-ink transition-colors cursor-pointer"
+                    className="rounded-md p-2 text-muted transition-colors hover:bg-surface2 hover:text-ink cursor-pointer"
                     title="Download Note PDF"
                   >
                     <Download className="h-3.5 w-3.5" />
@@ -815,69 +830,68 @@ export default function CourseWorkspacePage() {
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-2">
             {projectIdeas.map((project) => (
               <div
                 key={project.id}
-                className="rounded-xl border border-line bg-surface p-6 space-y-4 hover:border-[#8c959f] transition-all flex flex-col justify-between"
+                className="group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-line bg-surface shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-md"
               >
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between gap-2">
+                <div className="h-1 w-full bg-gradient-to-r from-accent/70 via-accent/20 to-transparent" />
+                <div className="flex flex-1 flex-col gap-4 p-5 sm:p-6">
+                  <div className="flex items-center justify-between gap-3">
                     <span
                       className={cn(
-                        'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider',
-                        project.difficulty === 'Production Capstone'
-                          ? 'bg-[#dafbe1] text-[#1a7f37] border border-[#4ac26b]/40'
+                          'rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider',
+                          project.difficulty === 'Production Capstone'
+                            ? 'border border-good/30 bg-good/10 text-good'
                           : project.difficulty === 'Advanced'
-                          ? 'bg-amber-500/10 text-amber-500 border border-amber-500/30'
-                          : 'bg-[#0969da]/10 text-[#0969da] border border-[#0969da]/30'
+                            ? 'border border-warn/30 bg-warn/10 text-warn'
+                            : 'border border-accent/30 bg-accent/10 text-accent'
                       )}
                     >
                       {project.difficulty}
                     </span>
-                    <span className="text-xs font-mono text-muted flex items-center gap-1">
+                    <span className="flex items-center gap-1.5 rounded-full bg-surface2 px-2.5 py-1 text-[11px] font-medium text-muted">
                       <Clock className="h-3 w-3" />
                       <span>{project.estimatedHours}</span>
                     </span>
                   </div>
 
-                  <h3 className="text-base sm:text-lg font-bold text-ink leading-snug">
+                  <h3 className="text-lg font-bold leading-snug tracking-tight text-ink transition-colors group-hover:text-accent sm:text-xl">
                     {project.title}
                   </h3>
 
-                  <p className="text-xs text-muted leading-relaxed">
+                  <p className="text-sm leading-relaxed text-muted">
                     {project.brief}
                   </p>
 
-                  {/* Architecture Highlights */}
-                  <div className="p-3 rounded-lg bg-surface2/60 border border-line space-y-2">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-ink block">
+                  <div className="space-y-3 rounded-xl border border-line bg-surface2/60 p-4">
+                    <span className="block text-[11px] font-bold uppercase tracking-wider text-ink">
                       Architecture & Implementation Highlights:
                     </span>
-                    <ul className="space-y-1.5 text-xs text-muted">
+                    <ul className="space-y-2 text-sm text-muted">
                       {project.architectureHighlights.map((hl, hIdx) => (
-                        <li key={hIdx} className="flex items-start gap-2">
-                          <Check className="h-3.5 w-3.5 text-[#1a7f37] shrink-0 mt-0.5" />
-                          <span className="leading-snug">{hl}</span>
-                        </li>
+                          <li key={hIdx} className="flex items-start gap-2">
+                            <Check className="mt-0.5 h-4 w-4 shrink-0 text-good" />
+                            <span className="leading-relaxed">{hl}</span>
+                          </li>
                       ))}
                     </ul>
                   </div>
 
-                  {/* Tech Stack Pills */}
-                  <div className="flex flex-wrap gap-1.5 pt-1">
+                  <div className="flex flex-wrap gap-2">
                     {project.techStack.map((tech, tIdx) => (
                       <span
-                        key={tIdx}
-                        className="px-2 py-0.5 rounded bg-surface2 text-[11px] font-semibold text-ink border border-line"
+                          key={tIdx}
+                          className="rounded-md border border-line bg-surface2 px-2.5 py-1 text-[11px] font-semibold text-ink"
                       >
-                        {tech}
+                          {tech}
                       </span>
                     ))}
                   </div>
                 </div>
 
-                <div className="pt-4 border-t border-line flex items-center justify-between text-xs">
+                <div className="flex items-center justify-between gap-3 border-t border-line px-5 py-4 text-xs sm:px-6">
                   <a
                     href={project.githubTemplateUrl || '#'}
                     target="_blank"
@@ -888,7 +902,7 @@ export default function CourseWorkspacePage() {
                         toast('Starter repository template cloned into your IDE project workspace.', 'success');
                       }
                     }}
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0969da] hover:underline cursor-pointer"
+                    className="inline-flex items-center gap-2 font-semibold text-accent transition-colors hover:opacity-80"
                   >
                     <Github className="h-3.5 w-3.5" />
                     <span>Clone Starter Template</span>
@@ -897,12 +911,12 @@ export default function CourseWorkspacePage() {
 
                   <button
                     onClick={() => handleCopy(project.brief, project.id)}
-                    className="inline-flex items-center gap-1 text-[11px] text-muted hover:text-ink cursor-pointer"
+                    className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-[11px] font-medium text-muted transition-colors hover:bg-surface2 hover:text-ink"
                   >
                     {copiedSnippet === project.id ? (
                       <>
-                        <Check className="h-3 w-3 text-[#1a7f37]" />
-                        <span className="text-[#1a7f37]">Copied!</span>
+                        <Check className="h-3 w-3 text-good" />
+                        <span className="text-good">Copied!</span>
                       </>
                     ) : (
                       <>
@@ -936,43 +950,43 @@ export default function CourseWorkspacePage() {
 
             <Link
               href="/jobs"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0969da] hover:underline"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-accent hover:underline"
             >
               <span>Explore Live Placement Drives</span>
               <ArrowLeft className="h-3.5 w-3.5 rotate-180" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-2">
             {jobProfiles.map((job) => (
               <div
                 key={job.id}
-                className="rounded-xl border border-line bg-surface p-5 space-y-4 hover:border-[#8c959f] transition-all flex flex-col justify-between"
+                className="group flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-line bg-surface shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-md"
               >
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/30">
+                <div className="h-1 w-full bg-gradient-to-r from-purple-500/70 via-purple-500/20 to-transparent" />
+                <div className="flex flex-1 flex-col gap-5 p-5 sm:p-6">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <span className="rounded-full border border-purple-500/30 bg-purple-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400">
                       {job.demandTier}
                     </span>
-                    <span className="text-xs font-bold font-mono text-[#1a7f37]">
+                    <span className="rounded-lg border border-good/25 bg-good/10 px-3 py-1.5 text-xs font-bold font-mono text-good">
                       {job.ctcRange}
                     </span>
                   </div>
 
-                  <h3 className="text-base font-bold text-ink leading-snug">
+                  <h3 className="text-lg font-bold leading-snug tracking-tight text-ink transition-colors group-hover:text-accent sm:text-xl">
                     {job.roleTitle}
                   </h3>
 
-                  {/* Top Recruiters */}
-                  <div>
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-muted block mb-1.5">
+                  <div className="space-y-2">
+                    <span className="block text-[11px] font-bold uppercase tracking-wider text-muted">
                       Top Campus Recruiters:
                     </span>
-                    <div className="flex flex-wrap gap-1.5">
+                    <div className="flex flex-wrap gap-2">
                       {job.topHiringCompanies.map((comp, cIdx) => (
                         <span
                           key={cIdx}
-                          className="px-2 py-0.5 rounded bg-surface2 text-[11px] font-medium text-ink border border-line"
+                          className="rounded-md border border-line bg-surface2 px-2.5 py-1 text-xs font-medium text-ink"
                         >
                           {comp}
                         </span>
@@ -980,33 +994,31 @@ export default function CourseWorkspacePage() {
                     </div>
                   </div>
 
-                  {/* Placement Eligibility */}
-                  <div className="p-2.5 rounded-lg bg-surface2/60 border border-line text-xs">
-                    <span className="font-semibold text-ink block">Placement Eligibility:</span>
-                    <span className="text-muted text-[11px]">{job.placementEligibility}</span>
+                  <div className="rounded-xl border border-line bg-surface2/60 p-3.5">
+                    <span className="mb-1 block text-[11px] font-bold uppercase tracking-wide text-ink">Placement Eligibility</span>
+                    <span className="text-sm leading-relaxed text-muted">{job.placementEligibility}</span>
                   </div>
 
-                  {/* Key Responsibilities */}
-                  <div className="space-y-1.5 text-xs text-muted">
-                    <span className="font-semibold text-ink text-[11px] uppercase tracking-wider block">
+                  <div className="space-y-2.5 text-sm text-muted">
+                    <span className="block text-[11px] font-bold uppercase tracking-wider text-ink">
                       Core Responsibilities:
                     </span>
                     {job.keyResponsibilities.map((resp, rIdx) => (
-                      <div key={rIdx} className="flex items-start gap-1.5">
-                        <span className="text-muted mt-0.5">•</span>
-                        <span className="leading-snug">{resp}</span>
+                      <div key={rIdx} className="flex items-start gap-2">
+                        <span className="mt-0.5 text-accent">•</span>
+                        <span className="leading-relaxed">{resp}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-line">
+                <div className="border-t border-line px-5 py-4 sm:px-6">
                   <Link
                     href="/jobs"
-                    className="w-full py-2 px-3 rounded-md bg-surface border border-line hover:bg-surface2 text-xs font-bold text-ink flex items-center justify-center gap-1.5 transition-colors"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-line bg-surface2 px-3 py-2.5 text-sm font-semibold text-ink transition-colors hover:border-accent/40 hover:bg-accent/5 hover:text-accent"
                   >
                     <span>View Placement Drives</span>
-                    <ChevronRight className="h-3.5 w-3.5 text-muted" />
+                    <ChevronRight className="h-4 w-4 text-muted transition-transform group-hover:translate-x-0.5 group-hover:text-accent" />
                   </Link>
                 </div>
               </div>
@@ -1017,87 +1029,95 @@ export default function CourseWorkspacePage() {
         {/* ========================================================================= */}
         {/* 4. VERIFIED STUDENT REVIEWS & PLACEMENT WALL (AT THE VERY BOTTOM)          */}
         {/* ========================================================================= */}
-        <section id="reviews-section" className="space-y-6 pt-6 border-t border-line pb-12">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <section id="reviews-section" className="scroll-mt-20 space-y-6 border-t border-line pt-7 pb-12">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <div className="flex items-center gap-2">
-                <span className="p-1 rounded bg-[#9a6700]/10 text-[#9a6700] border border-[#9a6700]/20">
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-warn/20 bg-warn/10 text-warn">
                   <Star className="h-4 w-4 fill-current" />
                 </span>
-                <h2 className="text-xl sm:text-2xl font-extrabold text-ink tracking-tight">
+                <h2 className="text-xl font-bold tracking-tight text-ink sm:text-2xl">
                   Verified Student Reviews & Placement Stories
                 </h2>
               </div>
-              <p className="text-xs sm:text-sm text-muted mt-1">
+              <p className="mt-2 text-sm leading-relaxed text-muted">
                 Real feedback from KIET students and placed alumni who cleared campus placement drives using this track.
               </p>
             </div>
 
             <button
               onClick={() => setReviewModalOpen(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-[#0969da] hover:bg-[#0854b0] text-white text-xs font-bold transition-all shadow-2xs cursor-pointer shrink-0"
+              className="inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-accentInk shadow-sm transition-all hover:-translate-y-0.5 hover:opacity-90"
             >
               <MessageSquare className="h-3.5 w-3.5" />
               <span>Write a Review</span>
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-2">
             {allReviews.map((rev) => (
               <div
                 key={rev.id}
-                className="rounded-xl border border-line bg-surface p-5 space-y-3.5 hover:border-[#8c959f] transition-all flex flex-col justify-between"
+                className="relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-line bg-surface shadow-sm transition-all duration-200 hover:border-accent/40 hover:shadow-md"
               >
-                <div className="space-y-3">
-                  {/* Reviewer Header */}
-                  <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <h4 className="text-sm font-bold text-ink">{rev.studentName}</h4>
-                      <p className="text-[11px] font-mono text-muted">
-                        Roll: {rev.rollNumber} • {rev.batchYear}
-                      </p>
+                <div className="flex flex-1 flex-col p-5 sm:p-6">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex min-w-0 items-center gap-3">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent/10 text-sm font-bold text-accent ring-1 ring-accent/20">
+                        {rev.studentName
+                          .split(/\s+/)
+                          .filter(Boolean)
+                          .slice(0, 2)
+                          .map((part) => part[0]?.toUpperCase())
+                          .join('')}
+                      </div>
+                      <div className="min-w-0">
+                        <h4 className="truncate text-sm font-bold text-ink">{rev.studentName}</h4>
+                        <p className="mt-0.5 truncate text-xs text-muted">
+                          {rev.batchYear}
+                          {rev.rollNumber && <span className="font-mono"> · {rev.rollNumber}</span>}
+                        </p>
+                      </div>
                     </div>
-
-                    {/* Star Rating */}
-                    <div className="flex items-center gap-0.5 text-[#9a6700]">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={cn(
-                            'h-3 w-3',
-                            i < rev.rating ? 'fill-current text-[#9a6700]' : 'text-line'
-                          )}
-                        />
-                      ))}
-                    </div>
+                    <Quote aria-hidden="true" className="h-7 w-7 shrink-0 text-accent/25" />
                   </div>
 
-                  {/* Placed Company Pill */}
-                  {rev.placedCompany && (
-                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 text-[#1a7f37] border border-emerald-500/20 text-xs font-semibold">
-                      <Building2 className="h-3 w-3" />
-                      <span>{rev.placedCompany}</span>
+                  <blockquote className="my-5 flex-1 text-sm leading-relaxed text-ink/90">
+                    “{rev.reviewText}”
+                  </blockquote>
+
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
+                    <div className="flex min-w-0 flex-wrap items-center gap-2">
+                      {rev.placedCompany && (
+                        <span className="inline-flex max-w-full items-center gap-1.5 rounded-lg border border-good/20 bg-good/10 px-2.5 py-1.5 text-xs font-semibold text-good">
+                          <Building2 className="h-3.5 w-3.5 shrink-0" />
+                          <span className="truncate">{rev.placedCompany}</span>
+                        </span>
+                      )}
                       {rev.placedPackage && (
-                        <span className="font-mono text-[11px] text-muted">({rev.placedPackage})</span>
+                        <span className="rounded-lg bg-surface2 px-2.5 py-1.5 text-xs font-medium text-muted">
+                          {rev.placedPackage}
+                        </span>
                       )}
                     </div>
-                  )}
-
-                  {/* Review Text */}
-                  <p className="text-xs text-ink/90 leading-relaxed italic">
-                    &quot;{rev.reviewText}&quot;
-                  </p>
-                </div>
-
-                {/* Verified Credential Tag */}
-                <div className="pt-3 border-t border-line flex items-center justify-between text-[11px] text-muted">
-                  <div className="flex items-center gap-1.5 text-[#1a7f37]">
-                    <ShieldCheck className="h-3.5 w-3.5" />
-                    <span className="font-mono font-medium">
-                      {rev.verifiedCertificateHash || 'Verified Student'}
-                    </span>
+                    <div
+                      className="flex shrink-0 items-center gap-1.5 rounded-full border border-warn/20 bg-warn/10 px-2.5 py-1"
+                      aria-label={`${rev.rating} out of 5 stars`}
+                    >
+                      <Star className="h-3.5 w-3.5 fill-current text-warn" />
+                      <span className="text-xs font-bold text-ink">{rev.rating.toFixed(1)}</span>
+                    </div>
                   </div>
-                  <span>{rev.date}</span>
+
+                  <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-[11px]">
+                    <div className="flex min-w-0 items-center gap-1.5 text-good">
+                      <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
+                      <span className="truncate font-mono font-medium" title={rev.verifiedCertificateHash || undefined}>
+                        {rev.verifiedCertificateHash || 'Verified Student'}
+                      </span>
+                    </div>
+                    <time className="shrink-0 text-muted">{rev.date}</time>
+                  </div>
                 </div>
               </div>
             ))}
@@ -1129,7 +1149,7 @@ export default function CourseWorkspacePage() {
             {/* Header */}
             <div className="p-4 sm:p-5 border-b border-line flex items-center justify-between gap-3 bg-surface2/40">
               <div className="flex items-center gap-2.5 truncate">
-                <BookOpen className="h-5 w-5 text-[#0969da] shrink-0" />
+                <BookOpen className="h-5 w-5 shrink-0 text-accent" />
                 <div className="truncate">
                   <h3 className="text-sm sm:text-base font-bold text-ink truncate">
                     {selectedNote.title}
@@ -1150,7 +1170,7 @@ export default function CourseWorkspacePage() {
             {/* Content Body */}
             <div className="p-6 overflow-y-auto space-y-5 text-xs sm:text-sm text-ink leading-relaxed font-sans">
               <div className="p-3 rounded-lg bg-surface2 border border-line text-xs font-mono">
-                <span className="font-bold text-[#0969da] block mb-1">Cheatsheet Overview:</span>
+                <span className="mb-1 block font-bold text-accent">Cheatsheet Overview:</span>
                 {selectedNote.contentSummary}
               </div>
 
@@ -1224,7 +1244,7 @@ ENTRYPOINT ["/main"]`}
               </button>
               <button
                 onClick={() => setSelectedNote(null)}
-                className="px-4 py-1.5 rounded-md bg-[#0969da] hover:bg-[#0854b0] text-white text-xs font-bold cursor-pointer"
+                className="cursor-pointer rounded-md bg-accent px-4 py-1.5 text-xs font-bold text-accentInk hover:opacity-90"
               >
                 Done
               </button>
@@ -1239,7 +1259,7 @@ ENTRYPOINT ["/main"]`}
           <div className="w-full max-w-lg rounded-2xl border border-line bg-surface shadow-2xl overflow-hidden flex flex-col">
             <div className="p-5 border-b border-line flex items-center justify-between bg-surface2/40">
               <div className="flex items-center gap-2">
-                <MessageSquare className="h-5 w-5 text-[#0969da]" />
+                <MessageSquare className="h-5 w-5 text-accent" />
                 <h3 className="text-base font-bold text-ink">Write a Student Review</h3>
               </div>
               <button
@@ -1261,12 +1281,12 @@ ENTRYPOINT ["/main"]`}
                       key={s}
                       type="button"
                       onClick={() => setNewReview((prev) => ({ ...prev, rating: s }))}
-                      className="p-1 text-[#9a6700] hover:scale-110 transition-transform cursor-pointer"
+                      className="cursor-pointer p-1 text-warn transition-transform hover:scale-110"
                     >
                       <Star
                         className={cn(
                           'h-6 w-6',
-                          s <= newReview.rating ? 'fill-current text-[#9a6700]' : 'text-line'
+                          s <= newReview.rating ? 'fill-current text-warn' : 'text-line'
                         )}
                       />
                     </button>
@@ -1289,7 +1309,7 @@ ENTRYPOINT ["/main"]`}
                     onChange={(e) =>
                       setNewReview((prev) => ({ ...prev, placedCompany: e.target.value }))
                     }
-                    className="w-full px-3 py-2 rounded-md bg-surface2 border border-line text-xs text-ink focus:outline-hidden focus:border-[#0969da]"
+                    className="w-full rounded-md border border-line bg-surface2 px-3 py-2 text-xs text-ink focus:border-accent focus:outline-hidden"
                   />
                 </div>
                 <div>
@@ -1303,7 +1323,7 @@ ENTRYPOINT ["/main"]`}
                     onChange={(e) =>
                       setNewReview((prev) => ({ ...prev, placedPackage: e.target.value }))
                     }
-                    className="w-full px-3 py-2 rounded-md bg-surface2 border border-line text-xs text-ink focus:outline-hidden focus:border-[#0969da]"
+                    className="w-full rounded-md border border-line bg-surface2 px-3 py-2 text-xs text-ink focus:border-accent focus:outline-hidden"
                   />
                 </div>
               </div>
@@ -1320,12 +1340,12 @@ ENTRYPOINT ["/main"]`}
                   onChange={(e) =>
                     setNewReview((prev) => ({ ...prev, reviewText: e.target.value }))
                   }
-                  className="w-full px-3 py-2 rounded-md bg-surface2 border border-line text-xs text-ink focus:outline-hidden focus:border-[#0969da] resize-none"
+                  className="w-full resize-none rounded-md border border-line bg-surface2 px-3 py-2 text-xs text-ink focus:border-accent focus:outline-hidden"
                 />
               </div>
 
               <div className="p-3 rounded-lg bg-surface2/60 border border-line text-[11px] text-muted flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 text-[#1a7f37] shrink-0" />
+                <ShieldCheck className="h-4 w-4 shrink-0 text-good" />
                 <span>
                   Posting as <strong>{student.name}</strong> (Roll: {student.rollNumber || '2100290100042'}). Verified certificate hash will automatically be attached if Phase 1 is passed.
                 </span>
@@ -1341,7 +1361,7 @@ ENTRYPOINT ["/main"]`}
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-md bg-[#0969da] hover:bg-[#0854b0] text-white text-xs font-bold cursor-pointer transition-all shadow-2xs"
+                  className="cursor-pointer rounded-md bg-accent px-5 py-2 text-xs font-bold text-accentInk shadow-2xs transition-all hover:opacity-90"
                 >
                   Publish Review
                 </button>
