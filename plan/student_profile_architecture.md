@@ -139,116 +139,120 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model Student {
+  id              String           @id @default(uuid())
+  name            String
+  email           String           @unique
+  collegeName     String
+  rollNumber      String           @unique
+  libraryId       String?          @unique
+  course          String
+  branch          String
+  batch           Int
+  currentSemester Int?             @default(1)
+
+  userId          String?          @unique
+  user            User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  studentProfile  StudentProfile?
+  academicRecords AcademicRecord[]
+  projects        Project[]
+  certifications  Certification[]
+  badges          StudentBadge[]
+
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
 model StudentProfile {
-  id               String          @id @default(uuid())
-  userId           String          @unique
-  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tenantId         String          @default("kiet-main") // Multi-tenant ready
+  id            String   @id @default(uuid())
+  studentId     String   @unique
+  student       Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
-  // College-Locked Academic Meta
-  rollNumber       String          @unique
-  branch           String          // E.g., "CSE", "IT", "CS-AI"
-  currentSemester  Int             // 1 to 8
-  batchYear        String          // E.g., "2023-2027"
+  username      String   @unique
+  bio           String?
+  avatarUrl     String?
 
-  // Editable Social & Dev Handles
-  avatarUrl        String?
-  bio              String?         @db.VarChar(300)
-  linkedinUrl      String?
-  xUrl             String?
-  githubHandle     String?
-  leetcodeHandle   String?
-  codeforcesHandle String?
-  codechefHandle   String?
-  gfgHandle        String?
+  githubUrl     String?
+  linkedinUrl   String?
+  leetcodeUrl   String?
+  codeforcesUrl String?
+  codechefUrl   String?
+  xUrl          String?
 
-  // Nightly Cached Coding Statistics (JSONB)
-  /* Structure:
-     {
-       "github": { "totalContributions": 482, "latestActivity": "Committed to repo...", "graphWeeks": [...] },
-       "leetcode": { "latestActivity": "Solved 'Trapping Rain Water'...", "submissionCalendar": {...} }
-     }
-  */
-  codingStats      Json?
-  lastStatsSync    DateTime?
-
-  // Trust, Audit & Penalty Enforcement
-  isAccountFrozen  Boolean         @default(false)
-  pendingFine      Float           @default(0.0)
-  fraudRemarks     String?
-
-  // Relations
-  academics        AcademicSemester[]
-  projects         Project[]
-  certifications   Certification[]
-  badges           StudentBadge[]
-
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-
-  @@index([tenantId, branch, currentSemester])
-  @@index([rollNumber])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
-enum AuditStatus {
-  SELF_DECLARED
-  VERIFIED
-  FLAGGED_FRAUD
-}
+model AcademicRecord {
+  id          String    @id @default(uuid())
+  studentId   String
+  student     Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
-model AcademicSemester {
-  id               String          @id @default(uuid())
-  studentProfileId String
-  studentProfile   StudentProfile  @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
+  semester    Int
+  sgpa        Float
+  cgpa        Float
+  backlogs    Int       @default(0)
 
-  semesterNumber   Int             // 1 to 8
-  sgpa             Float           // E.g., 8.42
-  cgpaCumulative   Float           // E.g., 8.10
-  activeBacklogs   Int             @default(0)
-  deadBacklogs     Int             @default(0)
-  resultPdfUrl     String          // Direct S3/R2 CDN link
+  isVerified  Boolean   @default(false)
+  verifiedAt  DateTime?
 
-  // Audit Tracking
-  auditStatus      AuditStatus     @default(SELF_DECLARED)
-  auditedBy        String?         // Faculty or TPO User ID
-  teacherReview    String?         // Optional faculty comments
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-
-  @@unique([studentProfileId, semesterNumber])
+  @@unique([studentId, semester])
 }
 
 model Project {
-  id                String         @id @default(uuid())
-  studentProfileId  String
-  studentProfile    StudentProfile @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
+  id          String   @id @default(uuid())
+  studentId   String
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
-  title             String         @db.VarChar(120)
-  shortTagline      String         @db.VarChar(200)
-  markdownContent   String         @db.Text // Full GitHub README style content
-  githubRepoUrl     String?
-  liveDemoUrl       String?
-  techStack         String[]       // ["Next.js", "Docker", "PostgreSQL"]
+  title       String
+  tagline     String?
+  description String
+  githubUrl   String?
+  demoUrl     String?
+  techStack   String[] @default([])
 
-  // Verification & AI Quality Flags
-  aiPlagScore       Float?         // 0 to 100 (Filled by Python AI analyzer)
-  isTeacherApproved Boolean        @default(false)
-  teacherRemarks    String?
+  isPinned    Boolean  @default(false)
+  isVerified  Boolean  @default(false)
 
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
-
-  @@index([studentProfileId])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
-model Badge {
+model Certification {
+  id             String    @id @default(uuid())
+  studentId      String
+  student        Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  title          String
+  issuer         String
+  credentialId   String?
+  credentialUrl  String?
+  certificateUrl String?
+  issuedAt       DateTime?
+  expiresAt      DateTime?
+
+  isVerified     Boolean   @default(false)
+  verifiedAt     DateTime?
+
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model BadgeCatalog {
   id          String         @id @default(uuid())
-  title       String         // E.g., "200+ LeetCode Solved", "Hackathon Winner"
-  iconUrl     String
-  category    String         // "DSA", "DEV", "OPEN_SOURCE", "COMPETITIVE"
-  description String?
-  requests    StudentBadge[]
+  title       String         @unique
+  description String
+  imageUrl    String?
+  category    String?
+
+  badges      StudentBadge[]
+
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
 }
 
 enum BadgeStatus {
@@ -258,35 +262,31 @@ enum BadgeStatus {
 }
 
 model StudentBadge {
-  id               String         @id @default(uuid())
-  studentProfileId String
-  studentProfile   StudentProfile @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
-  badgeId          String
-  badge            Badge          @relation(fields: [badgeId], references: [id])
+  id            String        @id @default(uuid())
+  studentId     String
+  student       Student       @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
-  status           BadgeStatus    @default(PENDING)
-  proofUrl         String         // Live contest URL, Drive link, or credential
-  rejectionReason  String?
-  verifiedBy       String?        // Reviewer User ID
-  verifiedAt       DateTime?
+  badgeId       String?
+  badgeCatalog  BadgeCatalog? @relation(fields: [badgeId], references: [id], onDelete: SetNull)
 
-  @@unique([studentProfileId, badgeId])
-}
+  title         String
+  description   String?
+  imageUrl      String?
 
-model Certification {
-  id                 String         @id @default(uuid())
-  studentProfileId   String
-  studentProfile     StudentProfile @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
+  proofUrl      String?
+  screenshotUrl String?
 
-  title              String         // E.g., "AWS Certified Solutions Architect"
-  issuingOrg         String         // E.g., "AWS", "Coursera", "Campus Internal"
-  isInternalCourse   Boolean        @default(false) // True if earned via 3-phase platform test
-  certificateHash    String?        @unique // For in-app auto-verification
-  credentialUrl      String?
-  certificateFileUrl String?
-  issueDate          DateTime
+  status        BadgeStatus   @default(PENDING) // PENDING | APPROVED | REJECTED
+  reviewedBy    String?
+  reviewedAt    DateTime?
 
-  createdAt          DateTime       @default(now())
+  awardedBy     String?
+  awardedAt     DateTime?
+
+  isPinned      Boolean       @default(false) // Strictly max 2 approved pinned badges
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 }
 ```
 
