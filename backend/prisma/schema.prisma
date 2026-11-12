@@ -302,3 +302,27 @@ model CampusSignal {
     linkUrl   String?
     createdAt DateTime @default(now())
 }
+
+model AlumniDirectory {
+    id            String   @id @default(uuid())
+    fullName      String   @db.VarChar(120)
+    avatarUrl     String?
+    company       String   @db.VarChar(120) // e.g. "Microsoft", "Amazon"
+    role          String   @db.VarChar(120) // e.g. "Software Development Engineer II"
+    batch         String // e.g. "Class of 2024"
+    passoutYear   Int // e.g. 2024 (Numeric filter)
+    branch        String // e.g. "CSE", "IT", "ECE"
+    domain        String   @db.VarChar(80) // "Distributed Systems", "Cloud & DevOps", "AI / ML"
+    skills        String[] @default([]) // ["Next.js", "Azure", "C++"]
+    linkedinUrl   String // Mandatory LinkedIn profile URL
+    verifiedByTpo Boolean  @default(true)
+    workEmail     String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([company])
+    @@index([domain])
+    @@index([passoutYear])
+    @@index([branch])
+}

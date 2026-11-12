@@ -40,17 +40,37 @@ interface AlumniMentor {
 }
 
 interface FilterDropdownProps {
-  label: string;
+  label?: string;
   value: string;
   options: { value: string; label: string }[];
   onChange: (value: string) => void;
+  placeholder?: string;
+  isActivePill?: boolean;
 }
 
-function FilterDropdown({ label, value, options, onChange }: FilterDropdownProps) {
+function FilterDropdown({
+  label,
+  value,
+  options,
+  onChange,
+  placeholder = 'Search...',
+  isActivePill = false,
+}: FilterDropdownProps) {
   const [open, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
   const selectedOption = options.find((option) => option.value === value);
+
+  useEffect(() => {
+    if (open) {
+      setTimeout(() => searchInputRef.current?.focus(), 60);
+    } else {
+      setSearchQuery('');
+    }
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -75,46 +95,100 @@ function FilterDropdown({ label, value, options, onChange }: FilterDropdownProps
     };
   }, [open]);
 
+  const filteredOptions = useMemo(() => {
+    if (!searchQuery.trim()) return options;
+    return options.filter((opt) =>
+      opt.label.toLowerCase().includes(searchQuery.toLowerCase().trim())
+    );
+  }, [options, searchQuery]);
+
   return (
-    <div ref={containerRef} className="relative grid min-w-[205px] gap-1.5">
-      <span className="text-[11px] font-semibold text-muted">{label}</span>
+    <div ref={containerRef} className={cn('relative grid gap-1.5', label ? 'min-w-[205px]' : 'min-w-[170px]')}>
+      {label && <span className="text-[11px] font-semibold text-muted">{label}</span>}
       <button
         ref={triggerRef}
         type="button"
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={() => setOpen((current) => !current)}
-        className="flex h-10 w-full items-center justify-between gap-3 rounded-lg border border-line bg-surface px-3 text-left text-[13px] font-medium text-ink transition-colors hover:border-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+        className={cn(
+          'flex h-10 w-full items-center justify-between gap-2.5 rounded-lg border px-3 text-left text-[13px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40',
+          isActivePill
+            ? 'border-accent bg-accent text-accent-ink font-semibold'
+            : 'border-line bg-surface text-ink hover:border-muted'
+        )}
       >
         <span className="truncate">{selectedOption?.label ?? value}</span>
-        <ChevronDown aria-hidden="true" className={cn('h-4 w-4 shrink-0 text-muted transition-transform', open && 'rotate-180')} />
+        <ChevronDown
+          aria-hidden="true"
+          className={cn(
+            'h-4 w-4 shrink-0 transition-transform',
+            open && 'rotate-180',
+            isActivePill ? 'text-accent-ink' : 'text-muted'
+          )}
+        />
       </button>
+
       {open && (
         <div
           role="menu"
-          aria-label={label}
-          className="absolute left-0 top-full z-30 mt-1.5 max-h-64 w-full overflow-y-auto rounded-lg border border-line bg-surface p-1 shadow-lg"
+          aria-label={label ?? 'Filter options'}
+          className="absolute left-0 top-full z-50 mt-1.5 w-64 max-w-[90vw] rounded-xl border border-line bg-surface p-1.5 shadow-2xl backdrop-blur-md"
         >
-          {options.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              role="menuitemradio"
-              aria-checked={value === option.value}
-              onClick={() => {
-                onChange(option.value);
-                setOpen(false);
-              }}
-              className={cn(
-                'flex min-h-9 w-full items-center rounded-md px-3 text-left text-[13px] transition-colors',
-                value === option.value
-                  ? 'bg-accent/10 font-semibold text-accent'
-                  : 'text-ink hover:bg-surface2'
-              )}
-            >
-              {option.label}
-            </button>
-          ))}
+          {/* Mini Search Input inside Dropdown */}
+          <div className="relative mb-1.5 flex items-center">
+            <Search className="pointer-events-none absolute left-2.5 h-3.5 w-3.5 text-muted" />
+            <input
+              ref={searchInputRef}
+              type="text"
+              placeholder={placeholder}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onClick={(e) => e.stopPropagation()}
+              className="h-8 w-full rounded-md border border-line bg-surface2 pl-8 pr-7 text-xs text-ink placeholder:text-muted focus:border-accent focus:outline-none"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSearchQuery('');
+                  searchInputRef.current?.focus();
+                }}
+                className="absolute right-2 text-muted hover:text-ink"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            )}
+          </div>
+
+          {/* Vertical Scrollable List (Slider) */}
+          <div className="max-h-60 overflow-y-auto space-y-0.5 pr-0.5">
+            {filteredOptions.length === 0 ? (
+              <div className="py-4 text-center text-xs text-muted">No matches found</div>
+            ) : (
+              filteredOptions.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  role="menuitemradio"
+                  aria-checked={value === option.value}
+                  onClick={() => {
+                    onChange(option.value);
+                    setOpen(false);
+                  }}
+                  className={cn(
+                    'flex min-h-8 w-full items-center rounded-md px-2.5 text-left text-[13px] transition-colors',
+                    value === option.value
+                      ? 'bg-accent/15 font-semibold text-accent'
+                      : 'text-ink hover:bg-surface2'
+                  )}
+                >
+                  <span className="truncate">{option.label}</span>
+                </button>
+              ))
+            )}
+          </div>
         </div>
       )}
     </div>
@@ -220,8 +294,93 @@ const ALUMNI_DATA: AlumniMentor[] = [
   },
 ];
 
-const COMPANIES = ['ALL', 'Microsoft', 'Amazon', 'Swiggy', 'Atlassian', 'NVIDIA', 'Goldman Sachs'];
-const DOMAINS = ['ALL', 'Distributed Systems', 'Frontend & Mobile', 'Cloud & DevOps', 'AI / ML', 'Quant & FinTech'];
+const QUICK_COMPANIES = ['Microsoft', 'Amazon', 'Swiggy', 'Atlassian', 'NVIDIA', 'Goldman Sachs'];
+
+// Top 120+ Tech Companies & High-Growth Startups
+const ALL_COMPANIES = [
+  'ALL',
+  // Big Tech & FAANG / Tier-1 MNCs
+  'Google', 'Microsoft', 'Amazon', 'Meta', 'Apple', 'Netflix', 'Uber', 'Atlassian',
+  'Adobe', 'Salesforce', 'Oracle', 'Cisco', 'Intel', 'NVIDIA', 'AMD', 'Qualcomm',
+  // FinTech & High-Frequency Trading
+  'Goldman Sachs', 'Morgan Stanley', 'JPMorgan Chase', 'DE Shaw', 'Tower Research', 
+  'Jane Street', 'Barclays', 'American Express', 'Deutsche Bank', 'WorldQuant', 'Citadel',
+  // Indian Unicorns & Product Giants
+  'Swiggy', 'Zomato', 'Flipkart', 'Razorpay', 'PhonePe', 'CRED', 'Meesho', 'Zepto',
+  'Blinkit', 'InMobi', 'Paytm', 'MakeMyTrip', 'Oyo', 'Ola', 'Urban Company', 'Nykaa',
+  'Groww', 'Zerodha', 'Upstox', 'InfoEdge', 'Pine Labs', 'BharatPe', 'CoinSwitch', 'CoinDCX',
+  // Global & Indian SaaS Leaders
+  'Postman', 'Hasura', 'BrowserStack', 'Innovaccer', 'Druva', 'Icertis', 'Chargebee',
+  'Freshworks', 'Zoho', 'Gainsight', 'HighRadius', 'Darwinbox', 'CleverTap', 'LeadSquared',
+  'Yellow.ai', 'Gupshup', 'Whatfix',
+  // Logistics & Mobility
+  'Delhivery', 'Shadowfax', 'Shiprocket', 'Rivigo', 'BlackBuck', 'Porter', 'Rapido',
+  'Cars24', 'Spinny', 'CarDekho',
+  // Gaming & Media
+  'BookMyShow', 'Dream11', 'Games24x7', 'MPL', 'WinZO', 'Nazara',
+  // D2C & HealthTech
+  'Lenskart', 'Mamaearth', 'Purplle', 'Sugar Cosmetics', 'Tata 1mg', 'PharmEasy',
+  'Practo', 'HealthifyMe', 'Cult.fit', 'Rebel Foods',
+  // Cloud & Security Infrastructure
+  'Snowflake', 'MongoDB', 'Datadog', 'Confluent', 'Palo Alto Networks', 'Fortinet',
+  'CrowdStrike', 'Cloudflare', 'Twilio', 'Stripe', 'ServiceNow', 'VMware',
+  // Tech Consulting & MNCs
+  'IBM', 'SAP', 'Dell', 'HP', 'Capgemini', 'Accenture', 'TCS', 'Infosys', 'Wipro',
+  'HCLTech', 'Cognizant', 'LTIMindtree', 'Tech Mahindra'
+];
+
+// Top 50+ In-Demand Technical Domains
+const ALL_DOMAINS = [
+  'ALL',
+  'AI / Machine Learning',
+  'Generative AI & LLMs',
+  'Distributed Systems',
+  'Cloud Architecture',
+  'DevOps & SRE',
+  'Platform Engineering',
+  'Site Reliability Engineering (SRE)',
+  'Fullstack Development',
+  'Frontend Engineering',
+  'Backend Engineering',
+  'Mobile Development (Android)',
+  'Mobile Development (iOS)',
+  'Cross-Platform Mobile (React Native / Flutter)',
+  'Data Engineering',
+  'Big Data & Analytics',
+  'Data Science',
+  'Cybersecurity & InfoSec',
+  'Penetration Testing & Red Teaming',
+  'Cloud Security',
+  'Application Security (AppSec)',
+  'System Design & Architecture',
+  'Database Internals & DBA',
+  'Microservices & APIs',
+  'High Performance Computing (HPC)',
+  'Blockchain & Web3',
+  'Smart Contracts & DeFi',
+  'Computer Vision',
+  'Natural Language Processing (NLP)',
+  'Deep Learning & MLOps',
+  'Embedded Systems & Firmware',
+  'IoT & Edge Computing',
+  'Robotics & Automation',
+  'Quantitative Finance & Trading',
+  'FinTech Engineering',
+  'Game Development (Unity / Unreal)',
+  'AR / VR / Spatial Computing',
+  'QA & SDET Automation',
+  'Performance Engineering',
+  'Linux & Kernel Development',
+  'Computer Networks & Protocols',
+  'Real-Time Systems (WebRTC / Sockets)',
+  'UI/UX Design & Research',
+  'Product Management (Technical)',
+  'Enterprise SaaS Architecture',
+  'E-Commerce Tech',
+  'Supply Chain Tech',
+  'HealthTech & BioInformatics'
+];
+
 const BATCHES = ['ALL', 'Class of 2024', 'Class of 2023', 'Class of 2022', 'Class of 2021'];
 
 export default function AlumniPage() {
@@ -352,21 +511,34 @@ export default function AlumniPage() {
           {/* Quick Pill Filter Bars */}
           <div className="space-y-2">
             <p className="text-[11px] font-semibold text-muted">Company</p>
-            <div className="flex flex-wrap gap-1.5">
-              {COMPANIES.map((company) => (
+            <div className="flex flex-wrap items-center gap-2">
+              {/* All Companies Searchable Dropdown with Vertical Slider */}
+              <FilterDropdown
+                value={selectedCompany}
+                options={ALL_COMPANIES.map((company) => ({
+                  value: company,
+                  label: company === 'ALL' ? 'All companies' : company,
+                }))}
+                onChange={setSelectedCompany}
+                placeholder="Search 120+ companies..."
+                isActivePill={!QUICK_COMPANIES.includes(selectedCompany)}
+              />
+
+              {/* Quick Hardcoded Company Pills */}
+              {QUICK_COMPANIES.map((company) => (
                 <button
                   key={company}
                   type="button"
                   aria-pressed={selectedCompany === company}
                   onClick={() => setSelectedCompany(company)}
                   className={cn(
-                    'min-h-8 rounded-lg border px-3 py-1 text-[13px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40',
+                    'h-10 rounded-lg border px-3 text-[13px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40',
                     selectedCompany === company
-                      ? 'border-accent bg-accent text-accent-ink'
+                      ? 'border-accent bg-accent text-accent-ink font-semibold'
                       : 'border-line bg-surface text-muted hover:bg-surface2 hover:text-ink'
                   )}
                 >
-                  {company === 'ALL' ? 'All companies' : company}
+                  {company}
                 </button>
               ))}
             </div>
@@ -376,11 +548,12 @@ export default function AlumniPage() {
             <FilterDropdown
               label="Area of expertise"
               value={selectedDomain}
-              options={DOMAINS.map((domain) => ({
+              options={ALL_DOMAINS.map((domain) => ({
                 value: domain,
                 label: domain === 'ALL' ? 'All areas' : domain,
               }))}
               onChange={setSelectedDomain}
+              placeholder="Search 50+ domains..."
             />
 
             <FilterDropdown
@@ -391,6 +564,7 @@ export default function AlumniPage() {
                 label: batch === 'ALL' ? 'All years' : batch.replace('Class of ', ''),
               }))}
               onChange={setSelectedBatch}
+              placeholder="Search year..."
             />
 
             {(selectedCompany !== 'ALL' || selectedDomain !== 'ALL' || selectedBatch !== 'ALL' || search) && (
