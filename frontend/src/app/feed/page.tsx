@@ -183,7 +183,7 @@ export default function FeedPage() {
   const imageInputRef = useRef<HTMLInputElement>(null);
   const postTextRef = useRef<HTMLTextAreaElement>(null);
   const publishingRef = useRef(false);
-  const quotaStorageKey = `onlyjobs:feed-post-limit:v1:${student.id}`;
+  const quotaStorageKey = `jobsonly:feed-post-limit:v1:${student.id}`;
 
   useEffect(() => {
     const refreshQuota = () => {

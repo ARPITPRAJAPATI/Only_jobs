@@ -1,5 +1,5 @@
 # Campus Feed Engine: Production Architecture & System Blueprint
-**Platform:** OnlyJobs (KIET Campus Talent, Placement & Community Platform)  
+**Platform:** JobsOnly (KIET Campus Talent, Placement & Community Platform)  
 **Target Scale:** ~7,000 Students, Faculty, TPO Cell, & Dean of Academics  
 **Tech Stack:** Node.js v24 ESM, Express, PostgreSQL, Prisma 7, Next.js  
 **Last Updated:** November 2026 (Synchronized with Implemented Backend & Live Frontend)

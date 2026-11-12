@@ -218,7 +218,7 @@ export function FeedNavbar() {
           {/* Brand wordmark matches the landing page */}
           <Link href="/" className="flex items-baseline gap-1.5 focus:outline-none group shrink-0">
             <span className="text-[17px] sm:text-[18px] font-extrabold tracking-tight text-ink transition-colors group-hover:text-accent">
-              OnlyJobs
+              JobsOnly
             </span>
             <span className="text-[12px] font-bold text-accent transition-colors group-hover:text-ink">
               × KIET

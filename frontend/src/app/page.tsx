@@ -28,7 +28,7 @@ export default function LandingPage() {
             className="text-[17px] text-[#1f2328]"
             style={{ fontWeight: 800, letterSpacing: '-0.3px' }}
           >
-            Only Jobs
+            JobsOnly
           </span>
           <span
             className="text-[12px] text-[#0969da]"

@@ -1,19 +1,19 @@
 # Courses & Learning Hub: UI/UX Architecture & Layout Specification
-### Modeled on the *Aduki Online Academy & Course Catalog* Standard for KIET × Only Jobs
+### Modeled on the *Aduki Online Academy & Course Catalog* Standard for KIET × JobsOnly
 
 ---
 
 ## 📌 1. Executive Overview & Visual Direction
 
-This specification establishes the **Courses & Learning Hub** for the **Only Jobs × KIET Campus Platform**, directly adapting the layout, visual hierarchy, and component anatomy from the reference design (**Aduki Online Academy Courses & Education Template**).
+This specification establishes the **Courses & Learning Hub** for the **JobsOnly × KIET Campus Platform**, directly adapting the layout, visual hierarchy, and component anatomy from the reference design (**Aduki Online Academy Courses & Education Template**).
 
-Traditional campus courses fail because they are either buried inside messy LMS portals (Moodle/Google Classroom) or lack direct career motivation. The **Only Jobs Learning Hub** solves this by packaging institutional learning into a **high-converting, marketplace-style course catalog** that connects directly to the **3-Phase Gatekeeper Engine** and **TPO Recruiter Shortlists**.
+Traditional campus courses fail because they are either buried inside messy LMS portals (Moodle/Google Classroom) or lack direct career motivation. The **JobsOnly Learning Hub** solves this by packaging institutional learning into a **high-converting, marketplace-style course catalog** that connects directly to the **3-Phase Gatekeeper Engine** and **TPO Recruiter Shortlists**.
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
 │  🎓 WELCOME TO KIET LEARNING PORTAL | 📞 +91-120-297-4300 | ✉️ academics@kiet.edu      │
 ├────────────────────────────────────────────────────────────────────────────────────────┤
-│  [OJ KIET]    Home   Courses & Tracks (Active)   Feed   Project Rooms   Verify Cert    │
+│  [JO KIET]    Home   Courses & Tracks (Active)   Feed   Project Rooms   Verify Cert    │
 ├────────────────────────────────────────────────────────────────────────────────────────┤
 │                                                                                        │
 │                                COURSES & LEARNING TRACKS                               │
@@ -41,12 +41,12 @@ Traditional campus courses fail because they are either buried inside messy LMS 
 
 ---
 
-## 🎨 2. Design System & Visual Translation (Aduki $\rightarrow$ Only Jobs KIET)
+## 🎨 2. Design System & Visual Translation (Aduki $\rightarrow$ JobsOnly KIET)
 
-| Reference Element (Aduki Template) | Aduki Implementation | Only Jobs × KIET Campus Adaptation |
+| Reference Element (Aduki Template) | Aduki Implementation | JobsOnly × KIET Campus Adaptation |
 | :--- | :--- | :--- |
 | **Top Utility Bar** | Phone, Email, Social icons on dark navy | Official KIET TPO Hotline, `placement@kiet.edu`, Student Helpdesk |
-| **Main Navbar** | Aduki logo + Nav links + Wishlist/Cart + "Register For Free →" | `Only Jobs KIET` logo, `Profile`, `Feed`, `Courses (Active)`, `TPO Drives`, `Student Identity Pill` |
+| **Main Navbar** | Aduki logo + Nav links + Wishlist/Cart + "Register For Free →" | `JobsOnly KIET` logo, `Profile`, `Feed`, `Courses (Active)`, `TPO Drives`, `Student Identity Pill` |
 | **Hero Breadcrumb Section** | Chalkboard green background with pencil/stationery textures + large title "Courses" | Deep Slate/Navy chalkboard header (`#0F172A` / `#1E3A8A`) with subtle engineering grid texture + "Courses & Verified Tracks" + breadcrumb navigation |
 | **Course Controls Toolbar** | Grid/List toggle + Course counter ("12 Courses") + Sorting dropdown | Grid/List view toggle + "12 Verified Tracks" + Sort: "Placement Demand", "Highest Faculty Rating", "Most Enrolled" |
 | **Category Filter Pills** | Horizontal tabs: `All`, `Design`, `Development`, `Photography`, `Music`, `Cooking`... | Horizontal category pills: `All Tracks`, `Full Stack Web`, `DevOps & Cloud`, `DSA & Core`, `AI & Machine Learning`, `System Design`, `Cybersecurity` |
@@ -396,7 +396,7 @@ When a student clicks on any course card from the Aduki-style catalog:
 
 ## 🏛️ 7. Dean & Placement Cell Value Proposition
 
-* **Eliminates Static Video Watching:** Unlike Coursera/Udemy where students leave videos running on 2x speed without understanding, Only Jobs courses require **code defense and phase assessments**.
+* **Eliminates Static Video Watching:** Unlike Coursera/Udemy where students leave videos running on 2x speed without understanding, JobsOnly courses require **code defense and phase assessments**.
 * **Zero Licensing Cost:** Standard open-source and campus-curated syllabi mean KIET pays ₹0 in external licensing fees.
 * **Instant Placement Shortlisting:** When a company demands candidates with Kubernetes and Next.js knowledge, the placement office filters by `Course: Cloud Native K8s (Advance Passed)`, producing an instant, verified talent roster.
 

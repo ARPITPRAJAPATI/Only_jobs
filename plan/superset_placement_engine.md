@@ -10,7 +10,7 @@ Traditional campus placement portals (e.g., vanilla Superset, Google Sheets, Wha
 2. **Campus-Only Siphon:** When on-campus recruitment slows down due to market cycles, students have zero assistance and are left to scramble across unvetted job boards.
 3. **One-Size-Fits-All Inefficiency:** Students receive flooded notifications for roles they are either unqualified for or uninterested in.
 
-In our **KIET Campus Platform (`Only_Jobs`)**, the **Placement Engine** is engineered as a **Triple-Engine Opportunity Ecosystem**:
+In our **KIET Campus Platform (`JobsOnly`)**, the **Placement Engine** is engineered as a **Triple-Engine Opportunity Ecosystem**:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────────────┐
@@ -147,7 +147,7 @@ sequenceDiagram
 
 ## 🎯 Section 3: 1st to 4th-Year Personalized Recommendation Engine
 
-Unlike vanilla Superset, which is useless for 1st, 2nd, and 3rd-year students, **Only_Jobs guides students throughout their 4-year lifecycle**:
+Unlike vanilla Superset, which is useless for 1st, 2nd, and 3rd-year students, **JobsOnly guides students throughout their 4-year lifecycle**:
 
 ```
 YEAR 1 (Sem 1–2)         YEAR 2 (Sem 3–4)         YEAR 3 (Sem 5–6)         YEAR 4 (Sem 7–8)
@@ -162,7 +162,7 @@ YEAR 1 (Sem 1–2)         YEAR 2 (Sem 3–4)         YEAR 3 (Sem 5–6)        
 
 ### 1. Year-Wise Opportunity Curation
 
-| Academic Year | Focus Opportunities | How Only_Jobs Matches Them |
+| Academic Year | Focus Opportunities | How JobsOnly Matches Them |
 | :--- | :--- | :--- |
 | **1st Year (Fresher)** | Open-Source programs (GSoC, MLH, Outreachy), beginner hackathons, college technical society internships, competitive programming tracks. | Matches by GitHub onboarding milestones, beginner DSA streaks, and fundamental language tags (C++, Python). |
 | **2nd Year (Sophomore)** | Winter/Summer micro-internships, early startup roles, frontend/backend internships, open-source contributor badges. | Evaluates student's top 3 GitHub project tech stacks (React, Node.js) and verified lab project room scores. |
@@ -278,7 +278,7 @@ model JobApplication {
 
 When the Dean asks: *"Superset already handles our placement drives, why do we need this?"*
 
-| Dimension | Vanilla Superset | Our KIET Platform (`Only_Jobs`) |
+| Dimension | Vanilla Superset | Our KIET Platform (`JobsOnly`) |
 | :--- | :--- | :--- |
 | **Scope** | 4th-year placements only | **1st to 4th-year end-to-end career growth** |
 | **Off-Campus Support** | Zero (goes silent during slowdowns) | **Dedicated in-app team curating verified off-campus roles** |

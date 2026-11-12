@@ -1,4 +1,4 @@
-﻿# KIET Campus Talent & Career Development Platform
+# KIET Campus Talent & Career Development Platform
 ## Comprehensive Master Plan & Roadmap
 
 ---
@@ -20,13 +20,13 @@ Goal: Build an airtight, institutional-grade proposal and architecture blueprint
 | Day | Date | Focus Area | Key Deliverable | Status |
 | :--- | :--- | :--- | :--- | :--- |
 | **Day 1** | **15 Oct** | **KIET Problem Discovery** | Document KIET-specific gaps in Superset/ERP, unverified resumes, and junior visibility. | 🔄 In Progress |
-| **Day 2** | **16 Oct** | **Competitive Benchmarking** | Comparative analysis & Superset architecture breakdown ([superset_placement_engine.md](file:///c:/Users/arpit/New%20folder%20%286%29/Only_jobs/superset_placement_engine.md)). | ✅ Ready |
-| **Day 3** | **17 Oct** | **Student Experience & Growth** | Profiles & nightly sync ([student_profile_architecture.md](file:///c:/Users/arpit/New%20folder%20%286%29/Only_jobs/student_profile_architecture.md)) + Campus feed engine ([campus_feed_architecture.md](file:///c:/Users/arpit/New%20folder%20%286%29/Only_jobs/campus_feed_architecture.md)). | ✅ Ready |
-| **Day 4** | **18 Oct** | **Faculty & Dean Workflows** | Class project rooms ([class_project_rooms_architecture.md](file:///c:/Users/arpit/New%20folder%20%286%29/Only_jobs/class_project_rooms_architecture.md)), exams engine ([exam_and_mock_test_engine.md](file:///c:/Users/arpit/New%20folder%20%286%29/Only_jobs/exam_and_mock_test_engine.md)), mentor support ([helper_mentor_support_engine.md](file:///c:/Users/arpit/New%20folder%20%286%29/Only_jobs/helper_mentor_support_engine.md)), talent extraction ([learning_and_certification_engine.md](file:///c:/Users/arpit/New%20folder%20%286%29/Only_jobs/learning_and_certification_engine.md)) & Aduki-standard learning catalog ([courses_and_learning_ui_architecture.md](file:///c:/Users/arpit/New%20folder%20%286%29/Only_jobs/plan/courses_and_learning_ui_architecture.md)). | ✅ Ready |
-| **Day 5** | **19 Oct** | **Placement Cell & Recruiter Engine** | Placement drive workflows & eligibility engine ([superset_placement_engine.md](file:///c:/Users/arpit/New%20folder%20%286%29/Only_jobs/superset_placement_engine.md)) + Vetted talent export ([learning_and_certification_engine.md](file:///c:/Users/arpit/New%20folder%20%286%29/Only_jobs/learning_and_certification_engine.md)) + Alumni directory ([alumni_directory_architecture.md](file:///c:/Users/arpit/New%20folder%20%286%29/Only_jobs/alumni_directory_architecture.md)). | ✅ Ready |
+| **Day 2** | **16 Oct** | **Competitive Benchmarking** | Comparative analysis & Superset architecture breakdown ([superset_placement_engine.md](superset_placement_engine.md)). | ✅ Ready |
+| **Day 3** | **17 Oct** | **Student Experience & Growth** | Profiles & nightly sync ([student_profile_architecture.md](student_profile_architecture.md)) + Campus feed engine ([campus_feed_architecture.md](campus_feed_architecture.md)). | ✅ Ready |
+| **Day 4** | **18 Oct** | **Faculty & Dean Workflows** | Class project rooms ([class_project_rooms_architecture.md](class_project_rooms_architecture.md)), exams engine ([exam_and_mock_test_engine.md](exam_and_mock_test_engine.md)), mentor support ([helper_mentor_support_engine.md](helper_mentor_support_engine.md)), talent extraction ([learning_and_certification_engine.md](learning_and_certification_engine.md)) & Aduki-standard learning catalog ([courses_and_learning_ui_architecture.md](courses_and_learning_ui_architecture.md)). | ✅ Ready |
+| **Day 5** | **19 Oct** | **Placement Cell & Recruiter Engine** | Placement drive workflows & eligibility engine ([superset_placement_engine.md](superset_placement_engine.md)) + Vetted talent export ([learning_and_certification_engine.md](learning_and_certification_engine.md)) + Alumni directory ([alumni_directory_architecture.md](alumni_directory_architecture.md)). | ✅ Ready |
 | **Day 6** | **20 Oct** | **AI Feasibility & Ethical Guardrails** | Explainable skill scoring, project plagiarism/similarity checks, and realistic AI boundaries. | ⏳ Pending |
-| **Day 7** | **21 Oct** | **Backend Architecture & DB Schema** | Complete High-Level Design Document ([system_design_hdd.md](file:///c:/Users/arpit/New%20folder%20%286%29/Only_jobs/plan/system_design_hdd.md)): C4 architecture, RBAC, ER diagrams, API design, security & infra. | ✅ Ready |
-| **Day 8** | **22 Oct** | **6-Month Execution Plan & Budget** | Capacity estimation & infrastructure costs included in HDD ([system_design_hdd.md](file:///c:/Users/arpit/New%20folder%20%286%29/Only_jobs/plan/system_design_hdd.md)). Sprint allocation pending. | 🔄 Partial |
+| **Day 7** | **21 Oct** | **Backend Architecture & DB Schema** | Complete High-Level Design Document ([system_design_hdd.md](system_design_hdd.md)): C4 architecture, RBAC, ER diagrams, API design, security & infra. | ✅ Ready |
+| **Day 8** | **22 Oct** | **6-Month Execution Plan & Budget** | Capacity estimation & infrastructure costs included in HDD ([system_design_hdd.md](system_design_hdd.md)). Sprint allocation pending. | 🔄 Partial |
 | **Day 9** | **23 Oct** | **Proposal Document & Pitch Deck** | Formal 10-Slide Dean Pitch Deck & 1-page Pilot Executive Summary. | ⏳ Pending |
 | **Day 10**| **24 Oct** | **Rehearsal & Objection Handling** | Mock Q&A: Faculty workload, data privacy, student adoption, and server costs. | ⏳ Pending |
 | **D-Day** | **25 Oct** | **Dean Meeting** | Presentation of Proposal & Request for 100-student Controlled Pilot (CSE/IT). | 🎯 Target |
@@ -72,7 +72,7 @@ gantt
 
 * **Month 2 (Dec 2026) — Student Growth & Proof of Work Engine**
   * Student Profile: GitHub integration (repos, commit quality), LeetCode stats, top 6 verified projects.
-  * Campus Feed (Only Jobs × KIET): 3-column interactive peer hub (Left: Profile mini-card & club shortcuts; Center: Multimedia composer & infinite stream; Right: Real-time TPO/faculty activity & placed alumni discovery) with Redis atomic rate limiting (max 3 posts/day).
+  * Campus Feed (JobsOnly × KIET): 3-column interactive peer hub (Left: Profile mini-card & club shortcuts; Center: Multimedia composer & infinite stream; Right: Real-time TPO/faculty activity & placed alumni discovery) with Redis atomic rate limiting (max 3 posts/day).
   * Skill Badging & Evidence-based recognition.
 
 * **Month 3 (Jan 2027) — Faculty & Academic Verification Modules**

@@ -23,7 +23,7 @@ app.use(cookieParser());
 app.get("/health", (req, res) => {
     res.status(200).json({
         success: true,
-        message: "OnlyJobs Backend is running",
+        message: "JobsOnly Backend is running",
     });
 });
 

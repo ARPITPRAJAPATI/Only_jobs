@@ -1,7 +1,7 @@
 {
-  "name": "onlyjobs-backend",
+  "name": "jobsonly-backend",
   "version": "1.0.0",
-  "description": "Backend API service for Only_Jobs KIET campus talent platform",
+  "description": "Backend API service for JobsOnly KIET campus talent platform",
   "main": "src/server.js",
   "type": "module",
   "scripts": {

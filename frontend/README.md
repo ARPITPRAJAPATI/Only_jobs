@@ -1,6 +1,6 @@
 # Student Profile — Next.js frontend
 
-Frontend for the **Student Profile System** described in `plan/student_profile_architecture.md` (Only_jobs / KIET Campus Platform).
+Frontend for the **Student Profile System** described in `plan/student_profile_architecture.md` (JobsOnly / KIET Campus Platform).
 Next.js 14 (App Router) · TypeScript · Tailwind CSS.
 
 ## Run

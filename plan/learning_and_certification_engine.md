@@ -7,7 +7,7 @@
 
 Traditional college learning management systems (LMS) either act as passive video repositories or enforce rigid locks that frustrate students. Meanwhile, commercial certification platforms lack institutional credibility and connection to campus hiring drives.
 
-In the **KIET Campus Platform (`Only_Jobs`)**, the **Learning & Certification Engine** provides a student-centric, outcome-driven learning pipeline:
+In the **KIET Campus Platform (`JobsOnly`)**, the **Learning & Certification Engine** provides a student-centric, outcome-driven learning pipeline:
 1. **Catalog & Smart Course Recommendation:** Accessible directly from the navigation slider. A dedicated **"Recommend Course"** engine analyzes past completed courses (e.g., Full-Stack completed $\rightarrow$ recommend DevOps), GitHub/LeetCode stats, and career goals to suggest the optimal learning path.
 2. **Open Exploration Freedom (Zero Learning Locks):** Students can jump to any phase, explore any module, and learn any topic without artificial lockouts—even if they haven't taken or passed an earlier phase exam.
 3. **Structured Phase Pipeline (e.g., DevOps):** Courses are divided into sequential skill tiers (Phase 1: Beginner $\rightarrow$ Phase 2: Intermediate $\rightarrow$ Phase 3: Advanced).
@@ -481,7 +481,7 @@ function evaluateCertificationScore(projectScore, examScore, passThreshold = 60)
 
 ## 🎯 Summary of Key Innovations
 
-| Feature | Generic LMS (Moodle, Coursera) | Our KIET Platform (`Only_Jobs`) |
+| Feature | Generic LMS (Moodle, Coursera) | Our KIET Platform (`JobsOnly`) |
 | :--- | :--- | :--- |
 | **Content Access** | Rigid locks; blocked until quizzes pass | **100% Open Exploration:** Free to jump to any phase/topic to learn |
 | **Certification Assessment** | Trivially cheat-able 5-min MCQs | **Balanced 20 Project + 80 Proctored Exam** with max 3 attempts |

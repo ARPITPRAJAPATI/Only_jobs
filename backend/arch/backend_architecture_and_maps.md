@@ -1,5 +1,5 @@
-# ONLY_JOBS Backend — Complete Architecture & System Maps
-**Project:** OnlyJobs (KIET Campus Talent, Placement & Community Platform)  
+# JOBSONLY Backend — Complete Architecture & System Maps
+**Project:** JobsOnly (KIET Campus Talent, Placement & Community Platform)  
 **Stack:** Node.js v24 ESM, Express, PostgreSQL, Prisma 7, Next.js  
 **Target Scale:** ~7,000 Students, Faculty, TPO Cell, & Dean of Academics  
 **Last Updated:** November 2026 (Fully Synchronized with Implemented Codebase)

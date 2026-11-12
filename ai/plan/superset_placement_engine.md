@@ -7,7 +7,7 @@
 
 Traditional placement software (like vanilla Superset) operates strictly as a transactional database for final-year placement drives.
 
-In the **KIET Campus Platform (`Only_Jobs`)**, the **Placement Engine** is expanded into a **Triple-Pillar Opportunity Hub** powered by local asynchronous queues and a specialized **FastAPI AI Code & Vector Intelligence Microservice**:
+In the **KIET Campus Platform (`JobsOnly`)**, the **Placement Engine** is expanded into a **Triple-Pillar Opportunity Hub** powered by local asynchronous queues and a specialized **FastAPI AI Code & Vector Intelligence Microservice**:
 
 1. **🏛️ Section 1: On-Campus Corporate TPO Drives:** Automated eligibility checks, multi-round selection tracking, and institutional policies (1-Student 1-Job & Dream Upgrades) combined with **AI Recruiter Candidate Dossiers**.
 2. **🔍 Section 2: KIET In-App Opportunity Extraction Team:** Dedicated student ops committee assisted by an **Autonomous LLM Parser & Scraper** extracting verified internships and fresher roles from `leco.ai`, LinkedIn, Wellfound, Greenhouse, Lever, and Ashby with spam-filtering.

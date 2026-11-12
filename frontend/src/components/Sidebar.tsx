@@ -59,12 +59,12 @@ export function Sidebar({ onNavigate, onClose }: { onNavigate?: () => void; onCl
       <div className="flex items-center justify-between px-2 pb-3 pt-1 border-b border-line/60">
         <Link href="/profile" className="flex items-center gap-2.5 focus:outline-none group" onClick={onNavigate}>
           <div className="grid h-8 w-8 place-items-center rounded-md bg-[#1f2328] text-white font-black text-xs shadow-2xs group-hover:scale-105 transition-transform">
-            OJ
+            JO
           </div>
           <div className="leading-tight">
             <div className="flex items-baseline gap-1.5">
               <span className="text-[14.5px] font-bold tracking-tight text-ink group-hover:text-[#0969da] transition-colors">
-                ONLY JOBS
+                JOBS ONLY
               </span>
               <span className="rounded bg-surface2 border border-line px-1.5 py-0.2 text-[9.5px] font-bold tracking-wider text-ink uppercase">
                 KIET

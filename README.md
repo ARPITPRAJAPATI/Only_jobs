@@ -1,5 +1,5 @@
 # 🎓 KIET Campus Talent & Career Development Platform
-> **Codename:** `Only_Jobs` • **Target Scale:** KIET Group of Institutions (~8,000+ Students)  
+> **Codename:** `JobsOnly` • **Target Scale:** KIET Group of Institutions (~8,000+ Students)  
 > **Mission:** Replacing resume fraud, unorganized WhatsApp placement groups, and static portals with **verifiable proof of work**, continuous peer motivation, institutional placement policies, and deep AI-driven skill intelligence.
 
 ---
@@ -10,7 +10,7 @@ Current campus placement systems and generic social networks fail Indian enginee
 1. **Resume Inflation & Zero Proof:** Students copy-paste projects and self-claim marks. Recruiters and TPOs waste hundreds of hours manually screening unverified claims.
 2. **Operational Chaos for TPO:** Managing 1-student-1-job rules, dream company upgrades, branch eligibility filters, and backlog policies across Google Sheets and WhatsApp is error-prone and stressful.
 
-**Only_Jobs** solves this with an institutional, proof-first ecosystem:
+**JobsOnly** solves this with an institutional, proof-first ecosystem:
 * **Students:** 1st-to-4th-year growth ladders, automated nightly GitHub/LeetCode sync, AI code-quality scoring, and verified academic credentials.
 * **Faculty:** Noise-free lab project rooms with zero conversational clutter, automated AST code similarity checks, and 1-click evaluations.
 * **TPO (Placement Cell):** Superset-grade automated placement drives, dynamic JSONB eligibility filters, automated 1-student-1-job policy locks, and instant recruiter talent extraction.
@@ -107,7 +107,7 @@ sequenceDiagram
 ---
 
 ### 2. The Triple-Pillar Placement & Opportunity Engine
-Unlike traditional portals that only serve 4th-year students during placement season, **Only_Jobs** operates as a continuous, 3-pillar opportunity ecosystem:
+Unlike traditional portals that only serve 4th-year students during placement season, **JobsOnly** operates as a continuous, 3-pillar opportunity ecosystem:
 
 ```mermaid
 flowchart TD
@@ -178,7 +178,7 @@ flowchart LR
 Detailed engineering specifications, database schemas, and architectural blueprints are organized into two key directories:
 
 ```
-Only_jobs/
+JobsOnly/
 ├── README.md                                    # Master platform guide & architecture
 ├── plan/                                        # 🏛️ Core Platform Specifications
 │   ├── system_design_hdd.md                     # Complete High-Level Design Document (HDD)

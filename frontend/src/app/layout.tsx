@@ -12,7 +12,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: 'Only Jobs · KIET Campus Placement',
+  title: 'JobsOnly · KIET Campus Placement',
   description: 'The KIET campus platform for verified placements, proof-of-work identity, and skill certifications.',
 };
 
