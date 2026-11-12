@@ -1,194 +1,174 @@
-# Alumni Directory & Career Network: Architecture, Search Engine & Privacy Controls
+# Alumni Directory & Career Network: Production Architecture Blueprint
+**Platform:** JobsOnly (KIET Campus Talent, Placement & Career Network)  
+**Target Scale:** ~30,000 Total Alumni (~4,000–5,000 Active Mentorship Pool)  
+**Stack:** Node.js v24 ESM, Express, PostgreSQL, Prisma 7, Next.js 14  
+**Last Updated:** November 2026 (Finalized Master Architecture)
 
 ---
 
-## 📌 Executive Summary
+## 📌 1. Core Philosophy: Why This Wins
 
-The **Alumni Directory & Career Network** bridges the gap between current KIET undergraduates (1st to 4th year) and graduated seniors working in top tech companies, startups, and multinational corporations. 
+Traditional college alumni portals fail because **alumni never log in or check college apps**. Their entire professional networking lives on **LinkedIn**.
 
-Unlike LinkedIn, where anyone can falsely claim to be a KIET alumnus or inflate their CTC package, this directory is **auto-populated strictly from verified campus placement records**:
-1. **Automated Alumni Transition:** Once a final-year student is placed and graduates, their profile automatically transitions to verified alumni status.
-2. **Strict Privacy Safeguards:** Alumni have full autonomy to toggle package visibility (`isPackagePublic: false`), ensuring data security while maintaining mentorship access.
-3. **High-Performance Multi-Filter Discovery:** Indexed search by Company, Passout Year, Engineering Branch, and Domain with cursor-based pagination.
-4. **Direct Mentorship Rails:** 1-click verified LinkedIn redirects and in-app guidance ticket workflows.
+JobsOnly solves this with a **Zero-Friction, Zero-App-Login Architecture for Alumni**:
+1. **Alumni do NOT need to download the app or create an account.**
+2. All outreach, referral requests, and messages land directly where alumni already are: **in their LinkedIn inbox**.
+3. The platform serves as an **institutional verified discovery layer** for current KIET undergraduates (1st to 4th year).
 
 ---
 
-## 🔄 1. Alumni Lifecycle & Discovery Flow
+## 🔄 2. End-to-End System Architecture
 
 ```mermaid
 flowchart TD
-    A[🎓 Final Year Student] -->|Verified Placement Drive| B[💼 Placed at Company e.g. Amazon, TCS]
-    B -->|Graduation / 8th Sem Clearance| C[🏛️ Auto-Transition to AlumniDirectory]
-    
-    C --> D{Privacy Controls}
-    D -->|isPackagePublic: true| E[Show Verified CTC e.g. ₹28.5 LPA]
-    D -->|isPackagePublic: false| F[Mask Package - Show Company & Role Only]
-    
-    G[👨‍🎓 Current Student 1st-4th Year] --> H[🔍 Multi-Filter Search Engine]
-    H -->|Filter by Company / Year / Branch| I[📋 Instant Paginated Alumni List]
-    I --> J[🔗 Direct Verified LinkedIn Connect]
-    I --> K[📩 In-App Guidance Request]
+    subgraph S1 ["1. Data Ingestion & Crawling Pipeline"]
+        A["📄 College TPO Master Sheet<br/>(Name, Roll, Branch, Batch, Initial Placement, LinkedIn)"] --> B["🤖 Public Search / Duck Extractor<br/>(Crawls public headline & company - Zero Ban)"]
+        B --> C["📦 Raw Staging Buffer<br/>(Uncleaned JSON data)"]
+        C --> D["🧠 AI Normalizer Bot<br/>(Cleans 'Crypto Ninja' ➔ SDE-1, Maps Domain: 'Cloud & DevOps')"]
+        D --> E[("🐘 Postgres AlumniDirectory Table<br/>(High-speed indexed table)")]
+    end
+
+    subgraph S2 ["2. Discovery & Filter UI (/alumni)"]
+        E --> F["💻 Student /alumni Dashboard<br/>(Multi-filter: Company, Domain, Batch, Branch)"]
+    end
+
+    subgraph S3 ["3. Two-Route Student Action Architecture"]
+        F --> Card["👤 Alumni Card (e.g. Arpit Prajapati @ Microsoft)"]
+        
+        Card --> Route1["Route 1: 🔗 LinkedIn Icon Button"]
+        Route1 --> OpenProfile["Opens Senior's Public Profile in New Tab<br/>(Student connects/follows to build relationship)"]
+        
+        Card --> Route2["Route 2: 📩 Request Referral Button"]
+        Route2 --> GateCheck{"Is Student Connected with Senior?"}
+        
+        GateCheck -->|❌ NOT Connected| ErrScreen["🚫 Error Screen / Modal:<br/>'You are not connected with this alumnus.'<br/>'To request a referral, connect on LinkedIn first!'<br/>[👉 Open Senior's Profile & Connect]"]
+        
+        GateCheck -->|✅ CONNECTED| ActionSuccess["🚀 1-Click Referral Action:<br/>1. Copies Full-Profile Candidate Dossier to Clipboard<br/>2. Deep-links directly to Senior's LinkedIn Message Inbox<br/>3. Student pastes dossier & senior reviews proof-of-work"]
+    end
+
+    subgraph S4 ["4. Periodic Sync Cycle"]
+        Cron["⏰ 60-Day Background Cron"] -.->|Trigger Update| B
+    end
 ```
 
 ---
 
-## 🗄️ 2. Database Schema (`schema.prisma`)
+## 🗄️ 3. Database Schema (`AlumniDirectory`)
 
 ```prisma
 model AlumniDirectory {
-  id               String          @id @default(uuid())
-  tenantId         String          @default("kiet-main") // College isolation
-  studentProfileId String          @unique
-  studentProfile   StudentProfile  @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
-  
-  // Basic Identity
-  fullName         String          @db.VarChar(100)
-  avatarUrl        String?
-  branch           String          // "CSE", "IT", "CS-AI", "ECE"
-  passoutYear      Int             // e.g., 2024, 2025, 2026
-  
-  // Professional Placement Records
-  company          String          @db.VarChar(120) // e.g., "Microsoft", "Zomato", "Amazon"
-  designation      String?         @db.VarChar(100) // e.g., "SDE-1", "Cloud Systems Engineer"
-  domain           String?         @db.VarChar(80)  // "Backend", "DevOps", "AI/ML", "Fintech"
-  packageLpa       Float?          // e.g., 28.5 (Verified college placement CTC)
-  isPackagePublic  Boolean         @default(true)   // Privacy toggle
-  
-  // Connect & Mentorship Rails
-  linkedinUrl      String          // Mandatory verified LinkedIn link
-  xUrl             String?
-  workEmail        String?         // Optional company-issued email
+    id                     String   @id @default(uuid())
+    fullName               String   @db.VarChar(120)
+    avatarUrl              String?
+    company                String   @db.VarChar(120) // e.g. "Microsoft", "Amazon"
+    role                   String   @db.VarChar(120) // e.g. "Software Development Engineer II"
+    batch                  String   // e.g. "Class of 2024"
+    passoutYear            Int      // e.g. 2024 (Numeric index for fast sorting)
+    branch                 String   // e.g. "CSE", "IT", "ECE", "CS-AI"
+    domain                 String   @db.VarChar(80)  // "Distributed Systems", "Cloud & DevOps", "AI / ML"
+    skills                 String[] @default([])     // e.g. ["Next.js", "Azure", "C++"]
+    packageLpa             Float?   // e.g. 28.5 (Official verified college CTC)
+    isPackagePublic        Boolean  @default(true)   // Privacy toggle
+    referralSlotsAvailable Int      @default(3)
+    linkedinUrl            String   // Mandatory LinkedIn profile URL
+    verifiedByTpo          Boolean  @default(true)
+    workEmail              String?  // Optional corporate email
 
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
+    createdAt              DateTime @default(now())
+    updatedAt              DateTime @updatedAt
 
-  // Multi-column B-tree indexes for sub-10ms filtered searches
-  @@index([tenantId, passoutYear])
-  @@index([tenantId, company])
-  @@index([tenantId, branch])
+    // High-performance B-tree indexes for sub-10ms filtered queries
+    @@index([company])
+    @@index([domain])
+    @@index([passoutYear])
+    @@index([branch])
 }
 ```
 
 ---
 
-## ⚡ 3. High-Performance Multi-Filter Search Controller (`getAlumniList`)
+## ⚡ 4. Backend API Specifications (`/api/alumni`)
 
-Handles multi-dimensional queries, fuzzy keyword search, and automatic package masking in a single efficient database query:
+### 1. `GET /api/alumni` (Multi-Filter Paginated Search)
+* **Access:** Student / Faculty / Admin
+* **Query Parameters:**
+  * `search`: Fuzzy keyword search matching `fullName`, `company`, `role`, or `skills`.
+  * `company`: Exact filter (`Microsoft`, `Amazon`, `Swiggy`, etc. or `ALL`).
+  * `domain`: Exact domain (`Distributed Systems`, `Frontend & Mobile`, `Cloud & DevOps`, `AI / ML`, `Quant & FinTech`).
+  * `batch`: Filter by passout year (`Class of 2024`, `Class of 2023`, etc.).
+  * `branch`: Filter by branch (`CSE`, `IT`, `ECE`, `CS-AI`).
+  * `page`: Integer (default `1`).
+  * `limit`: Integer (default `12`, max `50`).
+* **Privacy Enforcement:** If `isPackagePublic === false`, backend redacts `packageLpa: null`.
 
-```javascript
-import { prisma } from '../lib/prisma.js';
+### 2. `GET /api/alumni/stats` (Overview Summary)
+* Returns aggregated dynamic counts for the frontend header banner:
+  * `totalVerified`: Total verified alumni count.
+  * `totalCompanies`: Total unique companies count.
+  * `companies`: Sorted list of represented companies (including `ALL`).
+  * `domains`: Sorted list of active tech domains.
+  * `batches`: Sorted list of batches.
 
-export async function getAlumniList(req, res) {
-  const { tenantId = 'kiet-main' } = req.user;
-  const {
-    search,         // Search by Name, Company, or Designation
-    company,        // Dropdown company filter
-    passoutYear,    // Filter by batch: 2023, 2024, 2025
-    branch,         // CSE, IT, ECE
-    domain,         // Backend, DevOps, Data Science
-    cursor,
-    limit = 12
-  } = req.query;
+### 3. `GET /api/alumni/:id` (Single Profile Details)
+* Fetches full public details of a single alumnus.
 
-  const pageSize = Math.min(Number(limit) || 12, 36);
+### 4. `POST /api/alumni` (Admin / TPO Ingestion)
+* Endpoint for TPO coordinators to add or import new alumni records.
 
-  // Dynamic filter construction
-  const whereClause = {
-    tenantId,
-    ...(passoutYear && { passoutYear: Number(passoutYear) }),
-    ...(branch && { branch }),
-    ...(domain && { domain: { equals: domain, mode: 'insensitive' } }),
-    ...(company && { company: { equals: company, mode: 'insensitive' } }),
-    ...(search && {
-      OR: [
-        { fullName: { contains: search, mode: 'insensitive' } },
-        { company: { contains: search, mode: 'insensitive' } },
-        { designation: { contains: search, mode: 'insensitive' } }
-      ]
-    })
-  };
+---
 
-  try {
-    const alumniRecords = await prisma.alumniDirectory.findMany({
-      take: pageSize,
-      skip: cursor ? 1 : 0,
-      cursor: cursor ? { id: cursor } : undefined,
-      where: whereClause,
-      orderBy: [
-        { passoutYear: 'desc' },
-        { packageLpa: 'desc' }
-      ],
-      select: {
-        id: true,
-        fullName: true,
-        avatarUrl: true,
-        branch: true,
-        passoutYear: true,
-        company: true,
-        designation: true,
-        domain: true,
-        packageLpa: true,
-        isPackagePublic: true,
-        linkedinUrl: true,
-        xUrl: true
-      }
-    });
+## 📋 5. Candidate Dossier Specification (Clipboard Format)
 
-    // Privacy Masking: Redact packageLpa if user disabled public disclosure
-    const sanitizedAlumni = alumniRecords.map(alumnus => ({
-      ...alumnus,
-      packageLpa: alumnus.isPackagePublic ? alumnus.packageLpa : null
-    }));
+When an eligible connected student clicks **"Request Referral"**, the application compiles their live profile data into this standardized clipboard dossier:
 
-    const nextCursor = alumniRecords.length === pageSize ? alumniRecords[alumniRecords.length - 1].id : null;
+```text
+══════════════════════════════════════════════════════════════════
+🎓 KIET VERIFIED CANDIDATE DOSSIER · REFERRAL REQUEST
+══════════════════════════════════════════════════════════════════
 
-    return res.json({
-      success: true,
-      data: sanitizedAlumni,
-      pagination: {
-        nextCursor,
-        hasMore: nextCursor !== null
-      }
-    });
-  } catch (error) {
-    console.error('[GetAlumniList Error]', error);
-    return res.status(500).json({ error: "Failed to retrieve alumni directory." });
-  }
-}
+Hi [Senior Name],
+
+I am [Student Name], a 4th-year [Branch] student at KIET (Batch [Batch]).
+I came across your profile on the KIET JobsOnly Alumni Network and admire your work at [Company].
+I am actively seeking a referral for an opening at [Company].
+
+──────────────────────────────────────────────────────────────────
+📌 CANDIDATE SNAPSHOT (TPO VERIFIED)
+──────────────────────────────────────────────────────────────────
+• Degree: B.Tech [Branch] (KIET Group of Institutions)
+• Academic CGPA: [CGPA] / 10 · Institutional TPO Verified
+• Core Tech Stack: [Top 5 Skills/Technologies]
+• Problem Solving: [LeetCode Solved Count]+ Solved · GitHub [Streak Days]+ Active Streak
+
+🚀 TOP VERIFIED PROJECTS:
+1. [Project 1 Title] ([Summary])
+   • Tech Stack: [Stack]
+   • GitHub: [Repo Link]
+   • Live Demo: [Live URL]
+
+2. [Project 2 Title] ([Summary])
+   • Tech Stack: [Stack]
+   • GitHub: [Repo Link]
+
+🏆 VERIFIED BADGES & CERTIFICATIONS:
+• [Badge 1]
+• [Badge 2]
+
+🔗 FULL INTERACTIVE VERIFIED PROFILE:
+https://jobsonly.kiet.edu/profile/[student-username]
+──────────────────────────────────────────────────────────────────
+Would you be open to reviewing my profile or referring me if an opening matches?
+Thank you so much for your time and guidance!
+══════════════════════════════════════════════════════════════════
 ```
 
 ---
 
-## 🎨 4. Frontend Card Specification & Visual Preview
+## 🏛️ 6. Dean Pitch & Institutional Value Proposition
 
-### Visual Card Wireframe
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│ 👤 Arpit Prajapati • [VERIFIED ALUMNUS ✅]                              │
-│    Branch: CSE • Batch of 2026                                         │
-├────────────────────────────────────────────────────────────────────────┤
-│ 💼 Backend & Cloud Native Systems Engineer at Amazon                   │
-│ 🏷️ Domain: Distributed Systems / Cloud Infrastructure                 │
-│ 💰 Verified CTC: ₹28.5 LPA (Institutional Placement Audit)            │
-├────────────────────────────────────────────────────────────────────────┤
-│ [ 🔗 Connect on LinkedIn ↗ ]           [ 📩 Request Guidance Ticket ]  │
-└────────────────────────────────────────────────────────────────────────┘
-```
-
-* **Instant Pill Filters:** Top of the UI renders quick filters for top recruiting companies:  
-  `[ All ]` `[ Amazon ]` `[ Microsoft ]` `[ Google ]` `[ TCS Digital ]` `[ Zomato ]`
-* **Verified Institutional Badge:** Green verified checkmark proves the placement is cross-verified against official TPO records.
-* **Privacy Compliance:** If `isPackagePublic === false`, the card displays:  
-  `💰 Package: Confidential (Alumnus opted out)`
-
----
-
-## 🏛️ 5. Dean Pitch Angle (Why This Wins Administration Support)
-
-1. **NAAC / NIRF Accreditation Scoring:** Accreditation bodies heavily evaluate institutional alumni tracking and alumni-to-student mentoring networks.
-2. **Organic Placement Motivation:** 1st and 2nd year juniors see tangible proof of seniors getting hired at top packages, motivating them to complete courses and projects on the platform.
-3. **Referral Flywheel:** Startups and top firms get internal referrals from existing KIET alumni, directly increasing placement conversion rates.
-
----
-*Generated: 15 October 2026 — Alumni Directory & Career Network Specification.*
+1. **100% Verified Accreditations (NAAC / NIRF):**
+   Accreditation boards require proof of active alumni career outcomes. This directory automatically showcases seniors progressing from mass recruiters to Tier-1 product firms.
+2. **Organic Junior Mentorship:**
+   1st and 2nd-year students gain concrete proof of what skills produce ₹20LPA+ packages, directing their elective choices and lab projects.
+3. **Zero Maintenance Burden on Alumni:**
+   By routing all actions to LinkedIn, the college never suffers from "dead/abandoned alumni accounts".
