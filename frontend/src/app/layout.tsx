@@ -1,14 +1,14 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { Manrope } from 'next/font/google';
 import { Providers } from '@/components/Providers';
 import { THEME_INIT_SCRIPT } from '@/components/theme';
 import './globals.css';
 
-const inter = Inter({
+const manrope = Manrope({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['400', '500', '600', '700', '800'],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-manrope',
 });
 
 export const metadata: Metadata = {
@@ -23,11 +23,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" data-theme="indigo" suppressHydrationWarning className={inter.variable}>
+    <html lang="en" data-theme="indigo" suppressHydrationWarning className={manrope.variable}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
-      <body className={inter.className}>
+      <body className={manrope.className}>
         <Providers>{children}</Providers>
       </body>
     </html>

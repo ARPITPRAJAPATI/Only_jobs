@@ -31,6 +31,7 @@ import {
   Image as ImageIcon,
   Layers,
   LayoutGrid,
+  MapPin,
   MessageSquare,
   MoreVertical,
   Paperclip,
@@ -925,20 +926,17 @@ export default function ClassPage() {
           {/* Classes Cards Grid */}
           <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-2 xl:gap-5">
             {filteredClasses.map((item) => (
-            <article
-              key={item.id}
-              className="group flex min-h-[320px] flex-col justify-between border border-line bg-surface transition-colors hover:border-accent/50"
-            >
-              <div>
-                {/* Header: Short Name badge + Subject Code + Students */}
-                <div className="flex items-start justify-between gap-3 border-b border-line px-4 py-4 sm:px-5">
+              <article
+                key={item.id}
+                className="group flex min-h-[320px] flex-col overflow-hidden rounded-xl border border-line bg-surface shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-lg"
+              >
+                <div className="flex items-center justify-between gap-3 border-b border-line bg-surface2/40 px-4 py-4 sm:px-5">
                   <div className="flex min-w-0 items-center gap-3">
                     <div
                       className={cn(
-                        'flex h-10 w-10 shrink-0 items-center justify-center rounded-md border text-xs font-bold',
+                        'flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-black/5 text-xs font-bold',
                         item.accentBg,
-                        item.accentColor,
-                        'border-black/5'
+                        item.accentColor
                       )}
                     >
                       {item.shortName.substring(0, 3).toUpperCase()}
@@ -947,71 +945,81 @@ export default function ClassPage() {
                       <button
                         type="button"
                         onClick={() => setSelectedClassId(item.id)}
-                        className="flex max-w-full items-center gap-1.5 text-left text-base font-semibold text-ink transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 sm:text-lg"
+                        className="flex max-w-full items-center gap-1.5 text-left text-base font-bold text-ink transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 sm:text-lg"
                       >
                         <span className="truncate">{item.shortName}</span>
-                        <ChevronRight className="h-4 w-4 shrink-0 text-muted transition-transform group-hover:translate-x-0.5" />
+                        <ChevronRight aria-hidden="true" className="h-4 w-4 shrink-0 text-muted transition-transform group-hover:translate-x-0.5" />
                       </button>
                       <span className="mt-0.5 block truncate text-[11px] text-muted">
                         <span className="font-mono">{item.code}</span>
-                        <span className="mx-1.5">·</span>
+                        <span className="mx-1.5" aria-hidden="true">·</span>
                         {item.semester}
                       </span>
                     </div>
                   </div>
 
-                  <div className="shrink-0 text-right">
-                    <span className="block font-mono text-sm font-semibold text-ink">{item.totalStudents}</span>
-                    <span className="text-[10px] text-muted">enrolled</span>
+                  <span className="inline-flex shrink-0 flex-col items-center rounded-lg border border-line bg-surface px-2.5 py-1 text-right">
+                    <span className="font-mono text-xs font-bold text-ink">{item.totalStudents}</span>
+                    <span className="text-[9px] text-muted">enrolled</span>
+                  </span>
+                </div>
+
+                <div className="flex flex-1 flex-col px-4 py-3 sm:px-5">
+                  <p className="line-clamp-2 min-h-8 text-xs leading-5 text-muted" title={item.fullName}>
+                    {item.fullName}
+                  </p>
+
+                  <dl className="mt-3 space-y-2 text-xs">
+                    <div className="flex items-center gap-2.5">
+                      <GraduationCap aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-muted" />
+                      <dt className="w-14 shrink-0 text-muted">Faculty</dt>
+                      <dd className="min-w-0 flex-1 truncate text-right font-medium text-ink">{item.teacher}</dd>
+                    </div>
+                    <div className="flex items-center gap-2.5">
+                      <Clock aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-muted" />
+                      <dt className="w-14 shrink-0 text-muted">Schedule</dt>
+                      <dd className="min-w-0 flex-1 truncate text-right font-mono text-[10px] text-ink sm:text-[11px]">{item.timing}</dd>
+                    </div>
+                    <div className="flex items-center gap-2.5">
+                      <MapPin aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-muted" />
+                      <dt className="w-14 shrink-0 text-muted">Location</dt>
+                      <dd className="min-w-0 flex-1 truncate text-right font-medium text-ink">{item.labRoom}</dd>
+                    </div>
+                  </dl>
+
+                  <div className="mt-4 rounded-lg border-l-2 border-accent bg-accent/5 px-3 py-2.5">
+                    <div className="mb-1 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-accent">
+                      <Calendar aria-hidden="true" className="h-3 w-3" />
+                      <span>Today in class</span>
+                    </div>
+                    <p className="line-clamp-2 text-xs leading-relaxed text-ink" title={item.todayTopic}>
+                      {item.todayTopic}
+                    </p>
                   </div>
                 </div>
 
-                <div className="px-4 pt-3 sm:px-5">
-                <p className="mb-3 line-clamp-1 text-xs font-medium text-muted" title={item.fullName}>
-                  {item.fullName}
-                </p>
+                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line bg-surface2/30 px-4 py-3 sm:px-5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="inline-flex items-center gap-1.5 rounded-md border border-line bg-surface px-2 py-1 text-[10px] font-medium text-muted">
+                      <FileText aria-hidden="true" className="h-3 w-3 text-accent" />
+                      {item.notesCount} notes
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 rounded-md border border-line bg-surface px-2 py-1 text-[10px] font-medium text-muted">
+                      <Timer aria-hidden="true" className="h-3 w-3 text-bad" />
+                      {item.upcomingTestsCount} upcoming tests
+                    </span>
+                  </div>
 
-                {/* Faculty & Timing Info */}
-                <div className="mb-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 py-2 text-xs">
-                  <span className="text-muted">Faculty</span>
-                  <strong className="text-right font-medium text-ink">{item.teacher}</strong>
-                  <span className="text-muted">Schedule</span>
-                  <span className="text-right font-mono text-[10px] text-ink sm:text-[11px]">{item.timing}</span>
-                  <span className="text-muted">Location</span>
-                  <span className="text-right font-medium text-ink">{item.labRoom}</span>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedClassId(item.id)}
+                    className="inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-lg bg-accent px-3 text-xs font-semibold text-accent-ink transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2"
+                  >
+                    <span>Open class</span>
+                    <ArrowRight aria-hidden="true" className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                  </button>
                 </div>
-
-                {/* Today's Topic Banner */}
-                <div className="mb-4 border-l-2 border-accent/50 bg-surface2/50 px-3 py-2.5 text-xs">
-                  <span className="mb-1 block text-[10px] font-semibold uppercase tracking-wide text-accent">Today in class</span>
-                  <span className="line-clamp-2 leading-relaxed text-ink" title={item.todayTopic}>{item.todayTopic}</span>
-                </div>
-                </div>
-              </div>
-
-              {/* Bottom Quick Stats & Enter CTA */}
-              <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line px-4 py-3 text-xs sm:px-5">
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-                  <span className="flex items-center gap-1.5 text-muted">
-                    <FileText className="h-3.5 w-3.5 text-accent" />
-                    <span>{item.notesCount} notes</span>
-                  </span>
-                  <span className="flex items-center gap-1.5 text-muted">
-                    <Timer className="h-3.5 w-3.5 text-bad" />
-                    <span>{item.upcomingTestsCount} upcoming tests</span>
-                  </span>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setSelectedClassId(item.id)}
-                  className="inline-flex shrink-0 items-center gap-1.5 px-2 py-1.5 text-xs font-semibold text-accent transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
-                >
-                  <span>Open class</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </button>
-              </div>
-            </article>
+              </article>
             ))}
           </div>
         </main>

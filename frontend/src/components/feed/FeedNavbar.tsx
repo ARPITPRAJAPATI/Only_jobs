@@ -18,12 +18,82 @@ import {
   Menu,
   X,
   ChevronRight,
+  ArrowUpRight,
   ShieldCheck,
   Calendar,
   Sun,
   Moon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
+interface NotificationPanelProps {
+  id: string;
+  pendingCount: number;
+  onNavigate: () => void;
+  className?: string;
+}
+
+function NotificationPanel({ id, pendingCount, onNavigate, className }: NotificationPanelProps) {
+  return (
+    <section
+      id={id}
+      aria-labelledby={`${id}-title`}
+      className={cn(
+        'w-[min(20.5rem,calc(100vw-1.5rem))] overflow-hidden rounded-xl border border-line bg-surface shadow-2xl ring-1 ring-black/5 backdrop-blur-md',
+        className
+      )}
+    >
+      <div className="flex items-center justify-between gap-3 border-b border-line px-3.5 py-2.5">
+        <h2 id={`${id}-title`} className="text-xs font-bold text-ink flex items-center gap-1.5">
+          <Bell className="h-3.5 w-3.5 text-accent" />
+          <span>Notifications</span>
+        </h2>
+        <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-line bg-surface2 px-2 py-0.5 text-[10px] font-semibold text-ink">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#cf222e] animate-pulse" aria-hidden="true" />
+          {pendingCount} Pending
+        </span>
+      </div>
+
+      <div className="max-h-[min(20rem,calc(100vh-7rem))] space-y-1.5 overflow-y-auto p-2">
+        <article className="rounded-md border border-line bg-surface2/70 p-2.5 transition-colors hover:border-accent/40 hover:bg-surface2">
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-ink">
+            <Briefcase aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-[#0969da]" />
+            <span>Microsoft 2026 Drive Open</span>
+          </div>
+          <p className="mt-1 text-[11px] leading-[1.45] text-muted">
+            Registration closes Tuesday 5 PM for SDE 1 placement shortlist.
+          </p>
+          <Link
+            href="/jobs"
+            onClick={onNavigate}
+            className="mt-1 inline-flex min-h-7 items-center gap-1 text-[11px] font-semibold text-accent transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+          >
+            View job details
+            <ArrowUpRight aria-hidden="true" className="h-3 w-3" />
+          </Link>
+        </article>
+
+        <article className="rounded-md border border-line bg-surface2/70 p-2.5 transition-colors hover:border-accent/40 hover:bg-surface2">
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-ink">
+            <BookOpen aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-[#1a7f37]" />
+            <span>Courses &amp; Labs</span>
+          </div>
+          <p className="mt-1 text-[11px] leading-[1.45] text-muted">
+            12 verified 3-Phase Gatekeeper tracks released for placement readiness.
+          </p>
+          <Link
+            href="/courses"
+            onClick={onNavigate}
+            className="mt-1 inline-flex min-h-7 items-center gap-1 text-[11px] font-semibold text-accent transition-colors hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+          >
+            Explore courses
+            <ArrowUpRight aria-hidden="true" className="h-3 w-3" />
+          </Link>
+        </article>
+      </div>
+    </section>
+  );
+}
 
 export function FeedNavbar() {
   const pathname = usePathname();
@@ -36,6 +106,7 @@ export function FeedNavbar() {
 
   const searchRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
+  const notifButtonRef = useRef<HTMLButtonElement>(null);
 
   // Close dropdowns on outside click
   useEffect(() => {
@@ -47,9 +118,19 @@ export function FeedNavbar() {
         setNotifOpen(false);
       }
     }
+    function handleEscape(e: KeyboardEvent) {
+      if (e.key === 'Escape' && notifOpen) {
+        setNotifOpen(false);
+        notifButtonRef.current?.focus();
+      }
+    }
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [notifOpen]);
 
   // Close mobile drawer on route change
   useEffect(() => {
@@ -169,38 +250,44 @@ export function FeedNavbar() {
               )}
             </div>
 
-            {/* Quick Search Dropdown */}
-            {searchOpen && (
-              <div className="absolute top-10 left-0 w-[320px] rounded-md bg-surface border border-line shadow-lg p-2 z-50 animate-fade-up">
-                <div className="px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-wider text-muted">
-                  Campus Shortcuts
-                </div>
-                <div className="space-y-0.5 mt-1">
-                  {searchResults.slice(0, 5).map((res) => {
-                    const Icon = res.icon;
-                    return (
-                      <Link
-                        key={res.href}
-                        href={res.href}
-                        onClick={() => setSearchOpen(false)}
-                        className="flex items-center justify-between p-2 rounded-md hover:bg-surface2 transition-colors group"
-                      >
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <div className="h-6 w-6 rounded bg-surface2 border border-line text-ink flex items-center justify-center shrink-0">
-                            <Icon className="h-3.5 w-3.5" />
-                          </div>
-                          <div className="min-w-0">
-                            <div className="text-xs font-semibold text-ink truncate">{res.title}</div>
-                            <div className="text-[10.5px] text-muted">{res.category}</div>
-                          </div>
-                        </div>
-                        <ChevronRight className="h-3.5 w-3.5 text-muted group-hover:text-[#0969da] transition-all" />
-                      </Link>
-                    );
-                  })}
-                </div>
+            {/* Quick Search Dropdown with Smooth Animation */}
+            <div
+              className={cn(
+                'absolute top-[calc(100%+8px)] left-0 w-[320px] rounded-xl bg-surface border border-line shadow-2xl p-2 z-50 transition-all duration-200 ease-out origin-top-left',
+                searchOpen
+                  ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto'
+                  : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'
+              )}
+              aria-hidden={!searchOpen}
+            >
+              <div className="px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-wider text-muted">
+                Campus Shortcuts
               </div>
-            )}
+              <div className="space-y-0.5 mt-1">
+                {searchResults.slice(0, 5).map((res) => {
+                  const Icon = res.icon;
+                  return (
+                    <Link
+                      key={res.href}
+                      href={res.href}
+                      onClick={() => setSearchOpen(false)}
+                      className="flex items-center justify-between p-2 rounded-md hover:bg-surface2 transition-colors group"
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div className="h-6 w-6 rounded bg-surface2 border border-line text-ink flex items-center justify-center shrink-0">
+                          <Icon className="h-3.5 w-3.5" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-xs font-semibold text-ink truncate">{res.title}</div>
+                          <div className="text-[10.5px] text-muted">{res.category}</div>
+                        </div>
+                      </div>
+                      <ChevronRight className="h-3.5 w-3.5 text-muted group-hover:text-[#0969da] transition-all" />
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -229,73 +316,67 @@ export function FeedNavbar() {
           {/* 7: Notification Bell with Flyout */}
           <div ref={notifRef} className="relative ml-0.5">
             <button
+              ref={notifButtonRef}
+              type="button"
               onClick={() => setNotifOpen(!notifOpen)}
               aria-label="Campus Notifications"
+              aria-expanded={notifOpen}
+              aria-controls="notification-panel-desktop"
               className={cn(
-                'relative h-8 rounded-md flex items-center gap-1.5 text-[12.5px] font-semibold transition-all cursor-pointer',
+                'relative h-8 rounded-md flex items-center transition-all duration-300 ease-out cursor-pointer select-none active:scale-[0.97]',
                 notifOpen
-                  ? 'px-2.5 xl:px-3 text-ink bg-surface2 font-bold border border-line shadow-2xs'
-                  : 'px-2 sm:px-2.5 text-muted hover:bg-surface2 hover:text-ink'
+                  ? 'px-2.5 gap-1.5 text-ink bg-surface2 font-bold border border-line shadow-2xs'
+                  : 'w-8 justify-center text-muted hover:bg-surface2 hover:text-ink border border-transparent'
               )}
             >
-              <Bell className={cn('w-3.5 h-3.5 shrink-0', notifOpen ? 'text-ink' : 'text-muted')} />
-              {notifOpen && (
-                <span className="text-ink animate-fade-in">Notification</span>
-              )}
-              {pendingBadges > 0 && (
-                <span className="text-[10px] font-bold bg-[#cf222e] text-white px-1.5 py-0.5 rounded-full leading-none">
-                  {pendingBadges}
-                </span>
-              )}
+              <div className="relative flex items-center justify-center">
+                <Bell
+                  className={cn(
+                    'w-3.5 h-3.5 shrink-0 transition-transform duration-300 ease-out',
+                    notifOpen ? 'text-ink -rotate-12 scale-110' : 'text-muted'
+                  )}
+                />
+                {!notifOpen && pendingBadges > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#cf222e] opacity-75" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-[#cf222e]" />
+                  </span>
+                )}
+              </div>
+
+              {/* Animated Label & Badge: Appears smoothly only when clicked */}
+              <div
+                className={cn(
+                  'flex items-center gap-1.5 overflow-hidden transition-all duration-300 ease-out whitespace-nowrap',
+                  notifOpen ? 'max-w-[120px] opacity-100' : 'max-w-0 opacity-0 pointer-events-none'
+                )}
+              >
+                <span className="text-[12.5px]">Notification</span>
+                {pendingBadges > 0 && (
+                  <span className="text-[10px] font-bold bg-[#cf222e] text-white px-1.5 py-0.5 rounded-full leading-none shrink-0">
+                    {pendingBadges}
+                  </span>
+                )}
+              </div>
             </button>
 
-            {/* Notification Dropdown Panel */}
-            {notifOpen && (
-              <div className="absolute right-0 top-10 w-[320px] rounded-md bg-surface border border-line shadow-lg p-3 z-50 animate-fade-up">
-                <div className="flex items-center justify-between pb-2 border-b border-line">
-                  <span className="text-xs font-bold text-ink">Notifications</span>
-                  <span className="text-[10.5px] font-semibold text-ink bg-surface2 border border-line px-2 py-0.5 rounded-full">
-                    {pendingBadges} Pending
-                  </span>
-                </div>
-
-                <div className="space-y-2 mt-2 max-h-[300px] overflow-y-auto">
-                  <div className="p-2.5 rounded-md bg-surface2 border border-line text-xs">
-                    <div className="flex items-center gap-1.5 font-semibold text-ink">
-                      <Briefcase className="h-3.5 w-3.5 text-[#0969da]" />
-                      <span>Microsoft 2026 Drive Open</span>
-                    </div>
-                    <p className="text-[11px] text-muted mt-1">
-                      Registration closes Tuesday 5 PM for SDE 1 placement shortlist.
-                    </p>
-                    <Link
-                      href="/jobs"
-                      onClick={() => setNotifOpen(false)}
-                      className="text-[11px] font-semibold text-[#0969da] hover:underline mt-1 inline-block"
-                    >
-                      View Job Details &rarr;
-                    </Link>
-                  </div>
-
-                  <div className="p-2.5 rounded-md bg-surface2 border border-line text-xs">
-                    <div className="flex items-center gap-1.5 font-semibold text-ink">
-                      <BookOpen className="h-3.5 w-3.5 text-[#1a7f37]" />
-                      <span>Courses & Labs</span>
-                    </div>
-                    <p className="text-[11px] text-muted mt-1">
-                      12 verified 3-Phase Gatekeeper tracks released for placement readiness.
-                    </p>
-                    <Link
-                      href="/courses"
-                      onClick={() => setNotifOpen(false)}
-                      className="text-[11px] font-semibold text-[#0969da] hover:underline mt-1 inline-block"
-                    >
-                      Explore Courses &rarr;
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            )}
+            {/* Notification Dropdown Panel with Smooth Enter/Exit Animation */}
+            <div
+              id="notification-panel-desktop"
+              className={cn(
+                'absolute right-0 top-[calc(100%+8px)] z-50 transition-all duration-200 ease-out origin-top-right',
+                notifOpen
+                  ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto'
+                  : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'
+              )}
+              aria-hidden={!notifOpen}
+            >
+              <NotificationPanel
+                id="notification-panel-desktop-inner"
+                pendingCount={pendingBadges}
+                onNavigate={() => setNotifOpen(false)}
+              />
+            </div>
           </div>
         </nav>
 
@@ -394,19 +475,49 @@ export function FeedNavbar() {
 
           {/* Notification Button */}
           <button
-            onClick={() => setNotifOpen(!notifOpen)}
-            className="w-full flex items-center justify-between px-3 py-2 rounded-md text-xs font-semibold text-muted hover:bg-surface2 hover:text-ink text-left"
+            type="button"
+            onClick={() => setNotifOpen((open) => !open)}
+            aria-expanded={notifOpen}
+            aria-controls="notification-panel-mobile"
+            className={cn(
+              'w-full flex items-center justify-between px-3 py-2 rounded-md text-xs font-semibold transition-colors duration-200 text-left cursor-pointer active:scale-[0.99]',
+              notifOpen
+                ? 'bg-surface2 text-ink font-bold border border-line'
+                : 'text-muted hover:bg-surface2 hover:text-ink border border-transparent'
+            )}
           >
             <div className="flex items-center gap-3">
-              <Bell className="h-4 w-4" />
+              <Bell
+                className={cn(
+                  'h-4 w-4 transition-transform duration-300 ease-out',
+                  notifOpen && 'text-ink -rotate-12 scale-110'
+                )}
+              />
               <span>7. Notifications</span>
             </div>
             {pendingBadges > 0 && (
-              <span className="text-[10px] font-bold bg-[#cf222e] text-white px-1.5 py-0.2 rounded-full">
+              <span className="text-[10px] font-bold bg-[#cf222e] text-white px-2 py-0.5 rounded-full leading-none">
                 {pendingBadges} Pending
               </span>
             )}
           </button>
+
+          {/* Smooth Mobile Accordion */}
+          <div
+            className={cn(
+              'grid transition-all duration-300 ease-in-out',
+              notifOpen ? 'grid-rows-[1fr] opacity-100 my-1.5' : 'grid-rows-[0fr] opacity-0 my-0'
+            )}
+          >
+            <div className="overflow-hidden px-1">
+              <NotificationPanel
+                id="notification-panel-mobile"
+                pendingCount={pendingBadges}
+                onNavigate={() => setNotifOpen(false)}
+                className="w-full shadow-md"
+              />
+            </div>
+          </div>
 
           {/* Profile Shortcut */}
           <div className="pt-2 border-t border-line">

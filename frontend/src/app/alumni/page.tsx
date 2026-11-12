@@ -236,11 +236,23 @@ export default function AlumniPage() {
   const [selectedMentor, setSelectedMentor] = useState<AlumniMentor | null>(null);
   const [requestPurpose, setRequestPurpose] = useState('Job Referral');
   const [targetRole, setTargetRole] = useState('Software Development Engineer (SDE-1)');
-  const [selectedProjectId, setSelectedProjectId] = useState<string>(
-    student.projects[0]?.id || ''
-  );
+  const [selectedProjectId, setSelectedProjectId] = useState<string>(student.projects[0]?.id || '');
   const [personalPitch, setPersonalPitch] = useState('');
   const [requested, setRequested] = useState<Record<string, { purpose: string; role: string; date: string }>>({});
+
+  useEffect(() => {
+    if (!student.projects.length) {
+      setSelectedProjectId('');
+      return;
+    }
+
+    setSelectedProjectId((current) => {
+      if (current && student.projects.some((project) => project.id === current)) {
+        return current;
+      }
+      return student.projects[0].id;
+    });
+  }, [student.projects]);
 
   const filteredAlumni = useMemo(() => {
     return ALUMNI_DATA.filter((al) => {

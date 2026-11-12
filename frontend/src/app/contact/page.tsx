@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { MessageSquare } from 'lucide-react';
+import { ArrowRight, CircleDot, MessageSquare, Plus } from 'lucide-react';
 import { useToast } from '@/components/toast';
 import { useStudent } from '@/components/store';
 import { ContactDetails, SupportRequestForm } from './contact-form';
@@ -72,22 +72,37 @@ export default function ContactPage() {
               </p>
             </div>
 
-            <div className="w-full max-w-[420px] rounded-2xl border border-[#2d3c52] bg-[#111c2d] p-4 shadow-[0_18px_40px_rgba(15,23,42,0.35)] sm:p-5">
-              <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4">
-                <div className="min-w-0 text-left">
-                  <p className="text-xs font-medium text-slate-300/90">Open requests</p>
-                  <p className="mt-2 text-4xl font-medium leading-none tracking-[-0.04em] text-white tabular-nums">
-                    {openTicketCount}
-                  </p>
+            <div className="w-full max-w-[420px] rounded-2xl border border-line bg-surface2/70 p-4 shadow-sm sm:p-5">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2 text-sm font-semibold text-ink">
+                  <span className="grid h-8 w-8 place-items-center rounded-lg border border-accent/20 bg-accent/10 text-accent">
+                    <MessageSquare aria-hidden="true" className="h-4 w-4" />
+                  </span>
+                  Request overview
                 </div>
-                <div className="h-14 w-px bg-white/10" aria-hidden="true" />
-                <div className="min-w-0 text-left">
-                  <p className="text-xs font-medium text-slate-300/90">Total requests</p>
-                  <p className="mt-2 text-4xl font-medium leading-none tracking-[-0.04em] text-white tabular-nums">
-                    {tickets.length}
-                  </p>
-                </div>
+                <span
+                  aria-live="polite"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-accent/20 bg-accent/10 px-2.5 py-1 text-[10px] font-semibold text-accent"
+                >
+                  <CircleDot aria-hidden="true" className="h-3 w-3" />
+                  {openTicketCount} open
+                </span>
               </div>
+
+              <dl className="mt-4 grid grid-cols-2 divide-x divide-line rounded-xl border border-line bg-surface px-3 py-3.5">
+                <div className="pr-3">
+                  <dt className="text-[11px] font-medium text-muted">Open requests</dt>
+                  <dd className="mt-1 text-3xl font-bold leading-none tracking-tight text-accent tabular-nums">
+                    {openTicketCount}
+                  </dd>
+                </div>
+                <div className="pl-4">
+                  <dt className="text-[11px] font-medium text-muted">Total requests</dt>
+                  <dd className="mt-1 text-3xl font-bold leading-none tracking-tight text-ink tabular-nums">
+                    {tickets.length}
+                  </dd>
+                </div>
+              </dl>
 
               <a
                 href="#new-request"
@@ -101,9 +116,11 @@ export default function ContactPage() {
                   });
                   window.history.replaceState(null, '', '#new-request');
                 }}
-                className="mt-4 inline-flex w-full items-center justify-center rounded-lg bg-[#5ea3f5] px-3 py-2.5 text-sm font-semibold text-[#0e1a2a] shadow-[0_6px_16px_rgba(94,163,245,0.28)] transition-transform duration-200 hover:-translate-y-0.5 hover:bg-[#73b0ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7cb7ff]"
+                className="group mt-3 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-accent px-3 py-2.5 text-sm font-semibold text-accent-ink shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2"
               >
+                <Plus aria-hidden="true" className="h-4 w-4" />
                 Create a request
+                <ArrowRight aria-hidden="true" className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </a>
             </div>
           </div>

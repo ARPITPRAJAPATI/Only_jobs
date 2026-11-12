@@ -75,19 +75,25 @@ export function RotatingArcNavbar() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const currentIndex = hoveredIndex !== null ? hoveredIndex : activeRouteIndex;
+  const currentItem = items[currentIndex] ?? items[0];
 
-  // ── Geometry & Alignment ──
-  // Container: H = 280px, yc = 140px
-  // Rows follow a shallow parallel curve to the arc, with consistent vertical spacing.
+  // ── Geometry & Layout Alignment ──
+  // Container: Height = 280px
+  // 1. All 5 icons in ONE perfectly straight vertical column (identical left: 68px).
+  // 2. All 5 labels aligned horizontally (identical starting position).
+  // 3. Consistent 54px vertical spacing between items.
+  // 4. Arc curves on the left as a decorative guide with quadratic bezier Q 76 140.
+  // 5. Charcoal indicator positioned directly on the arc, tracking the active item.
+  // 6. Arc never overlaps or touches icons.
   const H = 280;
-  const yc = 140;
-  const circX = 76;
+  const Qx = 76;
+  const iconColumnLeft = 68; // Straight vertical alignment for all 5 icons
   const yPositions = [32, 86, 140, 194, 248]; // Equal 54px vertical spacing
 
-  // Arc coordinates at each item's Y position
+  // Exact mathematical point on the quadratic bezier arc: Q 76 140 (peak x = 38 at y = 140)
   const itemCoords = yPositions.map((y) => {
-    const normY = (y - yc) / yc;
-    const arcX = Math.round(42 * (1 - normY * normY));
+    const t = y / H;
+    const arcX = Math.round(2 * (1 - t) * t * Qx * 10) / 10;
     return { y, arcX };
   });
 
@@ -104,9 +110,9 @@ export function RotatingArcNavbar() {
         viewBox="0 0 320 280"
         fill="none"
       >
-        {/* Decorative thin curved arc line on the left (peak at x=42, stops before icons at x=76) */}
+        {/* Subtle decorative arc guide attached to the left edge */}
         <path
-          d="M 0 0 C 56 60, 56 220, 0 280"
+          d="M 0 0 Q 76 140 0 280"
           stroke="rgba(255, 255, 255, 0.16)"
           strokeWidth="1.25"
           strokeLinecap="round"
@@ -120,23 +126,30 @@ export function RotatingArcNavbar() {
           }}
         >
           <rect
-            x={-7}
-            y={-2.5}
-            width={14}
-            height={5}
-            rx={2.5}
-            fill="#2d333b"
-            stroke="rgba(255, 255, 255, 0.2)"
+            x={-8}
+            y={-3}
+            width={16}
+            height={6}
+            rx={3}
+            fill="#23272f"
+            stroke="rgba(255, 255, 255, 0.22)"
             strokeWidth={0.75}
+          />
+          {/* Subtle colored center accent dot matching active item */}
+          <circle
+            cx={0}
+            cy={0}
+            r={1.2}
+            fill={currentItem.pastelColor}
+            opacity={0.85}
           />
         </g>
       </svg>
 
-      {/* ── Arc-following rows of icons and labels ── */}
+      {/* ── Perfectly Straight Vertical Column of Icons & Labels ── */}
       <div className="relative w-full h-full z-20">
         {items.map((item, idx) => {
-          const { y, arcX } = itemCoords[idx];
-          const curveOffset = (42 - arcX) * 0.6;
+          const { y } = itemCoords[idx];
           const isTargeted = currentIndex === idx;
           const Icon = item.icon;
 
@@ -147,7 +160,7 @@ export function RotatingArcNavbar() {
               onMouseEnter={() => setHoveredIndex(idx)}
               className="absolute flex items-center group cursor-pointer transition-all duration-200"
               style={{
-                left: `${circX - 17 - curveOffset}px`,
+                left: `${iconColumnLeft}px`,
                 top: `${y}px`,
                 transform: 'translateY(-50%)',
               }}
@@ -160,9 +173,8 @@ export function RotatingArcNavbar() {
                   isTargeted ? 'scale-105' : 'hover:scale-[1.02]'
                 )}
                 style={{
-                  // Dynamic highlight using the hovered/targeted item's OWN pastel accent color
-                  borderColor: isTargeted ? item.pastelColor : `${item.pastelColor}30`,
-                  backgroundColor: isTargeted ? `${item.pastelColor}22` : `${item.pastelColor}12`,
+                  borderColor: isTargeted ? item.pastelColor : `${item.pastelColor}28`,
+                  backgroundColor: isTargeted ? `${item.pastelColor}22` : `${item.pastelColor}10`,
                   boxShadow: isTargeted ? `0 0 12px ${item.pastelColor}35` : undefined,
                 }}
               >
@@ -174,16 +186,16 @@ export function RotatingArcNavbar() {
                 />
               </div>
 
-              {/* Keep each label attached to its icon as the row follows the arc. */}
+              {/* Horizontally Aligned Label */}
               <div
                 className={cn(
                   'ml-3 px-3 py-1 rounded-full text-xs whitespace-nowrap transition-all duration-300 border',
                   isTargeted
-                    ? 'bg-white/[0.12] text-white font-medium'
+                    ? 'bg-white/[0.12] text-white font-medium shadow-xs'
                     : 'bg-white/[0.03] border-white/[0.07] text-white/60 group-hover:text-white/85 group-hover:bg-white/[0.06] group-hover:border-white/15'
                 )}
                 style={{
-                  borderColor: isTargeted ? `${item.pastelColor}45` : undefined,
+                  borderColor: isTargeted ? `${item.pastelColor}50` : undefined,
                 }}
               >
                 {item.label}
