@@ -31,6 +31,7 @@ flowchart TD
     end
 
     subgraph Centralized_Protected_Api ["Centralized Protected Routes (api.routes.js - authenticateUser)"]
+        ApiRouter --> Alumni["/alumni (alumni.routes.js - Public Browseable)"]
         ApiRouter --> CentralAuth["router.use(authenticateUser)"]
         CentralAuth --> Users["/users (user.routes.js)"]
         CentralAuth --> Staff["/staff (staff.routes.js)"]
@@ -43,8 +44,9 @@ flowchart TD
         CentralAuth --> Feed["/feed (feed.routes.js)"]
     end
 
-    Users & Staff & Students & Profiles & Academics & Projects & Certs & Badges & Feed --> Controllers["Controllers Layer"]
+    Users & Staff & Students & Profiles & Academics & Projects & Certs & Badges & Feed & Alumni --> Controllers["Controllers Layer"]
     Controllers --> PrismaClient["Prisma ORM (Client with PG Adapter)"]
+    Controllers --> PrismaClient
     PrismaClient --> PostgresDB[("PostgreSQL Database (Docker :5432)")]
 ```
 
@@ -52,10 +54,11 @@ flowchart TD
 
 ## 2. Database & Entity Relationship (ER) Map
 
-Platform ke 3 main pillars hain:
+Platform ke 4 main pillars hain:
 1. **User Identity & Auth** (`User`, `StaffRegistry`, `StaffProfile`, `Student`)
 2. **Student Growth & Portfolio** (`StudentProfile`, `AcademicRecord`, `Project`, `Certification`, `BadgeCatalog`, `StudentBadge`)
 3. **Campus Social & Engagement** (`Post`, `PostLike`, `PostComment`, `CampusSignal`)
+4. **Alumni & Institutional Career Mentorship** (`AlumniDirectory`)
 
 ```mermaid
 erDiagram
@@ -235,6 +238,23 @@ erDiagram
         string timeText "15m ago"
         string linkUrl "Target url"
         datetime createdAt
+    }
+
+    AlumniDirectory {
+        string id PK "UUID"
+        string fullName "VarChar(120)"
+        string company "VarChar(120) Indexed"
+        string role "VarChar(120)"
+        string batch "e.g. Class of 2024"
+        int passoutYear "Indexed"
+        string branch "VarChar Indexed"
+        string domain "VarChar(80) Indexed"
+        string_array skills "Default []"
+        string linkedinUrl "Mandatory"
+        boolean verifiedByTpo "Default true"
+        string workEmail "Optional"
+        datetime createdAt
+        datetime updatedAt
     }
 ```
 
@@ -438,6 +458,18 @@ sequenceDiagram
 | `GET` | `/api/feed` | Authenticated | Main Feed Stream. Pinned Dean notices (`isPinned: true`) always at top. Student posts render up to 2 pinned approved badges, techStack chips, and repo link. Supports pagination (`page`, `limit`). |
 | `POST` | `/api/feed` | Authenticated | Publishes post. `DEAN_NOTICE` / `isPinned: true` restricted to `ADMIN`. `PLACEMENT_UPDATE` restricted to `TPO`/`ADMIN`. Students can publish `PROJECT_SHOWCASE` with GitHub links and tech chips. |
 | `DELETE` | `/api/feed/:id` | Authenticated | Deletes post (Author can delete own post; Admin can delete any post). |
+
+---
+
+### 11. Alumni Module (`/api/alumni`)
+*Mounted at:* `/api/alumni` (Public / Student Browseable)
+
+| Method | Endpoint | Required Role | Description |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/alumni` | Public / Student | Paginated multi-filter search (`search`, `company`, `domain`, `batch`, `branch`, `page`, `limit`). Case-insensitive AND filter logic. |
+| `GET` | `/api/alumni/stats` | Public / Student | Header statistics (`totalVerified`, `totalCompanies`, distinct `companies`, `domains`, `batches`). |
+| `GET` | `/api/alumni/:id` | Public / Student | Detailed public profile of a single alumnus by UUID. Returns 404 if not found. |
+| `POST` | `/api/alumni` | `TPO` / `ADMIN` | Ingestion endpoint to insert new verified alumni records with validation. |
 
 ---
 

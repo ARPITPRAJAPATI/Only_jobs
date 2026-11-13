@@ -55,27 +55,27 @@ flowchart TD
 
 ## 🗄️ 3. Database Schema (`AlumniDirectory`)
 
+> **Privacy-First Design Decision:**
+> To eliminate student-alumni awkwardness, jealousy, and corporate NDA violations, exact salary packages (`packageLpa`) and artificial `referralSlotsAvailable` have been permanently omitted from the model.
+
 ```prisma
 model AlumniDirectory {
-    id                     String   @id @default(uuid())
-    fullName               String   @db.VarChar(120)
-    avatarUrl              String?
-    company                String   @db.VarChar(120) // e.g. "Microsoft", "Amazon"
-    role                   String   @db.VarChar(120) // e.g. "Software Development Engineer II"
-    batch                  String   // e.g. "Class of 2024"
-    passoutYear            Int      // e.g. 2024 (Numeric index for fast sorting)
-    branch                 String   // e.g. "CSE", "IT", "ECE", "CS-AI"
-    domain                 String   @db.VarChar(80)  // "Distributed Systems", "Cloud & DevOps", "AI / ML"
-    skills                 String[] @default([])     // e.g. ["Next.js", "Azure", "C++"]
-    packageLpa             Float?   // e.g. 28.5 (Official verified college CTC)
-    isPackagePublic        Boolean  @default(true)   // Privacy toggle
-    referralSlotsAvailable Int      @default(3)
-    linkedinUrl            String   // Mandatory LinkedIn profile URL
-    verifiedByTpo          Boolean  @default(true)
-    workEmail              String?  // Optional corporate email
+    id            String   @id @default(uuid())
+    fullName      String   @db.VarChar(120)
+    avatarUrl     String?
+    company       String   @db.VarChar(120) // e.g. "Microsoft", "Amazon"
+    role          String   @db.VarChar(120) // e.g. "Software Development Engineer II"
+    batch         String   // e.g. "Class of 2024"
+    passoutYear   Int      // e.g. 2024 (Numeric index for fast sorting)
+    branch        String   // e.g. "CSE", "IT", "ECE", "CS-AI"
+    domain        String   @db.VarChar(80)  // "Distributed Systems", "Cloud & DevOps", "AI / ML"
+    skills        String[] @default([])     // e.g. ["Next.js", "Azure", "C++"]
+    linkedinUrl   String   // Mandatory LinkedIn profile URL
+    verifiedByTpo Boolean  @default(true)
+    workEmail     String?  // Optional corporate email
 
-    createdAt              DateTime @default(now())
-    updatedAt              DateTime @updatedAt
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
 
     // High-performance B-tree indexes for sub-10ms filtered queries
     @@index([company])
@@ -89,31 +89,48 @@ model AlumniDirectory {
 
 ## ⚡ 4. Backend API Specifications (`/api/alumni`)
 
+Status: **Production Implemented & Mounted** in `backend/src/routes/api.routes.js`.
+
 ### 1. `GET /api/alumni` (Multi-Filter Paginated Search)
-* **Access:** Student / Faculty / Admin
+* **Access:** Public / Student browseable
 * **Query Parameters:**
-  * `search`: Fuzzy keyword search matching `fullName`, `company`, `role`, or `skills`.
-  * `company`: Exact filter (`Microsoft`, `Amazon`, `Swiggy`, etc. or `ALL`).
-  * `domain`: Exact domain (`Distributed Systems`, `Frontend & Mobile`, `Cloud & DevOps`, `AI / ML`, `Quant & FinTech`).
+  * `search`: Multi-field case-insensitive fuzzy match across `fullName`, `company`, `role`, or `skills`.
+  * `company`: Case-insensitive filter (`Google`, `Microsoft`, `Amazon`, etc. or `ALL`).
+  * `domain`: Case-insensitive domain match (`AI / Machine Learning`, `Cloud Architecture`, etc.).
   * `batch`: Filter by passout year (`Class of 2024`, `Class of 2023`, etc.).
   * `branch`: Filter by branch (`CSE`, `IT`, `ECE`, `CS-AI`).
   * `page`: Integer (default `1`).
-  * `limit`: Integer (default `12`, max `50`).
-* **Privacy Enforcement:** If `isPackagePublic === false`, backend redacts `packageLpa: null`.
+  * `limit`: Integer (default `12`, clamped to max `50`).
+* **Filtering Logic:** Uses Prisma `where` AND combinations for strict intersection of filters.
 
 ### 2. `GET /api/alumni/stats` (Overview Summary)
 * Returns aggregated dynamic counts for the frontend header banner:
   * `totalVerified`: Total verified alumni count.
   * `totalCompanies`: Total unique companies count.
-  * `companies`: Sorted list of represented companies (including `ALL`).
-  * `domains`: Sorted list of active tech domains.
-  * `batches`: Sorted list of batches.
+  * `companies`: Sorted list of represented companies in DB (with `ALL`).
+  * `domains`: Sorted list of active tech domains in DB.
+  * `batches`: Sorted list of batches in DB.
 
 ### 3. `GET /api/alumni/:id` (Single Profile Details)
-* Fetches full public details of a single alumnus.
+* Fetches full public details of a single alumnus by UUID. Returns 404 if record does not exist.
 
 ### 4. `POST /api/alumni` (Admin / TPO Ingestion)
-* Endpoint for TPO coordinators to add or import new alumni records.
+* Ingestion endpoint for TPO coordinators and background crawler to add or import verified alumni records with validation.
+
+---
+
+## 🔍 5. Frontend Search & Discovery Engine (`/alumni`)
+
+1. **Searchable Company Slider:**
+   * `[ All companies ▾ ]` pill opens a dropdown with an integrated **Mini Search Input** auto-focused.
+   * Houses a curated catalog of **120+ top global tech firms, Tier-1 MNCs, and Indian tech unicorns** (Google, Microsoft, Amazon, Atlassian, NVIDIA, Uber, Swiggy, Zomato, Razorpay, Goldman Sachs, etc.).
+   * Followed by fast 1-click shortcut pills for high-demand campus recruiters.
+2. **Searchable Domain Slider (Area of Expertise):**
+   * Features **50+ in-demand engineering domains** (AI/ML, Generative AI & LLMs, Distributed Systems, Cloud Architecture, DevOps & SRE, Cybersecurity, Quant FinTech, System Design, etc.).
+   * Equipped with real-time text filter and smooth vertical scrollable slider.
+3. **Graduation Year:**
+   * Searchable dropdown for batches (`Class of 2024`, `Class of 2023`, etc.).
+4. **Performance:** Fully typed with 0 TypeScript compilation errors (`tsc --noEmit` clean).
 
 ---
 
