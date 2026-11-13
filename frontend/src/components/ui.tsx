@@ -228,6 +228,6 @@ export function EmptyState({ icon, title, body, action }: { icon: ReactNode; tit
   );
 }
 
-export function PageGrid({ children }: { children: ReactNode }) {
-  return <div className="max-w-[1280px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 grid animate-fade-up gap-5 lg:gap-6">{children}</div>;
+export function PageGrid({ children, className }: { children: ReactNode; className?: string }) {
+  return <div className={cn('max-w-[1280px] mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 grid animate-fade-up gap-5 lg:gap-6', className)}>{children}</div>;
 }

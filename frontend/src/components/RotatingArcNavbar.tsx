@@ -78,19 +78,13 @@ export function RotatingArcNavbar() {
   const currentItem = items[currentIndex] ?? items[0];
 
   // ── Geometry & Layout Alignment ──
-  // Container: Height = 280px
-  // 1. All 5 icons in ONE perfectly straight vertical column (identical left: 68px).
-  // 2. All 5 labels aligned horizontally (identical starting position).
-  // 3. Consistent 54px vertical spacing between items.
-  // 4. Arc curves on the left as a decorative guide with quadratic bezier Q 76 140.
-  // 5. Charcoal indicator positioned directly on the arc, tracking the active item.
-  // 6. Arc never overlaps or touches icons.
+  // The icons and labels follow the same curved path as the guide, offset to its right.
   const H = 280;
   const Qx = 76;
-  const iconColumnLeft = 68; // Straight vertical alignment for all 5 icons
+  const iconOffsetFromArc = 32;
   const yPositions = [32, 86, 140, 194, 248]; // Equal 54px vertical spacing
 
-  // Exact mathematical point on the quadratic bezier arc: Q 76 140 (peak x = 38 at y = 140)
+  // Exact point on the quadratic bezier arc: Q 76 140 (peak x = 38 at y = 140).
   const itemCoords = yPositions.map((y) => {
     const t = y / H;
     const arcX = Math.round(2 * (1 - t) * t * Qx * 10) / 10;
@@ -149,7 +143,7 @@ export function RotatingArcNavbar() {
       {/* ── Perfectly Straight Vertical Column of Icons & Labels ── */}
       <div className="relative w-full h-full z-20">
         {items.map((item, idx) => {
-          const { y } = itemCoords[idx];
+          const { y, arcX } = itemCoords[idx];
           const isTargeted = currentIndex === idx;
           const Icon = item.icon;
 
@@ -160,7 +154,7 @@ export function RotatingArcNavbar() {
               onMouseEnter={() => setHoveredIndex(idx)}
               className="absolute flex items-center group cursor-pointer transition-all duration-200"
               style={{
-                left: `${iconColumnLeft}px`,
+                left: `${iconOffsetFromArc + arcX}px`,
                 top: `${y}px`,
                 transform: 'translateY(-50%)',
               }}

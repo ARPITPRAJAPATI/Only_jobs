@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo, use } from 'react';
+import { useState, useEffect, useMemo, use, useRef } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import {
@@ -53,6 +53,38 @@ import { useStudent } from '@/components/store';
 import { useToast } from '@/components/toast';
 import { cn } from '@/lib/utils';
 
+type CurriculumModule = {
+  id: string;
+  title: string;
+  status: 'Completed' | 'Ready for exam';
+  videoId: string;
+  videoTitle: string;
+};
+
+const CURRICULUM_MODULES: CurriculumModule[] = [
+  {
+    id: 'core-architecture',
+    title: 'Module 1.1: Core Architecture & Theory',
+    status: 'Completed',
+    videoId: 'K54qfZ1ptwI',
+    videoTitle: 'UI Architecture Fundamentals - Build Production-Ready React Components',
+  },
+  {
+    id: 'terminal-commands',
+    title: 'Module 1.2: Terminal Commands & Hands-on Diagnostics',
+    status: 'Completed',
+    videoId: 'YHFzr-akOas',
+    videoTitle: 'Linux Command Line Tutorial For Beginners - Introduction',
+  },
+  {
+    id: 'production-hardening',
+    title: 'Module 1.3: Production Hardening & Troubleshooting',
+    status: 'Ready for exam',
+    videoId: 'eAbJbtpDf_w',
+    videoTitle: 'Security Headers: Web Application Hardening & Response Security Analysis',
+  },
+];
+
 export default function CourseWorkspacePage() {
   const params = useParams();
   const router = useRouter();
@@ -79,6 +111,14 @@ export default function CourseWorkspacePage() {
 
   // Active Selected Phase for viewing details
   const [selectedPhaseIndex, setSelectedPhaseIndex] = useState<number>(0);
+  const [selectedModule, setSelectedModule] = useState<CurriculumModule | null>(null);
+  const videoPlayerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (selectedModule) {
+      videoPlayerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [selectedModule]);
 
   // Exam Player Modal State
   const [examModalOpen, setExamModalOpen] = useState<boolean>(false);
@@ -630,28 +670,77 @@ export default function CourseWorkspacePage() {
                         <span className="text-xs text-muted">Self-paced with mandatory lab checks</span>
                       </div>
                       <div className="space-y-2 text-xs">
-                        <div className="flex items-center justify-between gap-3 rounded-lg border border-line bg-surface2/50 p-3">
-                          <div className="flex min-w-0 items-center gap-2.5">
-                            <CheckCircle2 className="h-4 w-4 text-good" />
-                            <span className="font-semibold text-ink">Module 1.1: Core Architecture & Theory</span>
-                          </div>
-                          <span className="shrink-0 rounded-full bg-good/10 px-2 py-1 text-[10px] font-semibold text-good">Completed</span>
-                        </div>
-                        <div className="flex items-center justify-between gap-3 rounded-lg border border-line bg-surface2/50 p-3">
-                          <div className="flex min-w-0 items-center gap-2.5">
-                            <CheckCircle2 className="h-4 w-4 text-good" />
-                            <span className="font-semibold text-ink">Module 1.2: Terminal Commands & Hands-on Diagnostics</span>
-                          </div>
-                          <span className="shrink-0 rounded-full bg-good/10 px-2 py-1 text-[10px] font-semibold text-good">Completed</span>
-                        </div>
-                        <div className="flex items-center justify-between gap-3 rounded-lg border border-line bg-surface2/50 p-3">
-                          <div className="flex min-w-0 items-center gap-2.5">
-                            <Clock className="h-4 w-4 text-warn" />
-                            <span className="font-semibold text-ink">Module 1.3: Production Hardening & Troubleshooting</span>
-                          </div>
-                          <span className="shrink-0 rounded-full bg-warn/10 px-2 py-1 text-[10px] font-semibold text-warn">Ready for exam</span>
-                        </div>
+                        {CURRICULUM_MODULES.map((module) => {
+                          const isSelected = selectedModule?.id === module.id;
+                          const isCompleted = module.status === 'Completed';
+
+                          return (
+                            <button
+                              key={module.id}
+                              type="button"
+                              aria-pressed={isSelected}
+                              onClick={() => setSelectedModule(module)}
+                              className={cn(
+                                'flex w-full cursor-pointer items-center justify-between gap-3 rounded-lg border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+                                isSelected
+                                  ? 'border-accent bg-accent/5'
+                                  : 'border-line bg-surface2/50 hover:border-accent/40 hover:bg-surface2'
+                              )}
+                            >
+                              <span className="flex min-w-0 items-center gap-2.5">
+                                {isCompleted ? (
+                                  <CheckCircle2 className="h-4 w-4 shrink-0 text-good" />
+                                ) : (
+                                  <Clock className="h-4 w-4 shrink-0 text-warn" />
+                                )}
+                                <span className="font-semibold text-ink">{module.title}</span>
+                              </span>
+                              <span
+                                className={cn(
+                                  'shrink-0 rounded-full px-2 py-1 text-[10px] font-semibold',
+                                  isCompleted ? 'bg-good/10 text-good' : 'bg-warn/10 text-warn'
+                                )}
+                              >
+                                {module.status}
+                              </span>
+                            </button>
+                          );
+                        })}
                       </div>
+                      {selectedModule && (
+                        <section
+                          ref={videoPlayerRef}
+                          aria-label={`Video for ${selectedModule.title}`}
+                          className="overflow-hidden rounded-lg border border-line bg-surface2"
+                        >
+                          <div className="flex flex-col gap-2 p-3 sm:flex-row sm:items-center sm:justify-between">
+                            <div>
+                              <p className="text-xs font-bold text-ink">{selectedModule.title}</p>
+                              <p className="mt-1 text-[11px] text-muted">{selectedModule.videoTitle}</p>
+                            </div>
+                            <a
+                              href={`https://www.youtube.com/watch?v=${selectedModule.videoId}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex shrink-0 items-center gap-1 text-[11px] font-semibold text-accent hover:underline"
+                            >
+                              Watch on YouTube
+                              <ExternalLink className="h-3 w-3" />
+                            </a>
+                          </div>
+                          <div className="aspect-video w-full bg-black">
+                            <iframe
+                              key={selectedModule.videoId}
+                              src={`https://www.youtube-nocookie.com/embed/${selectedModule.videoId}?rel=0`}
+                              title={selectedModule.videoTitle}
+                              className="h-full w-full"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                              referrerPolicy="strict-origin-when-cross-origin"
+                              allowFullScreen
+                            />
+                          </div>
+                        </section>
+                      )}
                     </div>
 
                     {/* EXAM CALL TO ACTION BUTTONS (THE CORE REQUIREMENT) */}

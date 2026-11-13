@@ -78,9 +78,9 @@ function SettingsView() {
   );
 
   return (
-    <div className="pb-16 animate-fade-in">
-      <ProfileSubnav />
-      <PageGrid>
+    <ProfileSubnav>
+      <div className="pb-16 animate-fade-in">
+      <PageGrid className="!max-w-none !px-0 !py-0">
       <div className="grid gap-4 lg:gap-5 xl:grid-cols-3">
         <form onSubmit={save} className="grid gap-4 lg:gap-5 xl:col-span-2">
           <Card>
@@ -178,7 +178,8 @@ function SettingsView() {
           </div>
         </div>
       </Card>
-    </PageGrid>
-    </div>
+      </PageGrid>
+      </div>
+    </ProfileSubnav>
   );
 }

@@ -19,9 +19,9 @@ export default function ProjectsPage() {
   const full = count >= MAX_PROJECTS;
 
   return (
-    <div className="pb-16 animate-fade-in">
-      <ProfileSubnav />
-      <PageGrid>
+    <ProfileSubnav>
+      <div className="pb-16 animate-fade-in">
+      <PageGrid className="!max-w-none !px-0 !py-0">
       <Card className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
           <span className="grid h-9 w-9 place-items-center rounded-xl bg-white/[0.08] text-[#58a6ff] border border-white/[0.1]">
@@ -98,7 +98,8 @@ export default function ProjectsPage() {
       </Card>
 
       <ProjectModal key={modal.initial?.id ?? 'new'} open={modal.open} initial={modal.initial} onClose={() => setModal({ open: false, initial: null })} />
-    </PageGrid>
-    </div>
+      </PageGrid>
+      </div>
+    </ProfileSubnav>
   );
 }

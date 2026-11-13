@@ -34,9 +34,9 @@ export default function CertificationsPage() {
   };
 
   return (
-    <div className="pb-16 animate-fade-in">
-      <ProfileSubnav />
-      <PageGrid>
+    <ProfileSubnav>
+      <div className="pb-16 animate-fade-in">
+      <PageGrid className="!max-w-none !px-0 !py-0">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:gap-5">
         <Stat label="Total certifications" value={student.certifications.length} icon={<Award className="h-6 w-6" />} />
         <Stat label="Platform-issued" value={internal} sub="Hash-verified automatically" icon={<Fingerprint className="h-6 w-6" />} tone="good" />
@@ -131,7 +131,8 @@ export default function CertificationsPage() {
       </Card>
 
       <CertificationModal open={open} onClose={() => setOpen(false)} />
-    </PageGrid>
-    </div>
+      </PageGrid>
+      </div>
+    </ProfileSubnav>
   );
 }

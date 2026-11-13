@@ -39,9 +39,9 @@ export default function CodingPage() {
   ];
 
   return (
-    <div className="pb-16 animate-fade-in">
-      <ProfileSubnav />
-      <PageGrid>
+    <ProfileSubnav>
+      <div className="pb-16 animate-fade-in">
+      <PageGrid className="!max-w-none !px-0 !py-0">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5 xl:grid-cols-4">
         <Stat label="GitHub contributions" value={student.codingStats?.github?.totalContributions ?? 0} sub="Last 12 months" icon={<GitCommitHorizontal className="h-6 w-6" />} />
         <Stat label="Current streak" value={`${Math.max(ghS.current, lcS.current)} days`} sub={`GitHub ${ghS.current}d · LeetCode ${lcS.current}d`} icon={<Flame className="h-6 w-6" />} tone="warn" />
@@ -147,7 +147,8 @@ export default function CodingPage() {
           </Card>
         </div>
       </div>
-    </PageGrid>
-    </div>
+      </PageGrid>
+      </div>
+    </ProfileSubnav>
   );
 }

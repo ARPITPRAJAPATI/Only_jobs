@@ -19,9 +19,9 @@ export default function AcademicsPage() {
   const latest = [...sems].sort((a, b) => b.semesterNumber - a.semesterNumber)[0];
 
   return (
-    <div className="pb-16 animate-fade-in">
-      <ProfileSubnav />
-      <PageGrid>
+    <ProfileSubnav>
+      <div className="pb-16 animate-fade-in">
+      <PageGrid className="!max-w-none !px-0 !py-0">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5 xl:grid-cols-4">
           <Stat label="Cumulative CGPA" value={cgpa ? cgpa.toFixed(2) : '—'} sub={`Across ${sems.length} semesters`} icon={<GraduationCap className="h-6 w-6" />} />
           <Stat label="Latest SGPA" value={latest ? latest.sgpa.toFixed(2) : '—'} sub={latest ? `Semester ${latest.semesterNumber}` : 'No records found'} icon={<ScanSearch className="h-6 w-6" />} tone="accent2" />
@@ -126,6 +126,7 @@ export default function AcademicsPage() {
           </div>
         </div>
       </PageGrid>
-    </div>
+      </div>
+    </ProfileSubnav>
   );
 }

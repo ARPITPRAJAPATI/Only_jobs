@@ -31,9 +31,9 @@ export default function BadgesPage() {
   const count = (s: 'APPROVED' | 'PENDING' | 'REJECTED') => student.badges.filter((b) => b.status === s).length;
 
   return (
-    <div className="pb-16 animate-fade-in">
-      <ProfileSubnav />
-      <PageGrid>
+    <ProfileSubnav>
+      <div className="pb-16 animate-fade-in">
+      <PageGrid className="!max-w-none !px-0 !py-0">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:gap-5">
         <Stat label="Approved" value={count('APPROVED')} sub="Visible to recruiters" icon={<BadgeCheck className="h-6 w-6" />} tone="good" />
         <Stat label="Pending review" value={count('PENDING')} sub="In the TPO queue" icon={<Clock className="h-6 w-6" />} tone="warn" />
@@ -125,7 +125,8 @@ export default function BadgesPage() {
       </Card>
 
       <BadgeRequestModal badge={requesting} onClose={() => setRequesting(null)} />
-    </PageGrid>
-    </div>
+      </PageGrid>
+      </div>
+    </ProfileSubnav>
   );
 }
