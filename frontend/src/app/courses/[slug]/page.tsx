@@ -22,7 +22,6 @@ import {
   Sparkles,
   BookOpen,
   Github,
-  Building2,
   TrendingUp,
   Download,
   Eye,
@@ -32,7 +31,6 @@ import {
   Check,
   X,
   Share2,
-  Quote,
 } from 'lucide-react';
 import {
   COURSES_DATA,
@@ -56,6 +54,7 @@ import { cn } from '@/lib/utils';
 type CurriculumModule = {
   id: string;
   title: string;
+  description: string;
   status: 'Completed' | 'Ready for exam';
   videoId: string;
   videoTitle: string;
@@ -65,23 +64,26 @@ const CURRICULUM_MODULES: CurriculumModule[] = [
   {
     id: 'core-architecture',
     title: 'Module 1.1: Core Architecture & Theory',
+    description: 'A practical introduction to breaking interfaces into reusable React components and keeping data flow easy to follow.',
     status: 'Completed',
     videoId: 'K54qfZ1ptwI',
-    videoTitle: 'UI Architecture Fundamentals - Build Production-Ready React Components',
+    videoTitle: 'UI Architecture Fundamentals',
   },
   {
     id: 'terminal-commands',
     title: 'Module 1.2: Terminal Commands & Hands-on Diagnostics',
+    description: 'Get started with the Linux shell: learn how commands work and how to find your way around a terminal.',
     status: 'Completed',
     videoId: 'YHFzr-akOas',
-    videoTitle: 'Linux Command Line Tutorial For Beginners - Introduction',
+    videoTitle: 'Linux Command Line Tutorial for Beginners',
   },
   {
     id: 'production-hardening',
     title: 'Module 1.3: Production Hardening & Troubleshooting',
+    description: 'Learn how HTTP security headers help protect web apps and what to check before deployment.',
     status: 'Ready for exam',
     videoId: 'eAbJbtpDf_w',
-    videoTitle: 'Security Headers: Web Application Hardening & Response Security Analysis',
+    videoTitle: 'Security Headers: Web Application Hardening',
   },
 ];
 
@@ -360,146 +362,69 @@ export default function CourseWorkspacePage() {
       {/* 2. Main Course Workspace Body */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 space-y-12">
         {/* HERO SECTION */}
-        <section className="rounded-2xl border border-line bg-surface p-5 shadow-sm sm:p-7 lg:p-8">
-          <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-12 lg:gap-8">
-            <div className="min-w-0 space-y-4 lg:col-span-7">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-accent">
-                  <Sparkles className="h-3 w-3" />
-                  <span>{course.categoryLabel} Track</span>
-                </span>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface2 px-2.5 py-1 text-[10px] font-medium text-muted">
-                  <Clock className="h-3 w-3" />
-                  <span>{course.labHours} Hands-On Lab Hours</span>
-                </span>
+        <section className="rounded-xl border border-line bg-surface p-5 sm:p-7 lg:p-8">
+          <div className="max-w-5xl space-y-5">
+              <div className="flex flex-wrap items-center gap-x-2 text-xs text-muted">
+                <span className="font-semibold text-accent">{course.categoryLabel}</span>
+                <span aria-hidden="true">·</span>
+                <span>{course.labHours} lab hours</span>
               </div>
 
-              <h1 className="max-w-3xl text-2xl font-bold leading-tight tracking-tight text-ink sm:text-3xl lg:text-4xl">
+              <h1 className="max-w-4xl text-2xl font-semibold leading-tight tracking-tight text-ink sm:text-3xl lg:text-4xl">
                 {course.title}
               </h1>
 
-              <p className="max-w-3xl text-sm leading-relaxed text-muted sm:text-[15px]">
+              <p className="max-w-4xl text-sm leading-relaxed text-muted sm:text-[15px]">
                 {course.overview}
               </p>
 
-              <div className="flex flex-col gap-3 rounded-xl border border-line bg-surface2/60 p-3.5 xl:flex-row xl:items-center xl:justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-accent/20 bg-accent/10 text-accent">
-                    <Building2 className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold text-ink">TPO Placement Partner Accreditation</p>
-                    <p className="text-[11px] text-muted">{course.tpoPartner}</p>
-                  </div>
+              <div className="flex flex-col gap-3 border-t border-line pt-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-xs font-semibold text-ink">Placement partners</p>
+                  <p className="mt-0.5 text-xs text-muted">{course.tpoPartner}</p>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted">
                   <div className="flex items-center gap-1 text-warn">
                     <Star className="h-3.5 w-3.5 fill-current" />
                     <span className="font-bold text-ink">{course.rating.toFixed(1)}</span>
-                    <span className="text-[10px] text-muted">({course.reviewCount} reviews)</span>
+                    <span>({course.reviewCount} reviews)</span>
                   </div>
                   <span className="hidden text-muted sm:inline-block">•</span>
-                  <span>{course.studentsCount} Students Enrolled</span>
+                  <span>{course.studentsCount} enrolled</span>
                 </div>
               </div>
-            </div>
-
-            <div className="w-full min-w-0 rounded-xl border border-line bg-surface2/40 p-4 sm:p-5 lg:col-span-5">
-              <div className="flex items-center gap-3">
-                <img
-                  src={course.mentor.avatarUrl}
-                  alt={course.mentor.name}
-                  className="h-11 w-11 rounded-full border border-line object-cover"
-                />
-                <div>
-                  <h4 className="text-sm font-bold text-ink">{course.mentor.name}</h4>
-                  <p className="text-xs text-muted">{course.mentor.title}</p>
-                  <p className="text-[11px] text-muted">Dept of {course.mentor.department}</p>
-                </div>
-              </div>
-
-              <div className="mt-5 space-y-2 border-t border-line pt-4">
-                <div className="flex items-center justify-between gap-4 text-xs">
-                  <span className="font-medium text-muted">Certification Status</span>
-                  <span className="text-right font-bold text-ink font-mono text-[11px]">
-                    {phase3Passed
-                      ? '100% (Mastery)'
-                      : phase2Passed
-                      ? '66% (Phase 2 Passed)'
-                      : phase1Passed
-                      ? '33% (Phase 1 Passed)'
-                      : '0% (Phase 1 In-Progress)'}
-                  </span>
-                </div>
-
-                <div
-                  className="h-1.5 w-full overflow-hidden rounded-full border border-line bg-surface2"
-                  role="progressbar"
-                  aria-label="Certification progress"
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                  aria-valuenow={phase3Passed ? 100 : phase2Passed ? 66 : phase1Passed ? 33 : 0}
-                >
-                  <div
-                    className="h-full rounded-full bg-good transition-all duration-500"
-                    style={{
-                      width: phase3Passed ? '100%' : phase2Passed ? '66%' : phase1Passed ? '33%' : '5%',
-                    }}
-                  />
-                </div>
-              </div>
-
-              {phase1Passed && (
-                <div className="mt-4 flex items-start gap-2.5 rounded-xl border border-good/30 bg-good/10 p-3 text-xs">
-                  <ShieldCheck className="mt-0.5 h-5 w-5 text-good" />
-                  <div>
-                    <p className="font-bold text-good">Verified Credential Active</p>
-                    <p className="mt-0.5 font-mono text-muted">Hash: {certHashes[0] || 'CERT-KIET-VERIFIED'}</p>
-                  </div>
-                </div>
-              )}
-
-              <div className="mt-4 flex flex-col gap-2 pt-1">
+              <div className="flex flex-wrap gap-2 pt-1">
                 <a
                   href="#phases-section"
-                  className="w-full rounded-lg bg-accent px-3 py-2.5 text-center text-xs font-semibold text-accentInk shadow-sm transition-all hover:-translate-y-0.5 hover:opacity-95"
+                  className="inline-flex min-w-40 items-center justify-center rounded-md bg-accent px-4 py-2.5 text-xs font-semibold text-accentInk transition-colors hover:opacity-90"
                 >
-                  Go to 3-Phase Gatekeeper ↓
+                  Explore the syllabus
                 </a>
                 <a
                   href="#notes-section"
-                  className="w-full rounded-lg border border-line bg-surface px-3 py-2.5 text-center text-xs font-semibold text-ink transition-colors hover:bg-surface2"
+                  className="inline-flex min-w-40 items-center justify-center rounded-md border border-line px-4 py-2.5 text-xs font-semibold text-ink transition-colors hover:bg-surface2"
                 >
-                  View Notes & Cheatsheets
+                  Browse course resources
                 </a>
               </div>
-            </div>
           </div>
         </section>
 
-        {/* ========================================================================= */}
-        {/* 3-PHASE GATEKEEPER ENGINE (THE CORE USER REQUIREMENT)                     */}
-        {/* ========================================================================= */}
         <section id="phases-section" className="scroll-mt-20 space-y-6 rounded-2xl border border-line bg-surface p-4 shadow-sm sm:p-6 lg:p-7">
-          <div className="flex flex-col gap-4 border-b border-line pb-5 md:flex-row md:items-end md:justify-between">
+          <div className="border-b border-line pb-5">
             <div>
               <div className="flex items-center gap-2">
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 text-accent ring-1 ring-accent/20">
                   <Layers className="h-4 w-4" />
                 </span>
                 <h2 className="text-xl font-extrabold tracking-tight text-ink sm:text-2xl">
-                  3-Phase Gatekeeper Certification Engine
+                  Course roadmap
                 </h2>
               </div>
               <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
-                Mandatory sequential mastery. Pass each timed exam to unlock the next phase, mint cryptographic institutional certificates, and unlock top campus placement shortlists.
+                Complete each phase in order. Pass the assessment to unlock the next one.
               </p>
-            </div>
-
-            <div className="inline-flex w-fit items-center gap-2 rounded-lg border border-line bg-surface2 px-3 py-2 text-xs font-semibold text-muted">
-              <ShieldCheck className="h-4 w-4 text-accent" />
-              <span>Pass the phase cutoff to unlock the next phase</span>
             </div>
           </div>
 
@@ -645,7 +570,7 @@ export default function CourseWorkspacePage() {
                     {/* Competency & Skills Chips */}
                     <div>
                       <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-muted">
-                        Key Competencies & Tested Skills
+                        What you’ll learn
                       </h4>
                       <div className="flex flex-wrap gap-2">
                         {currentPhase.skills.map((skill, sIdx) => (
@@ -665,9 +590,9 @@ export default function CourseWorkspacePage() {
                       <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                         <span className="flex items-center gap-2 text-sm font-bold text-ink">
                           <BookOpen className="h-4 w-4 text-accent" />
-                          <span>Curriculum Modules ({currentPhase.modulesCount} modules)</span>
+                          <span>Course modules ({currentPhase.modulesCount})</span>
                         </span>
-                        <span className="text-xs text-muted">Self-paced with mandatory lab checks</span>
+                        <span className="text-xs text-muted">Select a module to see its video and details.</span>
                       </div>
                       <div className="space-y-2 text-xs">
                         {CURRICULUM_MODULES.map((module) => {
@@ -710,34 +635,34 @@ export default function CourseWorkspacePage() {
                       {selectedModule && (
                         <section
                           ref={videoPlayerRef}
-                          aria-label={`Video for ${selectedModule.title}`}
-                          className="overflow-hidden rounded-lg border border-line bg-surface2"
+                          aria-label={`Video lesson for ${selectedModule.title}`}
+                          className="grid gap-4 overflow-hidden rounded-lg border border-line bg-surface2 p-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] sm:items-center sm:p-4"
                         >
-                          <div className="flex flex-col gap-2 p-3 sm:flex-row sm:items-center sm:justify-between">
-                            <div>
-                              <p className="text-xs font-bold text-ink">{selectedModule.title}</p>
-                              <p className="mt-1 text-[11px] text-muted">{selectedModule.videoTitle}</p>
-                            </div>
-                            <a
-                              href={`https://www.youtube.com/watch?v=${selectedModule.videoId}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex shrink-0 items-center gap-1 text-[11px] font-semibold text-accent hover:underline"
-                            >
-                              Watch on YouTube
-                              <ExternalLink className="h-3 w-3" />
-                            </a>
-                          </div>
-                          <div className="aspect-video w-full bg-black">
+                          <div className="aspect-video overflow-hidden rounded-md bg-black">
                             <iframe
                               key={selectedModule.videoId}
-                              src={`https://www.youtube-nocookie.com/embed/${selectedModule.videoId}?rel=0`}
+                              src={`https://www.youtube-nocookie.com/embed/${selectedModule.videoId}?controls=1&rel=0`}
                               title={selectedModule.videoTitle}
                               className="h-full w-full"
                               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                               referrerPolicy="strict-origin-when-cross-origin"
                               allowFullScreen
+                              loading="lazy"
                             />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-[11px] font-semibold uppercase tracking-wide text-accent">Video lesson</p>
+                            <h4 className="mt-1 text-base font-semibold leading-snug text-ink">{selectedModule.videoTitle}</h4>
+                            <p className="mt-2 text-sm leading-relaxed text-muted">{selectedModule.description}</p>
+                            <a
+                              href={`https://www.youtube.com/watch?v=${selectedModule.videoId}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-accent hover:underline"
+                            >
+                              Open on YouTube
+                              <ExternalLink className="h-3 w-3" />
+                            </a>
                           </div>
                         </section>
                       )}
@@ -749,16 +674,16 @@ export default function CourseWorkspacePage() {
                         <div className="flex items-center gap-2">
                           <Award className="h-4 w-4 text-accent" />
                           <h4 className="text-sm font-bold text-ink">
-                            Phase {selectedPhaseIndex + 1} Certification Assessment
+                            Phase {selectedPhaseIndex + 1} assessment
                           </h4>
                         </div>
                         <p className="mt-1 max-w-2xl text-xs leading-relaxed text-muted">
-                          Server-timed assessment ({currentPhase.examCutoff}% cutoff). Anti-cheating proctoring active.
+                          Pass mark: {currentPhase.examCutoff}%.
                           {passed
-                            ? ' You have already passed this phase!'
+                            ? ' You’ve passed this phase.'
                             : selectedPhaseIndex < 2
-                            ? ' Passing unlocks Phase ' + (selectedPhaseIndex + 2) + '.'
-                            : ' Passing completes the full master track!'}
+                            ? ' Pass to unlock Phase ' + (selectedPhaseIndex + 2) + '.'
+                            : ' Pass to complete the course.'}
                         </p>
                       </div>
 
@@ -769,7 +694,7 @@ export default function CourseWorkspacePage() {
                           className="flex items-center justify-center gap-1.5 rounded-lg border border-line bg-surface px-3.5 py-2.5 text-xs font-bold text-ink transition-all hover:bg-surface2 cursor-pointer"
                         >
                           <Play className="h-3.5 w-3.5 text-muted" />
-                          <span>Practice Mock</span>
+                          <span>Practice questions</span>
                         </button>
 
                         {/* Official Exam Button */}
@@ -786,7 +711,7 @@ export default function CourseWorkspacePage() {
                           <span>
                             {passed
                               ? 'Retake Official Exam'
-                              : `Take Phase ${selectedPhaseIndex + 1} Exam for Certification`}
+                              : `Take Phase ${selectedPhaseIndex + 1} exam`}
                           </span>
                         </button>
                       </div>
@@ -798,31 +723,24 @@ export default function CourseWorkspacePage() {
           })()}
         </section>
 
-        {/* ========================================================================= */}
-        {/* 3 BOTTOM SECTIONS: 1. NOTES, 2. PROJECT IDEAS, 3. JOB PROFILES            */}
-        {/* ========================================================================= */}
-
-        {/* 1. NOTES & REVISION CHEATSHEETS */}
         <section id="notes-section" className="space-y-6 pt-6 border-t border-line">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <span className="p-1 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20">
-                  <BookOpen className="h-4 w-4" />
-                </span>
-                <h2 className="text-xl sm:text-2xl font-extrabold text-ink tracking-tight">
+                <BookOpen className="h-5 w-5 text-accent" />
+                <h2 className="text-xl sm:text-2xl font-semibold text-ink tracking-tight">
                   {course.category === 'DEVOPS' || course.slug.includes('devops') || course.slug.includes('kubernetes')
-                    ? 'DevOps Notes & Revision Cheatsheets'
-                    : `${course.categoryLabel} Notes & Revision Cheatsheets`}
+                    ? 'DevOps notes & guides'
+                    : `${course.categoryLabel} notes & guides`}
                 </h2>
               </div>
               <p className="text-xs sm:text-sm text-muted mt-1">
-                Verified high-yield revision summaries, kernel mechanics, and interview cheat sheets curated by TPO mentors.
+                Reference notes and study guides for this course.
               </p>
             </div>
 
-            <span className="text-xs font-mono font-medium text-muted">
-              {notes.length} Revision Guides Available
+            <span className="text-xs text-muted">
+              {notes.length} {notes.length === 1 ? 'resource' : 'resources'}
             </span>
           </div>
 
@@ -830,19 +748,18 @@ export default function CourseWorkspacePage() {
             {notes.map((note) => (
               <div
                 key={note.id}
-                className="group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-line bg-surface shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-md"
+                className="flex h-full flex-col justify-between overflow-hidden rounded-xl border border-line bg-surface shadow-xs transition-shadow hover:border-accent/40 hover:shadow-card"
               >
-                <div className="h-1 w-full bg-gradient-to-r from-warn/70 via-warn/20 to-transparent" />
                 <div className="flex flex-1 flex-col gap-4 p-5 sm:p-6">
                   <div className="flex items-center justify-between gap-3">
                     <span
                       className={cn(
-                        'rounded-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider',
+                        'rounded-md border px-2 py-1 text-[10px] font-semibold uppercase tracking-wide',
                         note.format === 'CHEATSHEET'
-                          ? 'border border-warn/30 bg-warn/10 text-warn'
+                          ? 'border-warn/20 bg-warn/10 text-warn'
                           : note.format === 'PDF'
-                          ? 'border border-bad/30 bg-bad/10 text-bad'
-                          : 'border border-accent/30 bg-accent/10 text-accent'
+                          ? 'border-bad/20 bg-bad/10 text-bad'
+                          : 'border-accent/20 bg-accent/10 text-accent'
                       )}
                     >
                       {note.format}
@@ -853,7 +770,7 @@ export default function CourseWorkspacePage() {
                     </span>
                   </div>
 
-                  <h3 className="text-lg font-bold leading-snug tracking-tight text-ink transition-colors group-hover:text-accent">
+                  <h3 className="text-lg font-semibold leading-snug tracking-tight text-ink transition-colors hover:text-accent">
                     {note.title}
                   </h3>
 
@@ -865,7 +782,7 @@ export default function CourseWorkspacePage() {
                     {note.topics.map((t, idx) => (
                       <span
                         key={idx}
-                        className="rounded-md border border-line bg-surface2 px-2.5 py-1 text-[11px] font-medium text-ink"
+                        className="rounded-md border border-line bg-surface2 px-2.5 py-1 text-[11px] text-muted"
                       >
                         {t}
                       </span>
@@ -879,15 +796,16 @@ export default function CourseWorkspacePage() {
                     className="inline-flex cursor-pointer items-center gap-2 font-semibold text-accent transition-colors hover:opacity-80"
                   >
                     <Eye className="h-3.5 w-3.5" />
-                    <span>Read Cheatsheet</span>
+                    <span>Read guide</span>
                   </button>
 
                   <button
                     onClick={() => {
-                      toast(`Downloaded "${note.title}" offline copy.`, 'success');
+                      toast('Offline downloads are not available yet.', 'info');
                     }}
                     className="rounded-md p-2 text-muted transition-colors hover:bg-surface2 hover:text-ink cursor-pointer"
-                    title="Download Note PDF"
+                    title="Save offline"
+                    aria-label="Save guide offline"
                   >
                     <Download className="h-3.5 w-3.5" />
                   </button>
@@ -897,25 +815,22 @@ export default function CourseWorkspacePage() {
           </div>
         </section>
 
-        {/* 2. PROJECT IDEAS & PRODUCTION CAPSTONES */}
         <section id="projects-section" className="space-y-6 pt-6 border-t border-line">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <span className="p-1 rounded bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
-                  <Lightbulb className="h-4 w-4" />
-                </span>
-                <h2 className="text-xl sm:text-2xl font-extrabold text-ink tracking-tight">
-                  Production-Grade Project Ideas & Capstones
+                <Lightbulb className="h-5 w-5 text-warn" />
+                <h2 className="text-xl sm:text-2xl font-semibold text-ink tracking-tight">
+                  Project ideas
                 </h2>
               </div>
               <p className="text-xs sm:text-sm text-muted mt-1">
-                Full-scale portfolio capstones evaluated in tier-1 technical interviews (Cisco, Amazon, Microsoft).
+                Try a project to put the skills from this course into practice.
               </p>
             </div>
 
-            <span className="text-xs font-mono font-medium text-muted">
-              {projectIdeas.length} Capstone Blueprints
+            <span className="text-xs text-muted">
+              {projectIdeas.length} {projectIdeas.length === 1 ? 'project' : 'projects'}
             </span>
           </div>
 
@@ -923,30 +838,29 @@ export default function CourseWorkspacePage() {
             {projectIdeas.map((project) => (
               <div
                 key={project.id}
-                className="group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-line bg-surface shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-md"
+                className="flex h-full flex-col justify-between overflow-hidden rounded-xl border border-line bg-surface shadow-xs transition-shadow hover:border-accent/40 hover:shadow-card"
               >
-                <div className="h-1 w-full bg-gradient-to-r from-accent/70 via-accent/20 to-transparent" />
                 <div className="flex flex-1 flex-col gap-4 p-5 sm:p-6">
                   <div className="flex items-center justify-between gap-3">
                     <span
                       className={cn(
-                          'rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider',
-                          project.difficulty === 'Production Capstone'
-                            ? 'border border-good/30 bg-good/10 text-good'
+                        'rounded-md border px-2 py-1 text-[10px] font-semibold',
+                        project.difficulty === 'Production Capstone'
+                          ? 'border-good/20 bg-good/10 text-good'
                           : project.difficulty === 'Advanced'
-                            ? 'border border-warn/30 bg-warn/10 text-warn'
-                            : 'border border-accent/30 bg-accent/10 text-accent'
+                            ? 'border-warn/20 bg-warn/10 text-warn'
+                            : 'border-line bg-surface2 text-muted'
                       )}
                     >
-                      {project.difficulty}
+                      {project.difficulty === 'Production Capstone' ? 'Capstone project' : project.difficulty}
                     </span>
-                    <span className="flex items-center gap-1.5 rounded-full bg-surface2 px-2.5 py-1 text-[11px] font-medium text-muted">
+                    <span className="flex items-center gap-1.5 rounded-full bg-surface2 px-2.5 py-1 text-[11px] text-muted">
                       <Clock className="h-3 w-3" />
                       <span>{project.estimatedHours}</span>
                     </span>
                   </div>
 
-                  <h3 className="text-lg font-bold leading-snug tracking-tight text-ink transition-colors group-hover:text-accent sm:text-xl">
+                  <h3 className="text-lg font-semibold leading-snug tracking-tight text-ink sm:text-xl">
                     {project.title}
                   </h3>
 
@@ -954,16 +868,16 @@ export default function CourseWorkspacePage() {
                     {project.brief}
                   </p>
 
-                  <div className="space-y-3 rounded-xl border border-line bg-surface2/60 p-4">
-                    <span className="block text-[11px] font-bold uppercase tracking-wider text-ink">
-                      Architecture & Implementation Highlights:
+                  <div className="space-y-3 rounded-lg border border-line bg-surface2/50 p-4">
+                    <span className="block text-sm font-semibold text-ink">
+                      Key parts
                     </span>
                     <ul className="space-y-2 text-sm text-muted">
                       {project.architectureHighlights.map((hl, hIdx) => (
-                          <li key={hIdx} className="flex items-start gap-2">
-                            <Check className="mt-0.5 h-4 w-4 shrink-0 text-good" />
-                            <span className="leading-relaxed">{hl}</span>
-                          </li>
+                        <li key={hIdx} className="flex items-start gap-2">
+                          <span className="mt-0.5 text-muted" aria-hidden="true">•</span>
+                          <span className="leading-relaxed">{hl}</span>
+                        </li>
                       ))}
                     </ul>
                   </div>
@@ -971,10 +885,10 @@ export default function CourseWorkspacePage() {
                   <div className="flex flex-wrap gap-2">
                     {project.techStack.map((tech, tIdx) => (
                       <span
-                          key={tIdx}
-                          className="rounded-md border border-line bg-surface2 px-2.5 py-1 text-[11px] font-semibold text-ink"
+                        key={tIdx}
+                        className="rounded-md border border-line bg-surface2 px-2.5 py-1 text-[11px] font-semibold text-ink"
                       >
-                          {tech}
+                        {tech}
                       </span>
                     ))}
                   </div>
@@ -988,13 +902,13 @@ export default function CourseWorkspacePage() {
                     onClick={(e) => {
                       if (!project.githubTemplateUrl || project.githubTemplateUrl === '#') {
                         e.preventDefault();
-                        toast('Starter repository template cloned into your IDE project workspace.', 'success');
+                        toast('A starter repository is not available for this project yet.', 'info');
                       }
                     }}
                     className="inline-flex items-center gap-2 font-semibold text-accent transition-colors hover:opacity-80"
                   >
                     <Github className="h-3.5 w-3.5" />
-                    <span>Clone Starter Template</span>
+                    <span>Starter template</span>
                     <ExternalLink className="h-3 w-3 opacity-60" />
                   </a>
 
@@ -1010,7 +924,7 @@ export default function CourseWorkspacePage() {
                     ) : (
                       <>
                         <Copy className="h-3 w-3" />
-                        <span>Copy Spec</span>
+                        <span>Copy brief</span>
                       </>
                     )}
                   </button>
@@ -1020,28 +934,25 @@ export default function CourseWorkspacePage() {
           </div>
         </section>
 
-        {/* 3. TARGET JOB PROFILES & CAMPUS RECRUITMENT MATRIX */}
         <section id="jobs-section" className="space-y-6 pt-6 border-t border-line">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <span className="p-1 rounded bg-purple-500/10 text-purple-500 border border-purple-500/20">
-                  <Briefcase className="h-4 w-4" />
-                </span>
-                <h2 className="text-xl sm:text-2xl font-extrabold text-ink tracking-tight">
-                  Target Job Profiles & Campus Hiring Matrix
+                <Briefcase className="h-5 w-5 text-accent" />
+                <h2 className="text-xl sm:text-2xl font-semibold text-ink tracking-tight">
+                  Roles to explore
                 </h2>
               </div>
               <p className="text-xs sm:text-sm text-muted mt-1">
-                Verified high-paying campus placement roles, compensation ranges (CTC), and recruiting partner requirements.
+                Examples of roles related to this course, with salary ranges and common requirements.
               </p>
             </div>
 
             <Link
               href="/jobs"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-accent hover:underline"
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-accent hover:underline"
             >
-              <span>Explore Live Placement Drives</span>
+              <span>Browse open roles</span>
               <ArrowLeft className="h-3.5 w-3.5 rotate-180" />
             </Link>
           </div>
@@ -1050,26 +961,25 @@ export default function CourseWorkspacePage() {
             {jobProfiles.map((job) => (
               <div
                 key={job.id}
-                className="group flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-line bg-surface shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-md"
+                className="flex h-full flex-col justify-between overflow-hidden rounded-xl border border-line bg-surface shadow-xs transition-shadow hover:border-accent/40 hover:shadow-card"
               >
-                <div className="h-1 w-full bg-gradient-to-r from-purple-500/70 via-purple-500/20 to-transparent" />
                 <div className="flex flex-1 flex-col gap-5 p-5 sm:p-6">
                   <div className="flex flex-wrap items-center justify-between gap-3">
-                    <span className="rounded-full border border-purple-500/30 bg-purple-500/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400">
+                    <span className="text-xs text-muted">
                       {job.demandTier}
                     </span>
-                    <span className="rounded-lg border border-good/25 bg-good/10 px-3 py-1.5 text-xs font-bold font-mono text-good">
+                    <span className="rounded-md bg-good/10 px-2.5 py-1 text-xs font-semibold text-good">
                       {job.ctcRange}
                     </span>
                   </div>
 
-                  <h3 className="text-lg font-bold leading-snug tracking-tight text-ink transition-colors group-hover:text-accent sm:text-xl">
+                  <h3 className="text-lg font-semibold leading-snug tracking-tight text-ink sm:text-xl">
                     {job.roleTitle}
                   </h3>
 
                   <div className="space-y-2">
-                    <span className="block text-[11px] font-bold uppercase tracking-wider text-muted">
-                      Top Campus Recruiters:
+                    <span className="block text-xs font-semibold text-ink">
+                      Companies hiring for similar roles
                     </span>
                     <div className="flex flex-wrap gap-2">
                       {job.topHiringCompanies.map((comp, cIdx) => (
@@ -1083,14 +993,14 @@ export default function CourseWorkspacePage() {
                     </div>
                   </div>
 
-                  <div className="rounded-xl border border-line bg-surface2/60 p-3.5">
-                    <span className="mb-1 block text-[11px] font-bold uppercase tracking-wide text-ink">Placement Eligibility</span>
+                  <div className="border-t border-line pt-3">
+                    <span className="mb-1 block text-xs font-semibold text-ink">Typical requirements</span>
                     <span className="text-sm leading-relaxed text-muted">{job.placementEligibility}</span>
                   </div>
 
                   <div className="space-y-2.5 text-sm text-muted">
-                    <span className="block text-[11px] font-bold uppercase tracking-wider text-ink">
-                      Core Responsibilities:
+                    <span className="block text-xs font-semibold text-ink">
+                      What you might do
                     </span>
                     {job.keyResponsibilities.map((resp, rIdx) => (
                       <div key={rIdx} className="flex items-start gap-2">
@@ -1104,10 +1014,10 @@ export default function CourseWorkspacePage() {
                 <div className="border-t border-line px-5 py-4 sm:px-6">
                   <Link
                     href="/jobs"
-                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-line bg-surface2 px-3 py-2.5 text-sm font-semibold text-ink transition-colors hover:border-accent/40 hover:bg-accent/5 hover:text-accent"
+                    className="flex w-full items-center justify-center gap-2 rounded-md border border-line px-3 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-surface2"
                   >
-                    <span>View Placement Drives</span>
-                    <ChevronRight className="h-4 w-4 text-muted transition-transform group-hover:translate-x-0.5 group-hover:text-accent" />
+                    <span>See open roles</span>
+                    <ChevronRight className="h-4 w-4 text-muted" />
                   </Link>
                 </div>
               </div>
@@ -1115,31 +1025,26 @@ export default function CourseWorkspacePage() {
           </div>
         </section>
 
-        {/* ========================================================================= */}
-        {/* 4. VERIFIED STUDENT REVIEWS & PLACEMENT WALL (AT THE VERY BOTTOM)          */}
-        {/* ========================================================================= */}
         <section id="reviews-section" className="scroll-mt-20 space-y-6 border-t border-line pt-7 pb-12">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <div className="flex items-center gap-2">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-warn/20 bg-warn/10 text-warn">
-                  <Star className="h-4 w-4 fill-current" />
-                </span>
-                <h2 className="text-xl font-bold tracking-tight text-ink sm:text-2xl">
-                  Verified Student Reviews & Placement Stories
+                <Star className="h-5 w-5 fill-current text-warn" />
+                <h2 className="text-xl font-semibold tracking-tight text-ink sm:text-2xl">
+                  Student reviews
                 </h2>
               </div>
               <p className="mt-2 text-sm leading-relaxed text-muted">
-                Real feedback from KIET students and placed alumni who cleared campus placement drives using this track.
+                Experiences shared by students who have taken this course.
               </p>
             </div>
 
             <button
               onClick={() => setReviewModalOpen(true)}
-              className="inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg bg-accent px-4 py-2.5 text-sm font-semibold text-accentInk shadow-sm transition-all hover:-translate-y-0.5 hover:opacity-90"
+              className="inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-md border border-line px-3.5 py-2 text-sm font-medium text-ink transition-colors hover:bg-surface2"
             >
               <MessageSquare className="h-3.5 w-3.5" />
-              <span>Write a Review</span>
+              <span>Write a review</span>
             </button>
           </div>
 
@@ -1147,12 +1052,12 @@ export default function CourseWorkspacePage() {
             {allReviews.map((rev) => (
               <div
                 key={rev.id}
-                className="relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border border-line bg-surface shadow-sm transition-all duration-200 hover:border-accent/40 hover:shadow-md"
+                className="relative flex h-full flex-col justify-between overflow-hidden rounded-xl border border-line bg-surface shadow-xs"
               >
                 <div className="flex flex-1 flex-col p-5 sm:p-6">
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex min-w-0 items-center gap-3">
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent/10 text-sm font-bold text-accent ring-1 ring-accent/20">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/10 text-sm font-semibold text-accent">
                         {rev.studentName
                           .split(/\s+/)
                           .filter(Boolean)
@@ -1168,7 +1073,6 @@ export default function CourseWorkspacePage() {
                         </p>
                       </div>
                     </div>
-                    <Quote aria-hidden="true" className="h-7 w-7 shrink-0 text-accent/25" />
                   </div>
 
                   <blockquote className="my-5 flex-1 text-sm leading-relaxed text-ink/90">
@@ -1177,34 +1081,27 @@ export default function CourseWorkspacePage() {
 
                   <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
                     <div className="flex min-w-0 flex-wrap items-center gap-2">
-                      {rev.placedCompany && (
-                        <span className="inline-flex max-w-full items-center gap-1.5 rounded-lg border border-good/20 bg-good/10 px-2.5 py-1.5 text-xs font-semibold text-good">
-                          <Building2 className="h-3.5 w-3.5 shrink-0" />
-                          <span className="truncate">{rev.placedCompany}</span>
-                        </span>
-                      )}
-                      {rev.placedPackage && (
-                        <span className="rounded-lg bg-surface2 px-2.5 py-1.5 text-xs font-medium text-muted">
-                          {rev.placedPackage}
-                        </span>
-                      )}
+                      {rev.placedCompany && <span className="truncate text-xs font-medium text-ink">{rev.placedCompany}</span>}
+                      {rev.placedPackage && <span className="text-xs text-muted">{rev.placedPackage}</span>}
                     </div>
                     <div
-                      className="flex shrink-0 items-center gap-1.5 rounded-full border border-warn/20 bg-warn/10 px-2.5 py-1"
+                      className="flex shrink-0 items-center gap-1.5 text-xs text-muted"
                       aria-label={`${rev.rating} out of 5 stars`}
                     >
                       <Star className="h-3.5 w-3.5 fill-current text-warn" />
-                      <span className="text-xs font-bold text-ink">{rev.rating.toFixed(1)}</span>
+                      <span>{rev.rating.toFixed(1)}</span>
                     </div>
                   </div>
 
                   <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-[11px]">
-                    <div className="flex min-w-0 items-center gap-1.5 text-good">
-                      <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
-                      <span className="truncate font-mono font-medium" title={rev.verifiedCertificateHash || undefined}>
-                        {rev.verifiedCertificateHash || 'Verified Student'}
-                      </span>
-                    </div>
+                    {rev.verifiedCertificateHash && (
+                      <div className="flex min-w-0 items-center gap-1.5 text-good">
+                        <ShieldCheck className="h-3.5 w-3.5 shrink-0" />
+                        <span className="truncate font-medium">
+                          Certificate verified
+                        </span>
+                      </div>
+                    )}
                     <time className="shrink-0 text-muted">{rev.date}</time>
                   </div>
                 </div>
@@ -1258,78 +1155,41 @@ export default function CourseWorkspacePage() {
 
             {/* Content Body */}
             <div className="p-6 overflow-y-auto space-y-5 text-xs sm:text-sm text-ink leading-relaxed font-sans">
-              <div className="p-3 rounded-lg bg-surface2 border border-line text-xs font-mono">
-                <span className="mb-1 block font-bold text-accent">Cheatsheet Overview:</span>
+              <div className="text-sm leading-relaxed text-muted">
+                <h4 className="mb-1 font-semibold text-ink">About this guide</h4>
                 {selectedNote.contentSummary}
               </div>
 
               <div>
-                <h4 className="text-xs font-bold uppercase tracking-wider text-muted mb-2">
-                  Key Topics & Tested Formulas
+                <h4 className="mb-2 text-sm font-semibold text-ink">
+                  Topics covered
                 </h4>
-                <div className="flex flex-wrap gap-2">
+                <ul className="space-y-1.5 text-sm text-muted">
                   {selectedNote.topics.map((top, idx) => (
-                    <span
-                      key={idx}
-                      className="px-2.5 py-1 rounded bg-surface2 border border-line text-xs font-mono font-medium text-ink"
-                    >
+                    <li key={idx}>
                       {top}
-                    </span>
+                    </li>
                   ))}
+                </ul>
+              </div>
+
+              {selectedNote.fullContent && (
+                <div className="whitespace-pre-wrap border-t border-line pt-4 text-sm leading-relaxed text-ink">
+                  {selectedNote.fullContent}
                 </div>
-              </div>
-
-              <div className="rounded-lg bg-surface2/60 p-4 border border-line space-y-3 font-mono text-xs">
-                <div className="flex items-center justify-between text-muted">
-                  <span>Syntax Reference Snippet</span>
-                  <button
-                    onClick={() => handleCopy('cat /proc/self/cgroup && ls -la /sys/fs/cgroup/memory', 'cmd-1')}
-                    className="hover:text-ink flex items-center gap-1 cursor-pointer"
-                  >
-                    <Copy className="h-3 w-3" />
-                    <span>Copy</span>
-                  </button>
-                </div>
-                <pre className="p-3 rounded bg-bg border border-line text-ink overflow-x-auto">
-{`# 1. Inspect namespace isolation for active PID
-lsns -p $$
-
-# 2. Check cgroups v2 memory limits
-cat /sys/fs/cgroup/memory.max
-
-# 3. Docker distroless multi-stage build template
-FROM golang:1.22-alpine AS builder
-WORKDIR /app
-COPY . .
-RUN CGO_ENABLED=0 go build -ldflags="-w -s" -o main .
-
-FROM gcr.io/distroless/static-debian12
-COPY --from=builder /app/main /main
-USER nonroot:nonroot
-ENTRYPOINT ["/main"]`}
-                </pre>
-              </div>
-
-              <div className="p-3.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-xs text-ink space-y-1">
-                <span className="font-bold text-amber-600 dark:text-amber-400 block">
-                  Campus Placement Interview Pro-Tip:
-                </span>
-                <p className="text-muted leading-relaxed">
-                  When asked how containers isolate resources, explicitly differentiate between Linux namespaces (provides view isolation) and cgroups (provides resource ceiling enforcement).
-                </p>
-              </div>
+              )}
             </div>
 
             {/* Modal Footer */}
             <div className="p-4 border-t border-line bg-surface2/30 flex items-center justify-between">
               <button
                 onClick={() => {
-                  toast(`Downloaded offline PDF for ${selectedNote.title}`, 'success');
+                  toast('Offline downloads are not available yet.', 'info');
                 }}
                 className="px-3.5 py-1.5 rounded-md border border-line bg-surface hover:bg-surface2 text-xs font-semibold text-ink flex items-center gap-1.5 cursor-pointer"
               >
                 <Download className="h-3.5 w-3.5" />
-                <span>Save Offline PDF</span>
+                <span>Save offline</span>
               </button>
               <button
                 onClick={() => setSelectedNote(null)}
@@ -1349,7 +1209,7 @@ ENTRYPOINT ["/main"]`}
             <div className="p-5 border-b border-line flex items-center justify-between bg-surface2/40">
               <div className="flex items-center gap-2">
                 <MessageSquare className="h-5 w-5 text-accent" />
-                <h3 className="text-base font-bold text-ink">Write a Student Review</h3>
+                <h3 className="text-base font-semibold text-ink">Write a review</h3>
               </div>
               <button
                 onClick={() => setReviewModalOpen(false)}
@@ -1381,7 +1241,7 @@ ENTRYPOINT ["/main"]`}
                     </button>
                   ))}
                   <span className="text-xs font-mono font-bold text-muted ml-2">
-                    {newReview.rating} of 5 Stars
+                    {newReview.rating} / 5
                   </span>
                 </div>
               </div>
@@ -1389,7 +1249,7 @@ ENTRYPOINT ["/main"]`}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs font-bold text-ink block mb-1">
-                    Placed Company / Role (Optional)
+                    Company or role (optional)
                   </label>
                   <input
                     type="text"
@@ -1403,7 +1263,7 @@ ENTRYPOINT ["/main"]`}
                 </div>
                 <div>
                   <label className="text-xs font-bold text-ink block mb-1">
-                    Package / CTC (Optional)
+                    Salary (optional)
                   </label>
                   <input
                     type="text"
@@ -1419,12 +1279,12 @@ ENTRYPOINT ["/main"]`}
 
               <div>
                 <label className="text-xs font-bold text-ink block mb-1">
-                  Your Review & Placement Experience
+                  Your review
                 </label>
                 <textarea
                   required
                   rows={4}
-                  placeholder="Share how the 3-phase progression, hands-on labs, and exams helped your placement rounds..."
+                  placeholder="What did you think of the course? Share anything that might help another student."
                   value={newReview.reviewText}
                   onChange={(e) =>
                     setNewReview((prev) => ({ ...prev, reviewText: e.target.value }))
@@ -1433,10 +1293,9 @@ ENTRYPOINT ["/main"]`}
                 />
               </div>
 
-              <div className="p-3 rounded-lg bg-surface2/60 border border-line text-[11px] text-muted flex items-center gap-2">
-                <ShieldCheck className="h-4 w-4 shrink-0 text-good" />
+              <div className="p-3 rounded-lg bg-surface2/60 border border-line text-[11px] text-muted">
                 <span>
-                  Posting as <strong>{student.name}</strong> (Roll: {student.rollNumber || '2100290100042'}). Verified certificate hash will automatically be attached if Phase 1 is passed.
+                  This review will appear under <strong>{student.name}</strong>.
                 </span>
               </div>
 
@@ -1452,7 +1311,7 @@ ENTRYPOINT ["/main"]`}
                   type="submit"
                   className="cursor-pointer rounded-md bg-accent px-5 py-2 text-xs font-bold text-accentInk shadow-2xs transition-all hover:opacity-90"
                 >
-                  Publish Review
+                  Post review
                 </button>
               </div>
             </form>
