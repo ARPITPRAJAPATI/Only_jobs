@@ -17,6 +17,7 @@ import {
   Briefcase,
   ExternalLink,
   ChevronRight,
+  ChevronDown,
   Clock,
   Layers,
   Sparkles,
@@ -594,78 +595,101 @@ export default function CourseWorkspacePage() {
                         </span>
                         <span className="text-xs text-muted">Select a module to see its video and details.</span>
                       </div>
-                      <div className="space-y-2 text-xs">
+                      <div className="space-y-3 text-xs">
                         {CURRICULUM_MODULES.map((module) => {
                           const isSelected = selectedModule?.id === module.id;
                           const isCompleted = module.status === 'Completed';
 
                           return (
-                            <button
-                              key={module.id}
-                              type="button"
-                              aria-pressed={isSelected}
-                              onClick={() => setSelectedModule(module)}
-                              className={cn(
-                                'flex w-full cursor-pointer items-center justify-between gap-3 rounded-lg border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
-                                isSelected
-                                  ? 'border-accent bg-accent/5'
-                                  : 'border-line bg-surface2/50 hover:border-accent/40 hover:bg-surface2'
-                              )}
-                            >
-                              <span className="flex min-w-0 items-center gap-2.5">
-                                {isCompleted ? (
-                                  <CheckCircle2 className="h-4 w-4 shrink-0 text-good" />
-                                ) : (
-                                  <Clock className="h-4 w-4 shrink-0 text-warn" />
-                                )}
-                                <span className="font-semibold text-ink">{module.title}</span>
-                              </span>
-                              <span
+                            <div key={module.id} className="space-y-2">
+                              <button
+                                type="button"
+                                aria-expanded={isSelected}
+                                aria-controls={`module-video-${module.id}`}
+                                onClick={() => setSelectedModule(isSelected ? null : module)}
                                 className={cn(
-                                  'shrink-0 rounded-full px-2 py-1 text-[10px] font-semibold',
-                                  isCompleted ? 'bg-good/10 text-good' : 'bg-warn/10 text-warn'
+                                  'flex w-full cursor-pointer items-center justify-between gap-3 rounded-lg border p-3 text-left transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent motion-reduce:transition-none',
+                                  isSelected
+                                    ? 'border-accent bg-accent/5'
+                                    : 'border-line bg-surface2/50 hover:border-accent/40 hover:bg-surface2'
                                 )}
                               >
-                                {module.status}
-                              </span>
-                            </button>
+                                <span className="flex min-w-0 items-center gap-2.5">
+                                  {isCompleted ? (
+                                    <CheckCircle2 className="h-4 w-4 shrink-0 text-good" />
+                                  ) : (
+                                    <Clock className="h-4 w-4 shrink-0 text-warn" />
+                                  )}
+                                  <span className="font-semibold text-ink">{module.title}</span>
+                                </span>
+                                <span className="flex shrink-0 items-center gap-2">
+                                  <span
+                                    className={cn(
+                                      'rounded-full px-2 py-1 text-[10px] font-semibold',
+                                      isCompleted ? 'bg-good/10 text-good' : 'bg-warn/10 text-warn'
+                                    )}
+                                  >
+                                    {module.status}
+                                  </span>
+                                  <ChevronDown
+                                    aria-hidden="true"
+                                    className={cn(
+                                      'h-4 w-4 text-muted transition-transform duration-200 ease-out motion-reduce:transition-none',
+                                      isSelected && 'rotate-180'
+                                    )}
+                                  />
+                                </span>
+                              </button>
+                              <div
+                                className={cn(
+                                  'grid transition-[grid-template-rows,opacity] duration-200 ease-out motion-reduce:transition-none',
+                                  isSelected ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                                )}
+                              >
+                                <div className="min-h-0 overflow-hidden">
+                                  <section
+                                    id={`module-video-${module.id}`}
+                                    ref={isSelected ? videoPlayerRef : undefined}
+                                    aria-hidden={!isSelected}
+                                    aria-label={`Video lesson for ${module.title}`}
+                                    className="grid gap-4 rounded-lg border border-line bg-surface2 p-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] sm:items-center sm:p-4"
+                                  >
+                                    <div className="aspect-video overflow-hidden rounded-md bg-black">
+                                      {isSelected && (
+                                        <iframe
+                                          key={module.videoId}
+                                          src={`https://www.youtube-nocookie.com/embed/${module.videoId}?controls=1&rel=0`}
+                                          title={module.videoTitle}
+                                          className="h-full w-full"
+                                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                          referrerPolicy="strict-origin-when-cross-origin"
+                                          allowFullScreen
+                                          loading="lazy"
+                                        />
+                                      )}
+                                    </div>
+                                    <div className="min-w-0">
+                                      <p className="text-[11px] font-semibold uppercase tracking-wide text-accent">Video lesson</p>
+                                      <h4 className="mt-1 text-base font-semibold leading-snug text-ink">{module.videoTitle}</h4>
+                                      <p className="mt-2 text-sm leading-relaxed text-muted">{module.description}</p>
+                                      <a
+                                        href={`https://www.youtube.com/watch?v=${module.videoId}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        tabIndex={isSelected ? undefined : -1}
+                                        className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-accent hover:underline"
+                                      >
+                                        Open on YouTube
+                                        <ExternalLink className="h-3 w-3" />
+                                      </a>
+                                    </div>
+                                  </section>
+                                </div>
+                              </div>
+                            </div>
                           );
                         })}
                       </div>
-                      {selectedModule && (
-                        <section
-                          ref={videoPlayerRef}
-                          aria-label={`Video lesson for ${selectedModule.title}`}
-                          className="grid gap-4 overflow-hidden rounded-lg border border-line bg-surface2 p-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] sm:items-center sm:p-4"
-                        >
-                          <div className="aspect-video overflow-hidden rounded-md bg-black">
-                            <iframe
-                              key={selectedModule.videoId}
-                              src={`https://www.youtube-nocookie.com/embed/${selectedModule.videoId}?controls=1&rel=0`}
-                              title={selectedModule.videoTitle}
-                              className="h-full w-full"
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                              referrerPolicy="strict-origin-when-cross-origin"
-                              allowFullScreen
-                              loading="lazy"
-                            />
-                          </div>
-                          <div className="min-w-0">
-                            <p className="text-[11px] font-semibold uppercase tracking-wide text-accent">Video lesson</p>
-                            <h4 className="mt-1 text-base font-semibold leading-snug text-ink">{selectedModule.videoTitle}</h4>
-                            <p className="mt-2 text-sm leading-relaxed text-muted">{selectedModule.description}</p>
-                            <a
-                              href={`https://www.youtube.com/watch?v=${selectedModule.videoId}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-accent hover:underline"
-                            >
-                              Open on YouTube
-                              <ExternalLink className="h-3 w-3" />
-                            </a>
-                          </div>
-                        </section>
-                      )}
                     </div>
 
                     {/* EXAM CALL TO ACTION BUTTONS (THE CORE REQUIREMENT) */}

@@ -41,7 +41,7 @@ export default function CodingPage() {
   return (
     <ProfileSubnav>
       <div className="pb-16 animate-fade-in">
-      <PageGrid className="!max-w-none !px-0 !py-0">
+      <PageGrid className="!max-w-none !min-w-0 !px-0 !py-0">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5 xl:grid-cols-4">
         <Stat label="GitHub contributions" value={student.codingStats?.github?.totalContributions ?? 0} sub="Last 12 months" icon={<GitCommitHorizontal className="h-6 w-6" />} />
         <Stat label="Current streak" value={`${Math.max(ghS.current, lcS.current)} days`} sub={`GitHub ${ghS.current}d · LeetCode ${lcS.current}d`} icon={<Flame className="h-6 w-6" />} tone="warn" />
@@ -49,9 +49,9 @@ export default function CodingPage() {
         <Stat label="LeetCode submissions" value={lcS.total} sub={`${lcS.active} active days`} icon={<Code2 className="h-6 w-6" />} tone="good" />
       </div>
 
-      <div className="grid gap-4 lg:gap-5 xl:grid-cols-3">
-        <div className="grid gap-4 lg:gap-5 xl:col-span-2">
-          <Card>
+      <div className="grid min-w-0 gap-4 lg:gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(16rem,1fr)]">
+        <div className="grid min-w-0 gap-4 lg:gap-5">
+          <Card className="min-w-0">
             <CardHeader title="GitHub contribution calendar" subtitle={`${ghS.active} active days · ${ghS.total} contributions`} icon={<GithubIcon className="h-4 w-4" />} action={student.githubHandle ? <Chip tone="accent">@{student.githubHandle}</Chip> : undefined} />
             {gh.length ? (
               <>
@@ -77,7 +77,7 @@ export default function CodingPage() {
             )}
           </Card>
 
-          <Card>
+          <Card className="min-w-0">
             <CardHeader title="LeetCode submission calendar" subtitle={`${lcS.active} active days · longest streak ${lcS.longest}`} icon={<Code2 className="h-4 w-4" />} action={student.leetcodeHandle ? <Chip tone="accent">@{student.leetcodeHandle}</Chip> : undefined} />
             {lc.length ? (
               <>
@@ -93,7 +93,7 @@ export default function CodingPage() {
           </Card>
         </div>
 
-        <div className="grid content-start gap-4 lg:gap-5">
+        <div className="grid min-w-0 content-start gap-4 lg:gap-5">
           <Card>
             <CardHeader title="Coding handles" subtitle="Edit in Settings" icon={<Trophy className="h-4 w-4" />} />
             <ul className="space-y-2">

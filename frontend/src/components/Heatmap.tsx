@@ -84,8 +84,8 @@ export function Heatmap({
   };
 
   return (
-    <div>
-      <div ref={scroller} className="overflow-x-auto pb-2 scrollbar-none">
+    <div className="min-w-0">
+      <div ref={scroller} className="max-w-full overflow-x-auto pb-2 scrollbar-none">
         <svg width={width} height={height} role="img" aria-label={`Activity calendar, ${unit}`} className="block">
           {labels.map((l) => (
             <text key={l.x} x={l.x} y={11} fontSize="9.5" fontWeight="600" style={{ fill: 'rgb(var(--muted))' }}>
