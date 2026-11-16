@@ -432,6 +432,10 @@ export type StaffRegistryUncheckedUpdateOneWithoutUserNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.StaffRegistryUpdateToOneWithWhereWithoutUserInput, Prisma.StaffRegistryUpdateWithoutUserInput>, Prisma.StaffRegistryUncheckedUpdateWithoutUserInput>
 }
 
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
 export type EnumStaffRoleFieldUpdateOperationsInput = {
   set?: $Enums.StaffRole
 }

@@ -480,10 +480,6 @@ export type StaffProfileCreatesubjectsInput = {
   set: string[]
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type StaffProfileUpdateareasOfExpertiseInput = {
   set?: string[]
   push?: string | string[]

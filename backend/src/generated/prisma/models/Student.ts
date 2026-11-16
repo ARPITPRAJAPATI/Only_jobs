@@ -290,6 +290,7 @@ export type StudentWhereInput = {
   projects?: Prisma.ProjectListRelationFilter
   certifications?: Prisma.CertificationListRelationFilter
   badges?: Prisma.StudentBadgeListRelationFilter
+  jobApplications?: Prisma.JobApplicationListRelationFilter
 }
 
 export type StudentOrderByWithRelationInput = {
@@ -312,6 +313,7 @@ export type StudentOrderByWithRelationInput = {
   projects?: Prisma.ProjectOrderByRelationAggregateInput
   certifications?: Prisma.CertificationOrderByRelationAggregateInput
   badges?: Prisma.StudentBadgeOrderByRelationAggregateInput
+  jobApplications?: Prisma.JobApplicationOrderByRelationAggregateInput
 }
 
 export type StudentWhereUniqueInput = Prisma.AtLeast<{
@@ -337,6 +339,7 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
   projects?: Prisma.ProjectListRelationFilter
   certifications?: Prisma.CertificationListRelationFilter
   badges?: Prisma.StudentBadgeListRelationFilter
+  jobApplications?: Prisma.JobApplicationListRelationFilter
 }, "id" | "email" | "rollNumber" | "libraryId" | "userId">
 
 export type StudentOrderByWithAggregationInput = {
@@ -398,6 +401,7 @@ export type StudentCreateInput = {
   projects?: Prisma.ProjectCreateNestedManyWithoutStudentInput
   certifications?: Prisma.CertificationCreateNestedManyWithoutStudentInput
   badges?: Prisma.StudentBadgeCreateNestedManyWithoutStudentInput
+  jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateInput = {
@@ -419,6 +423,7 @@ export type StudentUncheckedCreateInput = {
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutStudentInput
   certifications?: Prisma.CertificationUncheckedCreateNestedManyWithoutStudentInput
   badges?: Prisma.StudentBadgeUncheckedCreateNestedManyWithoutStudentInput
+  jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUpdateInput = {
@@ -440,6 +445,7 @@ export type StudentUpdateInput = {
   projects?: Prisma.ProjectUpdateManyWithoutStudentNestedInput
   certifications?: Prisma.CertificationUpdateManyWithoutStudentNestedInput
   badges?: Prisma.StudentBadgeUpdateManyWithoutStudentNestedInput
+  jobApplications?: Prisma.JobApplicationUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateInput = {
@@ -461,6 +467,7 @@ export type StudentUncheckedUpdateInput = {
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutStudentNestedInput
   certifications?: Prisma.CertificationUncheckedUpdateManyWithoutStudentNestedInput
   badges?: Prisma.StudentBadgeUncheckedUpdateManyWithoutStudentNestedInput
+  jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateManyInput = {
@@ -696,6 +703,20 @@ export type StudentUpdateOneRequiredWithoutBadgesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.StudentUpdateToOneWithWhereWithoutBadgesInput, Prisma.StudentUpdateWithoutBadgesInput>, Prisma.StudentUncheckedUpdateWithoutBadgesInput>
 }
 
+export type StudentCreateNestedOneWithoutJobApplicationsInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutJobApplicationsInput, Prisma.StudentUncheckedCreateWithoutJobApplicationsInput>
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutJobApplicationsInput
+  connect?: Prisma.StudentWhereUniqueInput
+}
+
+export type StudentUpdateOneRequiredWithoutJobApplicationsNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutJobApplicationsInput, Prisma.StudentUncheckedCreateWithoutJobApplicationsInput>
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutJobApplicationsInput
+  upsert?: Prisma.StudentUpsertWithoutJobApplicationsInput
+  connect?: Prisma.StudentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StudentUpdateToOneWithWhereWithoutJobApplicationsInput, Prisma.StudentUpdateWithoutJobApplicationsInput>, Prisma.StudentUncheckedUpdateWithoutJobApplicationsInput>
+}
+
 export type StudentCreateWithoutUserInput = {
   id?: string
   name: string
@@ -714,6 +735,7 @@ export type StudentCreateWithoutUserInput = {
   projects?: Prisma.ProjectCreateNestedManyWithoutStudentInput
   certifications?: Prisma.CertificationCreateNestedManyWithoutStudentInput
   badges?: Prisma.StudentBadgeCreateNestedManyWithoutStudentInput
+  jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutUserInput = {
@@ -734,6 +756,7 @@ export type StudentUncheckedCreateWithoutUserInput = {
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutStudentInput
   certifications?: Prisma.CertificationUncheckedCreateNestedManyWithoutStudentInput
   badges?: Prisma.StudentBadgeUncheckedCreateNestedManyWithoutStudentInput
+  jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutUserInput = {
@@ -770,6 +793,7 @@ export type StudentUpdateWithoutUserInput = {
   projects?: Prisma.ProjectUpdateManyWithoutStudentNestedInput
   certifications?: Prisma.CertificationUpdateManyWithoutStudentNestedInput
   badges?: Prisma.StudentBadgeUpdateManyWithoutStudentNestedInput
+  jobApplications?: Prisma.JobApplicationUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutUserInput = {
@@ -790,6 +814,7 @@ export type StudentUncheckedUpdateWithoutUserInput = {
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutStudentNestedInput
   certifications?: Prisma.CertificationUncheckedUpdateManyWithoutStudentNestedInput
   badges?: Prisma.StudentBadgeUncheckedUpdateManyWithoutStudentNestedInput
+  jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateWithoutStudentProfileInput = {
@@ -810,6 +835,7 @@ export type StudentCreateWithoutStudentProfileInput = {
   projects?: Prisma.ProjectCreateNestedManyWithoutStudentInput
   certifications?: Prisma.CertificationCreateNestedManyWithoutStudentInput
   badges?: Prisma.StudentBadgeCreateNestedManyWithoutStudentInput
+  jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutStudentProfileInput = {
@@ -830,6 +856,7 @@ export type StudentUncheckedCreateWithoutStudentProfileInput = {
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutStudentInput
   certifications?: Prisma.CertificationUncheckedCreateNestedManyWithoutStudentInput
   badges?: Prisma.StudentBadgeUncheckedCreateNestedManyWithoutStudentInput
+  jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutStudentProfileInput = {
@@ -866,6 +893,7 @@ export type StudentUpdateWithoutStudentProfileInput = {
   projects?: Prisma.ProjectUpdateManyWithoutStudentNestedInput
   certifications?: Prisma.CertificationUpdateManyWithoutStudentNestedInput
   badges?: Prisma.StudentBadgeUpdateManyWithoutStudentNestedInput
+  jobApplications?: Prisma.JobApplicationUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutStudentProfileInput = {
@@ -886,6 +914,7 @@ export type StudentUncheckedUpdateWithoutStudentProfileInput = {
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutStudentNestedInput
   certifications?: Prisma.CertificationUncheckedUpdateManyWithoutStudentNestedInput
   badges?: Prisma.StudentBadgeUncheckedUpdateManyWithoutStudentNestedInput
+  jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateWithoutAcademicRecordsInput = {
@@ -906,6 +935,7 @@ export type StudentCreateWithoutAcademicRecordsInput = {
   projects?: Prisma.ProjectCreateNestedManyWithoutStudentInput
   certifications?: Prisma.CertificationCreateNestedManyWithoutStudentInput
   badges?: Prisma.StudentBadgeCreateNestedManyWithoutStudentInput
+  jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutAcademicRecordsInput = {
@@ -926,6 +956,7 @@ export type StudentUncheckedCreateWithoutAcademicRecordsInput = {
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutStudentInput
   certifications?: Prisma.CertificationUncheckedCreateNestedManyWithoutStudentInput
   badges?: Prisma.StudentBadgeUncheckedCreateNestedManyWithoutStudentInput
+  jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutAcademicRecordsInput = {
@@ -962,6 +993,7 @@ export type StudentUpdateWithoutAcademicRecordsInput = {
   projects?: Prisma.ProjectUpdateManyWithoutStudentNestedInput
   certifications?: Prisma.CertificationUpdateManyWithoutStudentNestedInput
   badges?: Prisma.StudentBadgeUpdateManyWithoutStudentNestedInput
+  jobApplications?: Prisma.JobApplicationUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutAcademicRecordsInput = {
@@ -982,6 +1014,7 @@ export type StudentUncheckedUpdateWithoutAcademicRecordsInput = {
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutStudentNestedInput
   certifications?: Prisma.CertificationUncheckedUpdateManyWithoutStudentNestedInput
   badges?: Prisma.StudentBadgeUncheckedUpdateManyWithoutStudentNestedInput
+  jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateWithoutProjectsInput = {
@@ -1002,6 +1035,7 @@ export type StudentCreateWithoutProjectsInput = {
   academicRecords?: Prisma.AcademicRecordCreateNestedManyWithoutStudentInput
   certifications?: Prisma.CertificationCreateNestedManyWithoutStudentInput
   badges?: Prisma.StudentBadgeCreateNestedManyWithoutStudentInput
+  jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutProjectsInput = {
@@ -1022,6 +1056,7 @@ export type StudentUncheckedCreateWithoutProjectsInput = {
   academicRecords?: Prisma.AcademicRecordUncheckedCreateNestedManyWithoutStudentInput
   certifications?: Prisma.CertificationUncheckedCreateNestedManyWithoutStudentInput
   badges?: Prisma.StudentBadgeUncheckedCreateNestedManyWithoutStudentInput
+  jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutProjectsInput = {
@@ -1058,6 +1093,7 @@ export type StudentUpdateWithoutProjectsInput = {
   academicRecords?: Prisma.AcademicRecordUpdateManyWithoutStudentNestedInput
   certifications?: Prisma.CertificationUpdateManyWithoutStudentNestedInput
   badges?: Prisma.StudentBadgeUpdateManyWithoutStudentNestedInput
+  jobApplications?: Prisma.JobApplicationUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutProjectsInput = {
@@ -1078,6 +1114,7 @@ export type StudentUncheckedUpdateWithoutProjectsInput = {
   academicRecords?: Prisma.AcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
   certifications?: Prisma.CertificationUncheckedUpdateManyWithoutStudentNestedInput
   badges?: Prisma.StudentBadgeUncheckedUpdateManyWithoutStudentNestedInput
+  jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateWithoutCertificationsInput = {
@@ -1098,6 +1135,7 @@ export type StudentCreateWithoutCertificationsInput = {
   academicRecords?: Prisma.AcademicRecordCreateNestedManyWithoutStudentInput
   projects?: Prisma.ProjectCreateNestedManyWithoutStudentInput
   badges?: Prisma.StudentBadgeCreateNestedManyWithoutStudentInput
+  jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutCertificationsInput = {
@@ -1118,6 +1156,7 @@ export type StudentUncheckedCreateWithoutCertificationsInput = {
   academicRecords?: Prisma.AcademicRecordUncheckedCreateNestedManyWithoutStudentInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutStudentInput
   badges?: Prisma.StudentBadgeUncheckedCreateNestedManyWithoutStudentInput
+  jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutCertificationsInput = {
@@ -1154,6 +1193,7 @@ export type StudentUpdateWithoutCertificationsInput = {
   academicRecords?: Prisma.AcademicRecordUpdateManyWithoutStudentNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutStudentNestedInput
   badges?: Prisma.StudentBadgeUpdateManyWithoutStudentNestedInput
+  jobApplications?: Prisma.JobApplicationUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutCertificationsInput = {
@@ -1174,6 +1214,7 @@ export type StudentUncheckedUpdateWithoutCertificationsInput = {
   academicRecords?: Prisma.AcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutStudentNestedInput
   badges?: Prisma.StudentBadgeUncheckedUpdateManyWithoutStudentNestedInput
+  jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateWithoutBadgesInput = {
@@ -1194,6 +1235,7 @@ export type StudentCreateWithoutBadgesInput = {
   academicRecords?: Prisma.AcademicRecordCreateNestedManyWithoutStudentInput
   projects?: Prisma.ProjectCreateNestedManyWithoutStudentInput
   certifications?: Prisma.CertificationCreateNestedManyWithoutStudentInput
+  jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutBadgesInput = {
@@ -1214,6 +1256,7 @@ export type StudentUncheckedCreateWithoutBadgesInput = {
   academicRecords?: Prisma.AcademicRecordUncheckedCreateNestedManyWithoutStudentInput
   projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutStudentInput
   certifications?: Prisma.CertificationUncheckedCreateNestedManyWithoutStudentInput
+  jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutBadgesInput = {
@@ -1250,6 +1293,7 @@ export type StudentUpdateWithoutBadgesInput = {
   academicRecords?: Prisma.AcademicRecordUpdateManyWithoutStudentNestedInput
   projects?: Prisma.ProjectUpdateManyWithoutStudentNestedInput
   certifications?: Prisma.CertificationUpdateManyWithoutStudentNestedInput
+  jobApplications?: Prisma.JobApplicationUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutBadgesInput = {
@@ -1270,6 +1314,107 @@ export type StudentUncheckedUpdateWithoutBadgesInput = {
   academicRecords?: Prisma.AcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
   projects?: Prisma.ProjectUncheckedUpdateManyWithoutStudentNestedInput
   certifications?: Prisma.CertificationUncheckedUpdateManyWithoutStudentNestedInput
+  jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutStudentNestedInput
+}
+
+export type StudentCreateWithoutJobApplicationsInput = {
+  id?: string
+  name: string
+  email: string
+  collegeName: string
+  rollNumber: string
+  libraryId?: string | null
+  course: string
+  branch: string
+  batch: number
+  currentSemester?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user?: Prisma.UserCreateNestedOneWithoutStudentInput
+  studentProfile?: Prisma.StudentProfileCreateNestedOneWithoutStudentInput
+  academicRecords?: Prisma.AcademicRecordCreateNestedManyWithoutStudentInput
+  projects?: Prisma.ProjectCreateNestedManyWithoutStudentInput
+  certifications?: Prisma.CertificationCreateNestedManyWithoutStudentInput
+  badges?: Prisma.StudentBadgeCreateNestedManyWithoutStudentInput
+}
+
+export type StudentUncheckedCreateWithoutJobApplicationsInput = {
+  id?: string
+  name: string
+  email: string
+  collegeName: string
+  rollNumber: string
+  libraryId?: string | null
+  course: string
+  branch: string
+  batch: number
+  currentSemester?: number | null
+  userId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  studentProfile?: Prisma.StudentProfileUncheckedCreateNestedOneWithoutStudentInput
+  academicRecords?: Prisma.AcademicRecordUncheckedCreateNestedManyWithoutStudentInput
+  projects?: Prisma.ProjectUncheckedCreateNestedManyWithoutStudentInput
+  certifications?: Prisma.CertificationUncheckedCreateNestedManyWithoutStudentInput
+  badges?: Prisma.StudentBadgeUncheckedCreateNestedManyWithoutStudentInput
+}
+
+export type StudentCreateOrConnectWithoutJobApplicationsInput = {
+  where: Prisma.StudentWhereUniqueInput
+  create: Prisma.XOR<Prisma.StudentCreateWithoutJobApplicationsInput, Prisma.StudentUncheckedCreateWithoutJobApplicationsInput>
+}
+
+export type StudentUpsertWithoutJobApplicationsInput = {
+  update: Prisma.XOR<Prisma.StudentUpdateWithoutJobApplicationsInput, Prisma.StudentUncheckedUpdateWithoutJobApplicationsInput>
+  create: Prisma.XOR<Prisma.StudentCreateWithoutJobApplicationsInput, Prisma.StudentUncheckedCreateWithoutJobApplicationsInput>
+  where?: Prisma.StudentWhereInput
+}
+
+export type StudentUpdateToOneWithWhereWithoutJobApplicationsInput = {
+  where?: Prisma.StudentWhereInput
+  data: Prisma.XOR<Prisma.StudentUpdateWithoutJobApplicationsInput, Prisma.StudentUncheckedUpdateWithoutJobApplicationsInput>
+}
+
+export type StudentUpdateWithoutJobApplicationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  collegeName?: Prisma.StringFieldUpdateOperationsInput | string
+  rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  libraryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  course?: Prisma.StringFieldUpdateOperationsInput | string
+  branch?: Prisma.StringFieldUpdateOperationsInput | string
+  batch?: Prisma.IntFieldUpdateOperationsInput | number
+  currentSemester?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneWithoutStudentNestedInput
+  studentProfile?: Prisma.StudentProfileUpdateOneWithoutStudentNestedInput
+  academicRecords?: Prisma.AcademicRecordUpdateManyWithoutStudentNestedInput
+  projects?: Prisma.ProjectUpdateManyWithoutStudentNestedInput
+  certifications?: Prisma.CertificationUpdateManyWithoutStudentNestedInput
+  badges?: Prisma.StudentBadgeUpdateManyWithoutStudentNestedInput
+}
+
+export type StudentUncheckedUpdateWithoutJobApplicationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  collegeName?: Prisma.StringFieldUpdateOperationsInput | string
+  rollNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  libraryId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  course?: Prisma.StringFieldUpdateOperationsInput | string
+  branch?: Prisma.StringFieldUpdateOperationsInput | string
+  batch?: Prisma.IntFieldUpdateOperationsInput | number
+  currentSemester?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  studentProfile?: Prisma.StudentProfileUncheckedUpdateOneWithoutStudentNestedInput
+  academicRecords?: Prisma.AcademicRecordUncheckedUpdateManyWithoutStudentNestedInput
+  projects?: Prisma.ProjectUncheckedUpdateManyWithoutStudentNestedInput
+  certifications?: Prisma.CertificationUncheckedUpdateManyWithoutStudentNestedInput
+  badges?: Prisma.StudentBadgeUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 
@@ -1282,6 +1427,7 @@ export type StudentCountOutputType = {
   projects: number
   certifications: number
   badges: number
+  jobApplications: number
 }
 
 export type StudentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1289,6 +1435,7 @@ export type StudentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   projects?: boolean | StudentCountOutputTypeCountProjectsArgs
   certifications?: boolean | StudentCountOutputTypeCountCertificationsArgs
   badges?: boolean | StudentCountOutputTypeCountBadgesArgs
+  jobApplications?: boolean | StudentCountOutputTypeCountJobApplicationsArgs
 }
 
 /**
@@ -1329,6 +1476,13 @@ export type StudentCountOutputTypeCountBadgesArgs<ExtArgs extends runtime.Types.
   where?: Prisma.StudentBadgeWhereInput
 }
 
+/**
+ * StudentCountOutputType without action
+ */
+export type StudentCountOutputTypeCountJobApplicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.JobApplicationWhereInput
+}
+
 
 export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1350,6 +1504,7 @@ export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   projects?: boolean | Prisma.Student$projectsArgs<ExtArgs>
   certifications?: boolean | Prisma.Student$certificationsArgs<ExtArgs>
   badges?: boolean | Prisma.Student$badgesArgs<ExtArgs>
+  jobApplications?: boolean | Prisma.Student$jobApplicationsArgs<ExtArgs>
   _count?: boolean | Prisma.StudentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["student"]>
 
@@ -1411,6 +1566,7 @@ export type StudentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   projects?: boolean | Prisma.Student$projectsArgs<ExtArgs>
   certifications?: boolean | Prisma.Student$certificationsArgs<ExtArgs>
   badges?: boolean | Prisma.Student$badgesArgs<ExtArgs>
+  jobApplications?: boolean | Prisma.Student$jobApplicationsArgs<ExtArgs>
   _count?: boolean | Prisma.StudentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type StudentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1429,6 +1585,7 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     projects: Prisma.$ProjectPayload<ExtArgs>[]
     certifications: Prisma.$CertificationPayload<ExtArgs>[]
     badges: Prisma.$StudentBadgePayload<ExtArgs>[]
+    jobApplications: Prisma.$JobApplicationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1844,6 +2001,7 @@ export interface Prisma__StudentClient<T, Null = never, ExtArgs extends runtime.
   projects<T extends Prisma.Student$projectsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   certifications<T extends Prisma.Student$certificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$certificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CertificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   badges<T extends Prisma.Student$badgesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$badgesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentBadgePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  jobApplications<T extends Prisma.Student$jobApplicationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$jobApplicationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$JobApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2418,6 +2576,30 @@ export type Student$badgesArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.StudentBadgeScalarFieldEnum | Prisma.StudentBadgeScalarFieldEnum[]
+}
+
+/**
+ * Student.jobApplications
+ */
+export type Student$jobApplicationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the JobApplication
+   */
+  select?: Prisma.JobApplicationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the JobApplication
+   */
+  omit?: Prisma.JobApplicationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.JobApplicationInclude<ExtArgs> | null
+  where?: Prisma.JobApplicationWhereInput
+  orderBy?: Prisma.JobApplicationOrderByWithRelationInput | Prisma.JobApplicationOrderByWithRelationInput[]
+  cursor?: Prisma.JobApplicationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.JobApplicationScalarFieldEnum | Prisma.JobApplicationScalarFieldEnum[]
 }
 
 /**

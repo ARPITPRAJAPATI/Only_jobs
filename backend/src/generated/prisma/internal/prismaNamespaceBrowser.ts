@@ -52,15 +52,24 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  StaffRegistry: 'StaffRegistry',
   StaffProfile: 'StaffProfile',
   Student: 'Student',
-  StaffRegistry: 'StaffRegistry',
   StudentProfile: 'StudentProfile',
   AcademicRecord: 'AcademicRecord',
   Project: 'Project',
   Certification: 'Certification',
   BadgeCatalog: 'BadgeCatalog',
-  StudentBadge: 'StudentBadge'
+  StudentBadge: 'StudentBadge',
+  Post: 'Post',
+  PostLike: 'PostLike',
+  PostComment: 'PostComment',
+  CampusSignal: 'CampusSignal',
+  AlumniDirectory: 'AlumniDirectory',
+  JobDrive: 'JobDrive',
+  OffCampusJob: 'OffCampusJob',
+  JobApplication: 'JobApplication',
+  RawJobPosting: 'RawJobPosting'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -90,6 +99,21 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const StaffRegistryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  staffId: 'staffId',
+  email: 'email',
+  role: 'role',
+  userId: 'userId',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StaffRegistryScalarFieldEnum = (typeof StaffRegistryScalarFieldEnum)[keyof typeof StaffRegistryScalarFieldEnum]
 
 
 export const StaffProfileScalarFieldEnum = {
@@ -126,21 +150,6 @@ export const StudentScalarFieldEnum = {
 } as const
 
 export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeof StudentScalarFieldEnum]
-
-
-export const StaffRegistryScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  staffId: 'staffId',
-  email: 'email',
-  role: 'role',
-  userId: 'userId',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type StaffRegistryScalarFieldEnum = (typeof StaffRegistryScalarFieldEnum)[keyof typeof StaffRegistryScalarFieldEnum]
 
 
 export const StudentProfileScalarFieldEnum = {
@@ -243,11 +252,162 @@ export const StudentBadgeScalarFieldEnum = {
   reviewedAt: 'reviewedAt',
   awardedBy: 'awardedBy',
   awardedAt: 'awardedAt',
+  isPinned: 'isPinned',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type StudentBadgeScalarFieldEnum = (typeof StudentBadgeScalarFieldEnum)[keyof typeof StudentBadgeScalarFieldEnum]
+
+
+export const PostScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  content: 'content',
+  hashtags: 'hashtags',
+  imageUrl: 'imageUrl',
+  imageTag: 'imageTag',
+  projectRepo: 'projectRepo',
+  projectUrl: 'projectUrl',
+  projectStack: 'projectStack',
+  projectStars: 'projectStars',
+  isPinned: 'isPinned',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
+
+
+export const PostLikeScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  userId: 'userId',
+  createdAt: 'createdAt'
+} as const
+
+export type PostLikeScalarFieldEnum = (typeof PostLikeScalarFieldEnum)[keyof typeof PostLikeScalarFieldEnum]
+
+
+export const PostCommentScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  userId: 'userId',
+  content: 'content',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PostCommentScalarFieldEnum = (typeof PostCommentScalarFieldEnum)[keyof typeof PostCommentScalarFieldEnum]
+
+
+export const CampusSignalScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  category: 'category',
+  timeText: 'timeText',
+  linkUrl: 'linkUrl',
+  createdAt: 'createdAt'
+} as const
+
+export type CampusSignalScalarFieldEnum = (typeof CampusSignalScalarFieldEnum)[keyof typeof CampusSignalScalarFieldEnum]
+
+
+export const AlumniDirectoryScalarFieldEnum = {
+  id: 'id',
+  fullName: 'fullName',
+  avatarUrl: 'avatarUrl',
+  company: 'company',
+  role: 'role',
+  batch: 'batch',
+  passoutYear: 'passoutYear',
+  branch: 'branch',
+  domain: 'domain',
+  skills: 'skills',
+  linkedinUrl: 'linkedinUrl',
+  verifiedByTpo: 'verifiedByTpo',
+  workEmail: 'workEmail',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AlumniDirectoryScalarFieldEnum = (typeof AlumniDirectoryScalarFieldEnum)[keyof typeof AlumniDirectoryScalarFieldEnum]
+
+
+export const JobDriveScalarFieldEnum = {
+  id: 'id',
+  company: 'company',
+  logoLetter: 'logoLetter',
+  role: 'role',
+  type: 'type',
+  category: 'category',
+  ctc: 'ctc',
+  ctcLpa: 'ctcLpa',
+  isDreamCompany: 'isDreamCompany',
+  location: 'location',
+  deadline: 'deadline',
+  cgpaCutoff: 'cgpaCutoff',
+  allowedBranches: 'allowedBranches',
+  maxBacklogs: 'maxBacklogs',
+  minVerifiedBadges: 'minVerifiedBadges',
+  batch: 'batch',
+  requiredTrack: 'requiredTrack',
+  description: 'description',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type JobDriveScalarFieldEnum = (typeof JobDriveScalarFieldEnum)[keyof typeof JobDriveScalarFieldEnum]
+
+
+export const OffCampusJobScalarFieldEnum = {
+  id: 'id',
+  company: 'company',
+  logoLetter: 'logoLetter',
+  role: 'role',
+  type: 'type',
+  compensation: 'compensation',
+  location: 'location',
+  batchEligible: 'batchEligible',
+  deadline: 'deadline',
+  requiredSkills: 'requiredSkills',
+  portalSource: 'portalSource',
+  applyUrl: 'applyUrl',
+  isHot: 'isHot',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OffCampusJobScalarFieldEnum = (typeof OffCampusJobScalarFieldEnum)[keyof typeof OffCampusJobScalarFieldEnum]
+
+
+export const JobApplicationScalarFieldEnum = {
+  id: 'id',
+  driveId: 'driveId',
+  studentId: 'studentId',
+  currentStage: 'currentStage',
+  isOfferAccepted: 'isOfferAccepted',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type JobApplicationScalarFieldEnum = (typeof JobApplicationScalarFieldEnum)[keyof typeof JobApplicationScalarFieldEnum]
+
+
+export const RawJobPostingScalarFieldEnum = {
+  id: 'id',
+  source: 'source',
+  rawPayload: 'rawPayload',
+  status: 'status',
+  errorLog: 'errorLog',
+  publishedJobId: 'publishedJobId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RawJobPostingScalarFieldEnum = (typeof RawJobPostingScalarFieldEnum)[keyof typeof RawJobPostingScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -256,6 +416,13 @@ export const SortOrder = {
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -272,4 +439,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

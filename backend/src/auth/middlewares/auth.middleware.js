@@ -46,3 +46,42 @@ export const authenticateUser = async (req, res, next) => {
         });
     }
 };
+
+export const optionalAuthenticateUser = async (req, res, next) => {
+    try {
+        const token = req.cookies?.accessToken;
+
+        if (!token) {
+            return next();
+        }
+
+        const decoded = verifyToken(token);
+
+        if (!decoded?.userId) {
+            return next();
+        }
+
+        const user = await prisma.user.findUnique({
+            where: {
+                id: decoded.userId,
+            },
+            select: {
+                id: true,
+                role: true,
+                isActive: true,
+            },
+        });
+
+        if (user && user.isActive) {
+            req.user = {
+                id: user.id,
+                role: user.role,
+            };
+        }
+
+        next();
+    } catch (error) {
+        next();
+    }
+};
+

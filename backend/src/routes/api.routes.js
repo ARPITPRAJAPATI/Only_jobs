@@ -15,11 +15,14 @@ import feedRoutes from "./feed.routes.js";
 
 // 1. Alumni routes import karein
 import alumniRoutes from "../alumni/routes/alumni.routes.js";
+// 2. Jobs & Placement Engine routes import karein
+import jobRoutes from "../jobs/routes/job.routes.js";
 
 const router = Router();
 
-// 2. Alumni Directory (Students & Visitors ke liye open browseable)
+// Open & Self-Governed Module Routes
 router.use("/alumni", alumniRoutes);
+router.use("/jobs", jobRoutes);
 
 // Centralized authentication (Baaki internal routes ke liye)
 router.use(authenticateUser);

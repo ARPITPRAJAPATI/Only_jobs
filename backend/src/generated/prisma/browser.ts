@@ -23,6 +23,11 @@ export * from './enums.ts';
  */
 export type User = Prisma.UserModel
 /**
+ * Model StaffRegistry
+ * 
+ */
+export type StaffRegistry = Prisma.StaffRegistryModel
+/**
  * Model StaffProfile
  * 
  */
@@ -32,11 +37,6 @@ export type StaffProfile = Prisma.StaffProfileModel
  * 
  */
 export type Student = Prisma.StudentModel
-/**
- * Model StaffRegistry
- * 
- */
-export type StaffRegistry = Prisma.StaffRegistryModel
 /**
  * Model StudentProfile
  * 
@@ -67,3 +67,48 @@ export type BadgeCatalog = Prisma.BadgeCatalogModel
  * 
  */
 export type StudentBadge = Prisma.StudentBadgeModel
+/**
+ * Model Post
+ * 
+ */
+export type Post = Prisma.PostModel
+/**
+ * Model PostLike
+ * 
+ */
+export type PostLike = Prisma.PostLikeModel
+/**
+ * Model PostComment
+ * 
+ */
+export type PostComment = Prisma.PostCommentModel
+/**
+ * Model CampusSignal
+ * 
+ */
+export type CampusSignal = Prisma.CampusSignalModel
+/**
+ * Model AlumniDirectory
+ * 
+ */
+export type AlumniDirectory = Prisma.AlumniDirectoryModel
+/**
+ * Model JobDrive
+ * 
+ */
+export type JobDrive = Prisma.JobDriveModel
+/**
+ * Model OffCampusJob
+ * 
+ */
+export type OffCampusJob = Prisma.OffCampusJobModel
+/**
+ * Model JobApplication
+ * 
+ */
+export type JobApplication = Prisma.JobApplicationModel
+/**
+ * Model RawJobPosting
+ * 
+ */
+export type RawJobPosting = Prisma.RawJobPostingModel

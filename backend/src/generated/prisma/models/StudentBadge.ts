@@ -38,6 +38,7 @@ export type StudentBadgeMinAggregateOutputType = {
   reviewedAt: Date | null
   awardedBy: string | null
   awardedAt: Date | null
+  isPinned: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,6 +57,7 @@ export type StudentBadgeMaxAggregateOutputType = {
   reviewedAt: Date | null
   awardedBy: string | null
   awardedAt: Date | null
+  isPinned: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -74,6 +76,7 @@ export type StudentBadgeCountAggregateOutputType = {
   reviewedAt: number
   awardedBy: number
   awardedAt: number
+  isPinned: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -94,6 +97,7 @@ export type StudentBadgeMinAggregateInputType = {
   reviewedAt?: true
   awardedBy?: true
   awardedAt?: true
+  isPinned?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -112,6 +116,7 @@ export type StudentBadgeMaxAggregateInputType = {
   reviewedAt?: true
   awardedBy?: true
   awardedAt?: true
+  isPinned?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -130,6 +135,7 @@ export type StudentBadgeCountAggregateInputType = {
   reviewedAt?: true
   awardedBy?: true
   awardedAt?: true
+  isPinned?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -221,6 +227,7 @@ export type StudentBadgeGroupByOutputType = {
   reviewedAt: Date | null
   awardedBy: string | null
   awardedAt: Date | null
+  isPinned: boolean
   createdAt: Date
   updatedAt: Date
   _count: StudentBadgeCountAggregateOutputType | null
@@ -260,6 +267,7 @@ export type StudentBadgeWhereInput = {
   reviewedAt?: Prisma.DateTimeNullableFilter<"StudentBadge"> | Date | string | null
   awardedBy?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
   awardedAt?: Prisma.DateTimeNullableFilter<"StudentBadge"> | Date | string | null
+  isPinned?: Prisma.BoolFilter<"StudentBadge"> | boolean
   createdAt?: Prisma.DateTimeFilter<"StudentBadge"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StudentBadge"> | Date | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
@@ -280,6 +288,7 @@ export type StudentBadgeOrderByWithRelationInput = {
   reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   awardedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   awardedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  isPinned?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   student?: Prisma.StudentOrderByWithRelationInput
@@ -303,6 +312,7 @@ export type StudentBadgeWhereUniqueInput = Prisma.AtLeast<{
   reviewedAt?: Prisma.DateTimeNullableFilter<"StudentBadge"> | Date | string | null
   awardedBy?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
   awardedAt?: Prisma.DateTimeNullableFilter<"StudentBadge"> | Date | string | null
+  isPinned?: Prisma.BoolFilter<"StudentBadge"> | boolean
   createdAt?: Prisma.DateTimeFilter<"StudentBadge"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StudentBadge"> | Date | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
@@ -323,6 +333,7 @@ export type StudentBadgeOrderByWithAggregationInput = {
   reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   awardedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   awardedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  isPinned?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.StudentBadgeCountOrderByAggregateInput
@@ -347,6 +358,7 @@ export type StudentBadgeScalarWhereWithAggregatesInput = {
   reviewedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"StudentBadge"> | Date | string | null
   awardedBy?: Prisma.StringNullableWithAggregatesFilter<"StudentBadge"> | string | null
   awardedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"StudentBadge"> | Date | string | null
+  isPinned?: Prisma.BoolWithAggregatesFilter<"StudentBadge"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"StudentBadge"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"StudentBadge"> | Date | string
 }
@@ -363,6 +375,7 @@ export type StudentBadgeCreateInput = {
   reviewedAt?: Date | string | null
   awardedBy?: string | null
   awardedAt?: Date | string | null
+  isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   student: Prisma.StudentCreateNestedOneWithoutBadgesInput
@@ -383,6 +396,7 @@ export type StudentBadgeUncheckedCreateInput = {
   reviewedAt?: Date | string | null
   awardedBy?: string | null
   awardedAt?: Date | string | null
+  isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -399,6 +413,7 @@ export type StudentBadgeUpdateInput = {
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   student?: Prisma.StudentUpdateOneRequiredWithoutBadgesNestedInput
@@ -419,6 +434,7 @@ export type StudentBadgeUncheckedUpdateInput = {
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -437,6 +453,7 @@ export type StudentBadgeCreateManyInput = {
   reviewedAt?: Date | string | null
   awardedBy?: string | null
   awardedAt?: Date | string | null
+  isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -453,6 +470,7 @@ export type StudentBadgeUpdateManyMutationInput = {
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -471,6 +489,7 @@ export type StudentBadgeUncheckedUpdateManyInput = {
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -499,6 +518,7 @@ export type StudentBadgeCountOrderByAggregateInput = {
   reviewedAt?: Prisma.SortOrder
   awardedBy?: Prisma.SortOrder
   awardedAt?: Prisma.SortOrder
+  isPinned?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -517,6 +537,7 @@ export type StudentBadgeMaxOrderByAggregateInput = {
   reviewedAt?: Prisma.SortOrder
   awardedBy?: Prisma.SortOrder
   awardedAt?: Prisma.SortOrder
+  isPinned?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -535,6 +556,7 @@ export type StudentBadgeMinOrderByAggregateInput = {
   reviewedAt?: Prisma.SortOrder
   awardedBy?: Prisma.SortOrder
   awardedAt?: Prisma.SortOrder
+  isPinned?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -639,6 +661,7 @@ export type StudentBadgeCreateWithoutStudentInput = {
   reviewedAt?: Date | string | null
   awardedBy?: string | null
   awardedAt?: Date | string | null
+  isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   badgeCatalog?: Prisma.BadgeCatalogCreateNestedOneWithoutBadgesInput
@@ -657,6 +680,7 @@ export type StudentBadgeUncheckedCreateWithoutStudentInput = {
   reviewedAt?: Date | string | null
   awardedBy?: string | null
   awardedAt?: Date | string | null
+  isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -704,6 +728,7 @@ export type StudentBadgeScalarWhereInput = {
   reviewedAt?: Prisma.DateTimeNullableFilter<"StudentBadge"> | Date | string | null
   awardedBy?: Prisma.StringNullableFilter<"StudentBadge"> | string | null
   awardedAt?: Prisma.DateTimeNullableFilter<"StudentBadge"> | Date | string | null
+  isPinned?: Prisma.BoolFilter<"StudentBadge"> | boolean
   createdAt?: Prisma.DateTimeFilter<"StudentBadge"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StudentBadge"> | Date | string
 }
@@ -720,6 +745,7 @@ export type StudentBadgeCreateWithoutBadgeCatalogInput = {
   reviewedAt?: Date | string | null
   awardedBy?: string | null
   awardedAt?: Date | string | null
+  isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   student: Prisma.StudentCreateNestedOneWithoutBadgesInput
@@ -738,6 +764,7 @@ export type StudentBadgeUncheckedCreateWithoutBadgeCatalogInput = {
   reviewedAt?: Date | string | null
   awardedBy?: string | null
   awardedAt?: Date | string | null
+  isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -781,6 +808,7 @@ export type StudentBadgeCreateManyStudentInput = {
   reviewedAt?: Date | string | null
   awardedBy?: string | null
   awardedAt?: Date | string | null
+  isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -797,6 +825,7 @@ export type StudentBadgeUpdateWithoutStudentInput = {
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   badgeCatalog?: Prisma.BadgeCatalogUpdateOneWithoutBadgesNestedInput
@@ -815,6 +844,7 @@ export type StudentBadgeUncheckedUpdateWithoutStudentInput = {
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -832,6 +862,7 @@ export type StudentBadgeUncheckedUpdateManyWithoutStudentInput = {
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -849,6 +880,7 @@ export type StudentBadgeCreateManyBadgeCatalogInput = {
   reviewedAt?: Date | string | null
   awardedBy?: string | null
   awardedAt?: Date | string | null
+  isPinned?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -865,6 +897,7 @@ export type StudentBadgeUpdateWithoutBadgeCatalogInput = {
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   student?: Prisma.StudentUpdateOneRequiredWithoutBadgesNestedInput
@@ -883,6 +916,7 @@ export type StudentBadgeUncheckedUpdateWithoutBadgeCatalogInput = {
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -900,6 +934,7 @@ export type StudentBadgeUncheckedUpdateManyWithoutBadgeCatalogInput = {
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   awardedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   awardedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPinned?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -920,6 +955,7 @@ export type StudentBadgeSelect<ExtArgs extends runtime.Types.Extensions.Internal
   reviewedAt?: boolean
   awardedBy?: boolean
   awardedAt?: boolean
+  isPinned?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
@@ -940,6 +976,7 @@ export type StudentBadgeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   reviewedAt?: boolean
   awardedBy?: boolean
   awardedAt?: boolean
+  isPinned?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
@@ -960,6 +997,7 @@ export type StudentBadgeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   reviewedAt?: boolean
   awardedBy?: boolean
   awardedAt?: boolean
+  isPinned?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
@@ -980,11 +1018,12 @@ export type StudentBadgeSelectScalar = {
   reviewedAt?: boolean
   awardedBy?: boolean
   awardedAt?: boolean
+  isPinned?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type StudentBadgeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "badgeId" | "title" | "description" | "imageUrl" | "proofUrl" | "screenshotUrl" | "status" | "reviewedBy" | "reviewedAt" | "awardedBy" | "awardedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["studentBadge"]>
+export type StudentBadgeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "badgeId" | "title" | "description" | "imageUrl" | "proofUrl" | "screenshotUrl" | "status" | "reviewedBy" | "reviewedAt" | "awardedBy" | "awardedAt" | "isPinned" | "createdAt" | "updatedAt", ExtArgs["result"]["studentBadge"]>
 export type StudentBadgeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   badgeCatalog?: boolean | Prisma.StudentBadge$badgeCatalogArgs<ExtArgs>
@@ -1018,6 +1057,7 @@ export type $StudentBadgePayload<ExtArgs extends runtime.Types.Extensions.Intern
     reviewedAt: Date | null
     awardedBy: string | null
     awardedAt: Date | null
+    isPinned: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["studentBadge"]>
@@ -1458,6 +1498,7 @@ export interface StudentBadgeFieldRefs {
   readonly reviewedAt: Prisma.FieldRef<"StudentBadge", 'DateTime'>
   readonly awardedBy: Prisma.FieldRef<"StudentBadge", 'String'>
   readonly awardedAt: Prisma.FieldRef<"StudentBadge", 'DateTime'>
+  readonly isPinned: Prisma.FieldRef<"StudentBadge", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"StudentBadge", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"StudentBadge", 'DateTime'>
 }

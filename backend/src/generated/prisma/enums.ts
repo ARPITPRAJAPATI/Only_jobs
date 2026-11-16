@@ -36,3 +36,44 @@ export const BadgeStatus = {
 } as const
 
 export type BadgeStatus = (typeof BadgeStatus)[keyof typeof BadgeStatus]
+
+
+export const PostType = {
+  DEAN_NOTICE: 'DEAN_NOTICE',
+  PROJECT_SHOWCASE: 'PROJECT_SHOWCASE',
+  PLACEMENT_UPDATE: 'PLACEMENT_UPDATE',
+  HACKATHON_WIN: 'HACKATHON_WIN',
+  GENERAL: 'GENERAL'
+} as const
+
+export type PostType = (typeof PostType)[keyof typeof PostType]
+
+
+export const DriveType = {
+  FULL_TIME: 'FULL_TIME',
+  INTERNSHIP: 'INTERNSHIP'
+} as const
+
+export type DriveType = (typeof DriveType)[keyof typeof DriveType]
+
+
+export const ApplicationStage = {
+  APPLIED: 'APPLIED',
+  OA_SHORTLISTED: 'OA_SHORTLISTED',
+  TECHNICAL_INTERVIEW: 'TECHNICAL_INTERVIEW',
+  HR_ROUND: 'HR_ROUND',
+  OFFERED: 'OFFERED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type ApplicationStage = (typeof ApplicationStage)[keyof typeof ApplicationStage]
+
+
+export const ProcessingStatus = {
+  PENDING: 'PENDING',
+  PROCESSED: 'PROCESSED',
+  FAILED: 'FAILED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type ProcessingStatus = (typeof ProcessingStatus)[keyof typeof ProcessingStatus]

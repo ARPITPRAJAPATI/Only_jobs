@@ -13,7 +13,6 @@ import {
   Building2,
   Lock,
   Calendar,
-  Video,
   FileText,
   AlertTriangle,
   ChevronRight,
@@ -70,7 +69,6 @@ export interface OffCampusJob {
   requiredSkills: string[];
   portalSource: string;
   applyUrl: string;
-  hasReferral: boolean;
   isHot?: boolean;
 }
 
@@ -103,10 +101,6 @@ export interface CollegeJobApplication {
   ctc: string;
   appliedDate: string;
   currentStage: ApplicationStage;
-  nextRoundDate?: string;
-  nextRoundTitle?: string;
-  meetLink?: string;
-  interviewerNotes?: string;
   isOfferAccepted?: boolean;
 }
 
@@ -290,7 +284,6 @@ const OFFCAMPUS_POSTINGS: OffCampusJob[] = [
     requiredSkills: ['C++', 'Java', 'Python', 'Data Structures', 'Algorithms'],
     portalSource: 'Google Student Careers Portal',
     applyUrl: 'https://careers.google.com/jobs/results/step-intern-india',
-    hasReferral: true,
     isHot: true,
   },
   {
@@ -306,7 +299,6 @@ const OFFCAMPUS_POSTINGS: OffCampusJob[] = [
     requiredSkills: ['Go', 'Java', 'Distributed Systems', 'Kafka', 'System Design'],
     portalSource: 'Uber Engineering Careers',
     applyUrl: 'https://uber.com/careers/engineering-campus',
-    hasReferral: true,
     isHot: true,
   },
   {
@@ -322,7 +314,6 @@ const OFFCAMPUS_POSTINGS: OffCampusJob[] = [
     requiredSkills: ['Problem Solving', 'C++', 'Java', 'Math/Quant', 'OS Fundamentals'],
     portalSource: 'Goldman Sachs Student Programs',
     applyUrl: 'https://goldmansachs.com/careers/students',
-    hasReferral: false,
   },
   {
     id: 'off-4',
@@ -337,7 +328,6 @@ const OFFCAMPUS_POSTINGS: OffCampusJob[] = [
     requiredSkills: ['React', 'Next.js', 'TypeScript', 'TailwindCSS', 'Web Performance'],
     portalSource: 'Razorpay Careers Hub',
     applyUrl: 'https://razorpay.com/jobs/frontend-intern',
-    hasReferral: true,
     isHot: true,
   },
   {
@@ -353,7 +343,6 @@ const OFFCAMPUS_POSTINGS: OffCampusJob[] = [
     requiredSkills: ['Go', 'PostgreSQL', 'Redis', 'High-Throughput Concurrency'],
     portalSource: 'CRED Careers',
     applyUrl: 'https://cred.club/careers/backend',
-    hasReferral: true,
   },
   {
     id: 'off-6',
@@ -368,7 +357,6 @@ const OFFCAMPUS_POSTINGS: OffCampusJob[] = [
     requiredSkills: ['React Native', 'TypeScript', 'Redux Toolkit', 'Mobile Animations'],
     portalSource: 'Zomato Feeding India Tech',
     applyUrl: 'https://zomato.com/careers',
-    hasReferral: false,
   },
 ];
 
@@ -448,10 +436,6 @@ const INITIAL_COLLEGE_APPLICATIONS: CollegeJobApplication[] = [
     ctc: '₹1.10 Lakh / mo',
     appliedDate: '18 Oct 2026',
     currentStage: 'TECHNICAL_INTERVIEW',
-    nextRoundDate: '28 Oct 2026, 02:00 PM IST',
-    nextRoundTitle: 'Round 2: Data Structures & System Problem Solving',
-    meetLink: 'https://meet.google.com/amz-oj-tech',
-    interviewerNotes: 'Candidate demonstrated deep command of B-Trees and distributed caches in the OA screening round.',
   },
   {
     id: 'app-2',
@@ -461,10 +445,6 @@ const INITIAL_COLLEGE_APPLICATIONS: CollegeJobApplication[] = [
     ctc: '₹44.5 LPA',
     appliedDate: '20 Oct 2026',
     currentStage: 'OA_SHORTLISTED',
-    nextRoundDate: '30 Oct 2026, 10:00 AM IST',
-    nextRoundTitle: 'Round 1: Online Assessment Screening (Codility)',
-    meetLink: 'https://codility.com/c/kiet-msft-2026',
-    interviewerNotes: 'Shortlisted directly based on verified GitHub proof-of-work and Top-6 KubePay microservice project.',
   },
   {
     id: 'app-3',
@@ -474,10 +454,6 @@ const INITIAL_COLLEGE_APPLICATIONS: CollegeJobApplication[] = [
     ctc: '₹7.5 LPA',
     appliedDate: '15 Oct 2026',
     currentStage: 'OFFERED',
-    nextRoundDate: 'Offer Letter Acceptance Window Active',
-    nextRoundTitle: 'Final Selection / Institutional Offer Rolled Out',
-    meetLink: '',
-    interviewerNotes: 'Cleared all rounds with 92% assessment score. Offer letter issued via CRPC placement records.',
     isOfferAccepted: false,
   },
 ];
@@ -591,8 +567,6 @@ export default function JobsPage() {
       ctc: drive.ctc,
       appliedDate: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
       currentStage: 'APPLIED',
-      nextRoundTitle: 'Resume Screening & Profile Audit by TPO',
-      nextRoundDate: 'Within 48 Hours',
     };
 
     setCollegeApplications((prev) => [newApp, ...prev]);
@@ -987,11 +961,6 @@ export default function JobsPage() {
                         <span className="rounded-md border border-line bg-surface2 px-2 py-1 text-[11px] font-medium text-muted">
                           {job.batchEligible}
                         </span>
-                        {job.hasReferral && (
-                          <span className="rounded-md border border-line px-2 py-1 text-[11px] font-medium text-muted">
-                            Referral available
-                          </span>
-                        )}
                     </div>
 
                     <div className="mt-4 min-h-24 border-t border-line pt-3">
@@ -1246,13 +1215,25 @@ export default function JobsPage() {
                             </div>
                           </div>
 
-                          <button
-                            type="button"
-                            onClick={() => handleWithdrawApplication(app.id)}
-                            className="self-start rounded-md px-2.5 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-warn/10 hover:text-warn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
-                          >
-                            Withdraw
-                          </button>
+                          <div className="flex items-center gap-2 self-start">
+                            {isOffered && !isAccepted && (
+                              <button
+                                type="button"
+                                onClick={() => handleAcceptOffer(app.id)}
+                                className="inline-flex items-center gap-1.5 rounded-md bg-good px-2.5 py-1.5 text-xs font-semibold text-white transition-opacity hover:opacity-90"
+                              >
+                                <CheckCircle2 aria-hidden="true" className="h-3.5 w-3.5" />
+                                Accept offer
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => handleWithdrawApplication(app.id)}
+                              className="rounded-md px-2.5 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-warn/10 hover:text-warn focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+                            >
+                              Withdraw
+                            </button>
+                          </div>
                         </header>
 
                         <div className="mt-5 border-t border-line pt-4">
@@ -1299,55 +1280,6 @@ export default function JobsPage() {
                             );
                             })}
                           </div>
-                        </div>
-                      </div>
-
-                      <div className="border-t border-line bg-surface2/35 px-4 py-4 sm:px-5">
-                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                          <div className="min-w-0">
-                            <p className="text-xs font-medium text-muted">
-                            {isAccepted ? 'Offer accepted' : isOffered ? 'Offer details' : isRejected ? 'Application closed' : 'Next step'}
-                            </p>
-                            <p className="mt-1 text-sm font-medium text-ink">
-                            {app.nextRoundTitle || 'Your application is being reviewed'}
-                            </p>
-                            {app.nextRoundDate && (
-                            <p className="mt-1 inline-flex items-center gap-1.5 text-xs text-muted">
-                              <Clock aria-hidden="true" className="h-3.5 w-3.5" />
-                              {app.nextRoundDate}
-                            </p>
-                            )}
-                            {app.interviewerNotes && (
-                            <p className="mt-2 max-w-3xl text-xs leading-relaxed text-muted">
-                              <span className="font-medium text-ink">TPO note: </span>
-                              {app.interviewerNotes}
-                            </p>
-                            )}
-                          </div>
-
-                          {app.meetLink && !isRejected && !isAccepted && (
-                            <a
-                            href={app.meetLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-md bg-accent px-3.5 py-2 text-sm font-medium text-accentInk transition-opacity hover:opacity-90"
-                            >
-                            <Video aria-hidden="true" className="h-4 w-4" />
-                            Join interview
-                            <ExternalLink aria-hidden="true" className="h-3.5 w-3.5" />
-                            </a>
-                          )}
-
-                          {isOffered && !isAccepted && (
-                            <button
-                            type="button"
-                            onClick={() => handleAcceptOffer(app.id)}
-                            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-md bg-good px-3.5 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
-                            >
-                            <CheckCircle2 aria-hidden="true" className="h-4 w-4" />
-                            Accept offer
-                            </button>
-                          )}
                         </div>
                       </div>
                     </article>

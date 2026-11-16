@@ -7,6 +7,10 @@ datasource db {
     provider = "postgresql"
 }
 
+// ============================================================================
+// 1. AUTH & USER IDENTITY
+// ============================================================================
+
 enum UserRole {
     DEAN
     TEACHER
@@ -19,20 +23,6 @@ enum StaffRole {
     DEAN
     TEACHER
     TPO
-}
-
-enum BadgeStatus {
-    PENDING
-    APPROVED
-    REJECTED
-}
-
-enum PostType {
-    DEAN_NOTICE
-    PROJECT_SHOWCASE
-    PLACEMENT_UPDATE
-    HACKATHON_WIN
-    GENERAL
 }
 
 model User {
@@ -50,6 +40,22 @@ model User {
     posts        Post[]
     postLikes    PostLike[]
     postComments PostComment[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model StaffRegistry {
+    id      String    @id @default(uuid())
+    name    String?
+    staffId String?   @unique
+    email   String    @unique
+    role    StaffRole
+
+    userId String? @unique
+    user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+    isActive Boolean @default(true)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -74,6 +80,10 @@ model StaffProfile {
     updatedAt DateTime @updatedAt
 }
 
+// ============================================================================
+// 2. STUDENT PORTFOLIO & ACADEMICS
+// ============================================================================
+
 model Student {
     id              String  @id @default(uuid())
     name            String
@@ -90,26 +100,12 @@ model Student {
     userId String? @unique
     user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
-    createdAt       DateTime         @default(now())
-    updatedAt       DateTime         @updatedAt
     studentProfile  StudentProfile?
     academicRecords AcademicRecord[]
     projects        Project[]
     certifications  Certification[]
     badges          StudentBadge[]
-}
-
-model StaffRegistry {
-    id      String    @id @default(uuid())
-    name    String?
-    staffId String?   @unique
-    email   String    @unique
-    role    StaffRole
-
-    userId String? @unique
-    user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
-
-    isActive Boolean @default(true)
+    jobApplications JobApplication[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -199,6 +195,16 @@ model Certification {
     updatedAt DateTime @updatedAt
 }
 
+// ============================================================================
+// 3. BADGES & RECOGNITION
+// ============================================================================
+
+enum BadgeStatus {
+    PENDING
+    APPROVED
+    REJECTED
+}
+
 model BadgeCatalog {
     id          String  @id @default(uuid())
     title       String  @unique
@@ -240,9 +246,17 @@ model StudentBadge {
     updatedAt DateTime @updatedAt
 }
 
-// -------------------------------------------------------------
-// FEED MODULE
-// -------------------------------------------------------------
+// ============================================================================
+// 4. CAMPUS FEED & SIGNALS
+// ============================================================================
+
+enum PostType {
+    DEAN_NOTICE
+    PROJECT_SHOWCASE
+    PLACEMENT_UPDATE
+    HACKATHON_WIN
+    GENERAL
+}
 
 model Post {
     id     String @id @default(uuid())
@@ -303,6 +317,10 @@ model CampusSignal {
     createdAt DateTime @default(now())
 }
 
+// ============================================================================
+// 5. ALUMNI DIRECTORY
+// ============================================================================
+
 model AlumniDirectory {
     id            String   @id @default(uuid())
     fullName      String   @db.VarChar(120)
@@ -325,4 +343,123 @@ model AlumniDirectory {
     @@index([domain])
     @@index([passoutYear])
     @@index([branch])
+}
+
+// ============================================================================
+// 6. JOBS & PLACEMENT ENGINE (SUPERSET)
+// ============================================================================
+
+enum DriveType {
+    FULL_TIME
+    INTERNSHIP
+}
+
+enum ApplicationStage {
+    APPLIED
+    OA_SHORTLISTED
+    TECHNICAL_INTERVIEW
+    HR_ROUND
+    OFFERED
+    REJECTED
+}
+
+// On-Campus Placement Drives created by TPO
+model JobDrive {
+    id             String    @id @default(uuid())
+    company        String    @db.VarChar(120) // e.g. "Microsoft"
+    logoLetter     String    @default("CO") // e.g. "MS"
+    role           String    @db.VarChar(120) // e.g. "Software Development Engineer (SDE 1)"
+    type           DriveType @default(FULL_TIME)
+    category       String    @default("SDE") // "SDE" | "INTERN" | "DATA" | "DEVOPS"
+    ctc            String // e.g. "₹44.5 LPA"
+    ctcLpa         Float // e.g. 44.5 (Sorting & dream upgrade check)
+    isDreamCompany Boolean   @default(false)
+    location       String    @default("Pan India")
+    deadline       DateTime
+
+    // Eligibility Criteria (TPO Rules)
+    cgpaCutoff        Float    @default(6.0)
+    allowedBranches   String[] @default(["CSE", "IT", "ECE"])
+    maxBacklogs       Int      @default(0)
+    minVerifiedBadges Int      @default(0)
+    batch             String // e.g. "2026 Batch"
+    requiredTrack     String?
+    description       String   @db.Text
+    isActive          Boolean  @default(true)
+
+    applications JobApplication[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([company])
+    @@index([batch])
+    @@index([isActive])
+}
+
+// Curated Off-Campus Opportunities (External Apply Links)
+model OffCampusJob {
+    id             String    @id @default(uuid())
+    company        String    @db.VarChar(120)
+    logoLetter     String    @default("OC")
+    role           String    @db.VarChar(120)
+    type           DriveType @default(FULL_TIME)
+    compensation   String // e.g. "₹12 - 18 LPA"
+    location       String
+    batchEligible  String // e.g. "2025, 2026"
+    deadline       DateTime
+    requiredSkills String[]  @default([])
+    portalSource   String // e.g. "LinkedIn", "Wellfound"
+    applyUrl       String // External link
+    isHot          Boolean   @default(false)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([company])
+}
+
+// On-Campus Application Tracker (Only Links Student <-> On-Campus Drive)
+model JobApplication {
+    id String @id @default(uuid())
+
+    driveId String
+    drive   JobDrive @relation(fields: [driveId], references: [id], onDelete: Cascade)
+
+    studentId String
+    student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+    currentStage    ApplicationStage @default(APPLIED)
+    isOfferAccepted Boolean          @default(false)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([driveId, studentId]) // 1 student 1 application per on-campus drive
+    @@index([studentId])
+    @@index([currentStage])
+}
+
+enum ProcessingStatus {
+    PENDING
+    PROCESSED
+    FAILED
+    REJECTED
+}
+
+// Staging Table for Scraper Agents (Raw Data Buffer)
+model RawJobPosting {
+    id         String           @id @default(uuid())
+    source     String // e.g. "LinkedIn", "Wellfound", "Greenhouse", "leco.ai"
+    rawPayload Json // Agent ka poora uncleaned JSON / text
+    status     ProcessingStatus @default(PENDING)
+    errorLog   String?
+
+    publishedJobId String? // Clean publish hone ke baad OffCampusJob ki ID
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([status])
+    @@index([source])
 }
