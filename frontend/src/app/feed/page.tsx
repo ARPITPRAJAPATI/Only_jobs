@@ -45,6 +45,16 @@ interface FeedComment {
   content: string;
 }
 
+type FeedFilter = 'ALL' | Post['type'];
+
+const FEED_FILTERS: { value: FeedFilter; label: string }[] = [
+  { value: 'ALL', label: 'All updates' },
+  { value: 'DEAN_NOTICE', label: 'Official notices' },
+  { value: 'PROJECT_SHOWCASE', label: 'Projects' },
+  { value: 'PLACEMENT_UPDATE', label: 'Placements' },
+  { value: 'HACKATHON_WIN', label: 'Wins' },
+];
+
 const DAILY_POST_LIMIT = 3;
 
 function getLocalDateKey() {
@@ -179,7 +189,11 @@ export default function FeedPage() {
   const [postActionNotice, setPostActionNotice] = useState<{ postId: string; message: string } | null>(null);
   const [sortOrder, setSortOrder] = useState<'recent' | 'popular'>('recent');
   const [sortMenuOpen, setSortMenuOpen] = useState(false);
-  const visiblePosts = sortOrder === 'popular' ? [...posts].sort((a, b) => b.likes - a.likes) : posts;
+  const [feedFilter, setFeedFilter] = useState<FeedFilter>('ALL');
+  const filteredPosts = feedFilter === 'ALL' ? posts : posts.filter((post) => post.type === feedFilter);
+  const visiblePosts = sortOrder === 'popular'
+    ? [...filteredPosts].sort((a, b) => b.likes - a.likes)
+    : filteredPosts;
   const imageInputRef = useRef<HTMLInputElement>(null);
   const postTextRef = useRef<HTMLTextAreaElement>(null);
   const publishingRef = useRef(false);
@@ -513,54 +527,100 @@ export default function FeedPage() {
               )}
             </div>
 
-            <div className="flex items-center justify-between border-b border-line/70 px-1 pb-2 text-xs">
-              <span className="text-muted">{posts.length} campus updates</span>
-              <div
-                className="relative"
-                onKeyDown={(event) => {
-                  if (event.key === 'Escape') setSortMenuOpen(false);
-                }}
-              >
-                <button
-                  type="button"
-                  aria-label={`Sort campus updates: ${sortOrder === 'recent' ? 'Recent' : 'Most liked'}`}
-                  aria-haspopup="menu"
-                  aria-expanded={sortMenuOpen}
-                  onClick={() => setSortMenuOpen((open) => !open)}
-                  className="inline-flex items-center gap-2 rounded-lg border border-line bg-surface px-3 py-2 font-semibold text-ink shadow-xs transition-colors hover:border-accent/40 hover:bg-surface2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+            <div className="space-y-3">
+              <div role="group" aria-label="Filter campus updates" className="-mx-1 flex gap-1 overflow-x-auto px-1">
+                {FEED_FILTERS.map((filter) => {
+                  const count = filter.value === 'ALL'
+                    ? posts.length
+                    : posts.filter((post) => post.type === filter.value).length;
+                  const isActive = feedFilter === filter.value;
+
+                  return (
+                    <button
+                      key={filter.value}
+                      type="button"
+                      aria-pressed={isActive}
+                      onClick={() => setFeedFilter(filter.value)}
+                      className={`inline-flex min-h-9 shrink-0 items-center gap-2 rounded-lg px-3 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 ${
+                        isActive
+                          ? 'bg-accent/10 text-accent'
+                          : 'text-muted hover:bg-surface2 hover:text-ink'
+                      }`}
+                    >
+                      {filter.label}
+                      <span className={`rounded-full px-1.5 py-0.5 text-[10px] tabular-nums ${
+                        isActive ? 'bg-accent/15 text-accent' : 'bg-surface2 text-muted'
+                      }`}>
+                        {count}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="flex items-center justify-between border-b border-line/70 px-1 pb-2 text-xs">
+                <span className="text-muted">
+                  Showing <span className="font-semibold text-ink">{visiblePosts.length}</span> of {posts.length} updates
+                </span>
+                <div
+                  className="relative"
+                  onKeyDown={(event) => {
+                    if (event.key === 'Escape') setSortMenuOpen(false);
+                  }}
                 >
-                  <ArrowDownWideNarrow className="h-3.5 w-3.5 text-muted" />
-                  <span>{sortOrder === 'recent' ? 'Recent' : 'Most liked'}</span>
-                  <ChevronDown className={`h-3.5 w-3.5 text-muted transition-transform ${sortMenuOpen ? 'rotate-180' : ''}`} />
-                </button>
-                {sortMenuOpen && (
-                  <div role="menu" aria-label="Sort campus updates" className="absolute right-0 top-full z-20 mt-2 min-w-40 rounded-xl border border-line bg-surface p-1.5 shadow-lg">
-                    {([
-                      { value: 'recent', label: 'Recent' },
-                      { value: 'popular', label: 'Most liked' },
-                    ] as const).map((option) => (
-                      <button
-                        key={option.value}
-                        type="button"
-                        role="menuitemradio"
-                        aria-checked={sortOrder === option.value}
-                        onClick={() => {
-                          setSortOrder(option.value);
-                          setSortMenuOpen(false);
-                        }}
-                        className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-medium text-ink transition-colors hover:bg-surface2"
-                      >
-                        {option.label}
-                        {sortOrder === option.value && <Check className="h-3.5 w-3.5 text-accent" />}
-                      </button>
-                    ))}
-                  </div>
-                )}
+                  <button
+                    type="button"
+                    aria-label={`Sort campus updates: ${sortOrder === 'recent' ? 'Recent' : 'Most liked'}`}
+                    aria-haspopup="menu"
+                    aria-expanded={sortMenuOpen}
+                    onClick={() => setSortMenuOpen((open) => !open)}
+                    className="inline-flex items-center gap-2 rounded-lg border border-line bg-surface px-3 py-2 font-semibold text-ink shadow-xs transition-colors hover:border-accent/40 hover:bg-surface2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+                  >
+                    <ArrowDownWideNarrow className="h-3.5 w-3.5 text-muted" />
+                    <span>{sortOrder === 'recent' ? 'Recent' : 'Most liked'}</span>
+                    <ChevronDown className={`h-3.5 w-3.5 text-muted transition-transform ${sortMenuOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  {sortMenuOpen && (
+                    <div role="menu" aria-label="Sort campus updates" className="absolute right-0 top-full z-20 mt-2 min-w-40 rounded-xl border border-line bg-surface p-1.5 shadow-lg">
+                      {([
+                        { value: 'recent', label: 'Recent' },
+                        { value: 'popular', label: 'Most liked' },
+                      ] as const).map((option) => (
+                        <button
+                          key={option.value}
+                          type="button"
+                          role="menuitemradio"
+                          aria-checked={sortOrder === option.value}
+                          onClick={() => {
+                            setSortOrder(option.value);
+                            setSortMenuOpen(false);
+                          }}
+                          className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-medium text-ink transition-colors hover:bg-surface2"
+                        >
+                          {option.label}
+                          {sortOrder === option.value && <Check className="h-3.5 w-3.5 text-accent" />}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
             {/* Posts Feed */}
-            {visiblePosts.map((post) => {
+            {visiblePosts.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-line bg-surface px-5 py-12 text-center">
+                <p className="text-sm font-semibold text-ink">No updates in this category yet</p>
+                <p className="mt-1 text-xs text-muted">Check back later or browse all campus updates.</p>
+                <button
+                  type="button"
+                  onClick={() => setFeedFilter('ALL')}
+                  className="mt-4 rounded-lg px-3 py-2 text-xs font-semibold text-accent transition-colors hover:bg-accent/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+                >
+                  Show all updates
+                </button>
+              </div>
+            ) : visiblePosts.map((post) => {
               const isDeanNotice = post.id === 'dean-notice';
               const isStudentPost = post.isOwnPost || post.author.email === (student.email || 'arpit.prajapati@kiet.edu');
               const postBadges: { id: string; title: string; iconUrl?: string }[] = isStudentPost
