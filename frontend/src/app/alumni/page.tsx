@@ -25,6 +25,7 @@ import type { Project } from '@/lib/types';
 interface AlumniMentor {
   id: string;
   name: string;
+  email?: string;
   avatarUrl: string;
   company: string;
   role: string;
@@ -199,6 +200,7 @@ const ALUMNI_DATA: AlumniMentor[] = [
   {
     id: 'alumni-1',
     name: 'Arpit Prajapati',
+    email: 'arpit.prajapati@kiet.edu',
     avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=160&q=80',
     company: 'Microsoft',
     role: 'Software Development Engineer II',
@@ -430,6 +432,13 @@ export default function AlumniPage() {
   }, [search, selectedCompany, selectedDomain, selectedBatch]);
   const verifiedAlumniCount = ALUMNI_DATA.filter((alumni) => alumni.verifiedByTpo).length;
   const representedCompanyCount = new Set(ALUMNI_DATA.map((alumni) => alumni.company)).size;
+  const featuredAlumni = ALUMNI_DATA[0];
+  const featuredInitials = featuredAlumni.name
+    .split(' ')
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
 
   const handleOpenModal = (mentor: AlumniMentor) => {
     setSelectedMentor(mentor);
@@ -485,6 +494,51 @@ export default function AlumniPage() {
 
       {/* Main Content Area */}
       <main className="mx-auto max-w-7xl px-4 pt-5 sm:px-6 lg:px-8">
+        <section className="mb-6 rounded-[28px] border border-line bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.12),_transparent_38%),_rgba(17,24,39,0.9)] p-5 shadow-[0_20px_60px_-28px_rgba(15,23,42,0.9)] sm:p-6">
+          <div className="mx-auto max-w-xl text-center text-ink">
+            <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-slate-700/90 text-3xl font-semibold tracking-tight text-white shadow-inner shadow-slate-500/30 ring-1 ring-white/10">
+              {featuredInitials}
+            </div>
+
+            <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-[2rem]">
+              {featuredAlumni.name}
+            </h2>
+
+            <p className="mt-2 text-base text-slate-300 sm:text-lg">
+              {featuredAlumni.email || 'arpit.prajapati@kiet.edu'}
+            </p>
+
+            <div className="mx-auto mt-5 grid w-full max-w-[420px] grid-cols-3 gap-3 rounded-xl border border-slate-700/80 bg-slate-800/60 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+              <div>
+                <div className="text-2xl font-semibold tracking-tight text-white">2</div>
+                <div className="mt-1 text-[11px] font-medium uppercase tracking-[0.16em] text-slate-400">
+                  Badges
+                </div>
+              </div>
+              <div>
+                <div className="text-2xl font-semibold tracking-tight text-white">84%</div>
+                <div className="mt-1 text-[11px] font-medium uppercase tracking-[0.16em] text-slate-400">
+                  Trust
+                </div>
+              </div>
+              <div>
+                <div className="text-2xl font-semibold tracking-tight text-white">3</div>
+                <div className="mt-1 text-[11px] font-medium uppercase tracking-[0.16em] text-slate-400">
+                  Projects
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="mt-5 inline-flex w-full max-w-[420px] items-center justify-center gap-2 rounded-xl bg-[#4aa3ff] px-4 py-3 text-base font-semibold text-slate-950 shadow-[0_10px_25px_-12px_rgba(74,163,255,0.9)] transition-transform hover:-translate-y-0.5 hover:bg-[#6ab2ff]"
+            >
+              <span>Verified Portfolio</span>
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          </div>
+        </section>
+
         {/* Controls Toolbar: Search & Filter Tabs */}
         <div className="mb-6 space-y-4 border-b border-line pb-5">
           <div className="flex flex-col items-stretch justify-between gap-3 sm:flex-row sm:items-center">
