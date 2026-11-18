@@ -433,12 +433,6 @@ export default function AlumniPage() {
   const verifiedAlumniCount = ALUMNI_DATA.filter((alumni) => alumni.verifiedByTpo).length;
   const representedCompanyCount = new Set(ALUMNI_DATA.map((alumni) => alumni.company)).size;
   const featuredAlumni = ALUMNI_DATA[0];
-  const featuredInitials = featuredAlumni.name
-    .split(' ')
-    .map((part) => part[0])
-    .slice(0, 2)
-    .join('')
-    .toUpperCase();
 
   const handleOpenModal = (mentor: AlumniMentor) => {
     setSelectedMentor(mentor);
@@ -494,47 +488,52 @@ export default function AlumniPage() {
 
       {/* Main Content Area */}
       <main className="mx-auto max-w-7xl px-4 pt-5 sm:px-6 lg:px-8">
-        <section className="mb-6 rounded-[28px] border border-line bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.12),_transparent_38%),_rgba(17,24,39,0.9)] p-5 shadow-[0_20px_60px_-28px_rgba(15,23,42,0.9)] sm:p-6">
-          <div className="mx-auto max-w-xl text-center text-ink">
-            <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-slate-700/90 text-3xl font-semibold tracking-tight text-white shadow-inner shadow-slate-500/30 ring-1 ring-white/10">
-              {featuredInitials}
+        <section className="relative mb-6 overflow-hidden rounded-[24px] border border-slate-700/70 bg-[#111827] shadow-[0_18px_45px_-30px_rgba(15,23,42,0.95)]">
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top,_rgba(74,163,255,0.16),_transparent_65%)]" />
+          <div className="relative mx-auto max-w-xl px-5 py-6 text-center text-ink sm:px-6 sm:py-7">
+            <div className="relative mx-auto h-20 w-20">
+              <img
+                src={featuredAlumni.avatarUrl}
+                alt={featuredAlumni.name}
+                className="h-20 w-20 rounded-full border-2 border-slate-600/90 object-cover shadow-[0_12px_30px_-12px_rgba(0,0,0,0.9)]"
+              />
+              <span className="absolute bottom-0 right-0 flex h-6 w-6 items-center justify-center rounded-full border-2 border-[#111827] bg-[#4aa3ff] text-slate-950" title="Verified alumni">
+                <ShieldCheck className="h-3.5 w-3.5" strokeWidth={2.5} />
+              </span>
             </div>
 
-            <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-[2rem]">
+            <h2 className="mt-3 text-[1.75rem] font-bold leading-tight tracking-tight text-white">
               {featuredAlumni.name}
             </h2>
-
-            <p className="mt-2 text-base text-slate-300 sm:text-lg">
+            <p className="mt-1 text-sm font-medium text-slate-300">
+              {featuredAlumni.role}
+            </p>
+            <p className="mt-1.5 text-[13px] text-slate-400">
               {featuredAlumni.email || 'arpit.prajapati@kiet.edu'}
             </p>
 
-            <div className="mx-auto mt-5 grid w-full max-w-[420px] grid-cols-3 gap-3 rounded-xl border border-slate-700/80 bg-slate-800/60 p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
-              <div>
-                <div className="text-2xl font-semibold tracking-tight text-white">2</div>
-                <div className="mt-1 text-[11px] font-medium uppercase tracking-[0.16em] text-slate-400">
-                  Badges
-                </div>
+            <div className="mx-auto mt-5 grid w-full grid-cols-3 overflow-hidden rounded-xl border border-slate-700/80 bg-slate-800/55">
+              <div className="px-2 py-3.5">
+                <div className="text-xl font-bold tracking-tight text-white">2</div>
+                <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">Badges</div>
               </div>
-              <div>
-                <div className="text-2xl font-semibold tracking-tight text-white">84%</div>
-                <div className="mt-1 text-[11px] font-medium uppercase tracking-[0.16em] text-slate-400">
-                  Trust
-                </div>
+              <div className="border-x border-slate-700/80 px-2 py-3.5">
+                <div className="text-xl font-bold tracking-tight text-[#58a6ff]">84%</div>
+                <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">Trust</div>
               </div>
-              <div>
-                <div className="text-2xl font-semibold tracking-tight text-white">3</div>
-                <div className="mt-1 text-[11px] font-medium uppercase tracking-[0.16em] text-slate-400">
-                  Projects
-                </div>
+              <div className="px-2 py-3.5">
+                <div className="text-xl font-bold tracking-tight text-white">3</div>
+                <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">Projects</div>
               </div>
             </div>
 
             <button
               type="button"
-              className="mt-5 inline-flex w-full max-w-[420px] items-center justify-center gap-2 rounded-xl bg-[#4aa3ff] px-4 py-3 text-base font-semibold text-slate-950 shadow-[0_10px_25px_-12px_rgba(74,163,255,0.9)] transition-transform hover:-translate-y-0.5 hover:bg-[#6ab2ff]"
+              onClick={() => window.open(featuredAlumni.linkedinUrl, '_blank', 'noopener,noreferrer')}
+              className="group mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#4aa3ff] px-4 py-3 text-base font-bold text-slate-950 shadow-[0_12px_28px_-14px_rgba(74,163,255,0.95)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#64afff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#77baff] focus-visible:ring-offset-2 focus-visible:ring-offset-[#111827]"
             >
-              <span>Verified Portfolio</span>
-              <ArrowRight className="h-4 w-4" />
+              <span>View Profile</span>
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </button>
           </div>
         </section>

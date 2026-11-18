@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowDownWideNarrow, Check, ChevronDown, Heart, ImagePlus, MessageCircle, MoreHorizontal, Send, ShieldCheck, X } from 'lucide-react';
+import { ArrowDownWideNarrow, ArrowUpRight, Check, ChevronDown, Heart, ImagePlus, MessageCircle, MoreHorizontal, Send, ShieldCheck, UserRoundCheck, X } from 'lucide-react';
 import { BadgeIcon } from '@/components/BadgeIcon';
 import { useStudent } from '@/components/store';
 import { trustBreakdown } from '@/lib/utils';
@@ -901,45 +901,75 @@ export default function FeedPage() {
           <aside className="lg:col-span-3 space-y-4">
             
             {/* Card 1: Signals */}
-            <div className="bg-surface rounded-2xl p-4 border border-line shadow-xs">
-              <div className="flex items-center justify-between mb-3 px-1">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-muted">
-                  Campus Signals
+            <div className="rounded-2xl border border-line bg-surface overflow-hidden shadow-xs">
+              <div className="flex items-center justify-between px-4 py-3.5 border-b border-line/70">
+                <div>
+                  <p className="text-sm font-bold text-ink">Campus Signals</p>
+                  <p className="mt-0.5 text-[11px] text-muted">Latest campus activity</p>
+                </div>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-1 text-[10px] font-bold text-emerald-700 dark:text-emerald-400">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-60" />
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  </span>
+                  Live
                 </span>
-                <span className="text-[11px] text-[#1a7f37] font-semibold">● Live</span>
               </div>
 
-              <div className="space-y-3">
-                <div className="flex items-start gap-2.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#0969da] mt-1.5 shrink-0" />
-                  <div className="text-xs">
-                    <p className="text-ink">
-                      <strong className="font-semibold">CRPC Cell</strong> announced Amazon SDE shortlists.
+              <div className="divide-y divide-line/70">
+                <button type="button" className="group flex w-full items-start gap-3 px-4 py-3.5 text-left transition-colors hover:bg-surface2/70">
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-blue-500/15 bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                    <ShieldCheck className="h-4 w-4" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs leading-5 text-ink">
+                      <strong className="font-semibold">CRPC Cell</strong> announced <strong className="font-semibold">Amazon SDE</strong> shortlists.
                     </p>
-                    <span className="text-[11px] text-muted">15m ago</span>
+                    <div className="mt-1 flex items-center justify-between">
+                      <span className="text-[10.5px] text-muted">15m ago</span>
+                      <ArrowUpRight className="h-3.5 w-3.5 text-muted opacity-0 transition-opacity group-hover:opacity-100" />
+                    </div>
                   </div>
-                </div>
+                </button>
 
-                <div className="flex items-start gap-2.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#1a7f37] mt-1.5 shrink-0" />
-                  <div className="text-xs">
-                    <p className="text-ink">
-                      <strong className="font-semibold">Prof. Sharma</strong> verified AST complexity.
+                <button type="button" className="group flex w-full items-start gap-3 px-4 py-3.5 text-left transition-colors hover:bg-surface2/70">
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-emerald-500/15 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                    <Check className="h-4 w-4" strokeWidth={2.5} />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs leading-5 text-ink">
+                      <strong className="font-semibold">Prof. Sharma</strong> verified <strong className="font-semibold">AST complexity</strong>.
                     </p>
-                    <span className="text-[11px] text-muted">1h ago</span>
+                    <div className="mt-1 flex items-center justify-between">
+                      <span className="text-[10.5px] text-muted">1h ago</span>
+                      <ArrowUpRight className="h-3.5 w-3.5 text-muted opacity-0 transition-opacity group-hover:opacity-100" />
+                    </div>
                   </div>
-                </div>
+                </button>
 
-                <div className="flex items-start gap-2.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#8250df] mt-1.5 shrink-0" />
-                  <div className="text-xs">
-                    <p className="text-ink">
-                      <strong className="font-semibold">Rohan</strong> endorsed Docker & K8s skills.
+                <button type="button" className="group flex w-full items-start gap-3 px-4 py-3.5 text-left transition-colors hover:bg-surface2/70">
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-violet-500/15 bg-violet-500/10 text-violet-600 dark:text-violet-400">
+                    <UserRoundCheck className="h-4 w-4" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs leading-5 text-ink">
+                      <strong className="font-semibold">Rohan</strong> endorsed <strong className="font-semibold">Docker &amp; K8s</strong>.
                     </p>
-                    <span className="text-[11px] text-muted">1D ago</span>
+                    <div className="mt-1 flex items-center justify-between">
+                      <span className="text-[10.5px] text-muted">1d ago</span>
+                      <ArrowUpRight className="h-3.5 w-3.5 text-muted opacity-0 transition-opacity group-hover:opacity-100" />
+                    </div>
                   </div>
-                </div>
+                </button>
               </div>
+
+              <Link
+                href="/feed"
+                className="flex h-10 items-center justify-center gap-1.5 border-t border-line/70 text-[11px] font-semibold text-accent transition-colors hover:bg-accent/5"
+              >
+                View all activity
+                <ArrowUpRight className="h-3.5 w-3.5" />
+              </Link>
             </div>
 
             {/* Card 2: Placed Alumni & Peers */}
