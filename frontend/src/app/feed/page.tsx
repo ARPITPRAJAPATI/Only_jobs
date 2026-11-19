@@ -902,12 +902,9 @@ export default function FeedPage() {
             
             {/* Card 1: Signals */}
             <div className="rounded-2xl border border-line bg-surface overflow-hidden shadow-xs">
-              <div className="flex items-center justify-between px-4 py-3.5 border-b border-line/70">
-                <div>
-                  <p className="text-sm font-bold text-ink">Campus Signals</p>
-                  <p className="mt-0.5 text-[11px] text-muted">Latest campus activity</p>
-                </div>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-1 text-[10px] font-bold text-emerald-700 dark:text-emerald-400">
+              <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-line/70">
+                <p className="text-xs font-bold text-ink">Campus Signals</p>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-400">
                   <span className="relative flex h-1.5 w-1.5">
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-60" />
                     <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
@@ -917,47 +914,47 @@ export default function FeedPage() {
               </div>
 
               <div className="divide-y divide-line/70">
-                <button type="button" className="group flex w-full items-start gap-3 px-4 py-3.5 text-left transition-colors hover:bg-surface2/70">
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-blue-500/15 bg-blue-500/10 text-blue-600 dark:text-blue-400">
-                    <ShieldCheck className="h-4 w-4" />
+                <button type="button" className="group flex w-full items-start gap-2.5 px-3.5 py-2.5 text-left transition-colors hover:bg-surface2/70">
+                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg border border-blue-500/15 bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                    <ShieldCheck className="h-3.5 w-3.5" />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs leading-5 text-ink">
+                    <p className="text-xs leading-4 text-ink">
                       <strong className="font-semibold">CRPC Cell</strong> announced <strong className="font-semibold">Amazon SDE</strong> shortlists.
                     </p>
-                    <div className="mt-1 flex items-center justify-between">
-                      <span className="text-[10.5px] text-muted">15m ago</span>
-                      <ArrowUpRight className="h-3.5 w-3.5 text-muted opacity-0 transition-opacity group-hover:opacity-100" />
+                    <div className="mt-0.5 flex items-center justify-between">
+                      <span className="text-[10px] text-muted">15m ago</span>
+                      <ArrowUpRight className="h-3 w-3 text-muted opacity-0 transition-opacity group-hover:opacity-100" />
                     </div>
                   </div>
                 </button>
 
-                <button type="button" className="group flex w-full items-start gap-3 px-4 py-3.5 text-left transition-colors hover:bg-surface2/70">
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-emerald-500/15 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                    <Check className="h-4 w-4" strokeWidth={2.5} />
+                <button type="button" className="group flex w-full items-start gap-2.5 px-3.5 py-2.5 text-left transition-colors hover:bg-surface2/70">
+                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg border border-emerald-500/15 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                    <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs leading-5 text-ink">
+                    <p className="text-xs leading-4 text-ink">
                       <strong className="font-semibold">Prof. Sharma</strong> verified <strong className="font-semibold">AST complexity</strong>.
                     </p>
-                    <div className="mt-1 flex items-center justify-between">
-                      <span className="text-[10.5px] text-muted">1h ago</span>
-                      <ArrowUpRight className="h-3.5 w-3.5 text-muted opacity-0 transition-opacity group-hover:opacity-100" />
+                    <div className="mt-0.5 flex items-center justify-between">
+                      <span className="text-[10px] text-muted">1h ago</span>
+                      <ArrowUpRight className="h-3 w-3 text-muted opacity-0 transition-opacity group-hover:opacity-100" />
                     </div>
                   </div>
                 </button>
 
-                <button type="button" className="group flex w-full items-start gap-3 px-4 py-3.5 text-left transition-colors hover:bg-surface2/70">
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-violet-500/15 bg-violet-500/10 text-violet-600 dark:text-violet-400">
-                    <UserRoundCheck className="h-4 w-4" />
+                <button type="button" className="group flex w-full items-start gap-2.5 px-3.5 py-2.5 text-left transition-colors hover:bg-surface2/70">
+                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg border border-violet-500/15 bg-violet-500/10 text-violet-600 dark:text-violet-400">
+                    <UserRoundCheck className="h-3.5 w-3.5" />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs leading-5 text-ink">
+                    <p className="text-xs leading-4 text-ink">
                       <strong className="font-semibold">Rohan</strong> endorsed <strong className="font-semibold">Docker &amp; K8s</strong>.
                     </p>
-                    <div className="mt-1 flex items-center justify-between">
-                      <span className="text-[10.5px] text-muted">1d ago</span>
-                      <ArrowUpRight className="h-3.5 w-3.5 text-muted opacity-0 transition-opacity group-hover:opacity-100" />
+                    <div className="mt-0.5 flex items-center justify-between">
+                      <span className="text-[10px] text-muted">1d ago</span>
+                      <ArrowUpRight className="h-3 w-3 text-muted opacity-0 transition-opacity group-hover:opacity-100" />
                     </div>
                   </div>
                 </button>
@@ -965,10 +962,10 @@ export default function FeedPage() {
 
               <Link
                 href="/feed"
-                className="flex h-10 items-center justify-center gap-1.5 border-t border-line/70 text-[11px] font-semibold text-accent transition-colors hover:bg-accent/5"
+                className="flex h-8 items-center justify-center gap-1 border-t border-line/70 text-[10px] font-semibold text-accent transition-colors hover:bg-accent/5"
               >
                 View all activity
-                <ArrowUpRight className="h-3.5 w-3.5" />
+                <ArrowUpRight className="h-3 w-3" />
               </Link>
             </div>
 
