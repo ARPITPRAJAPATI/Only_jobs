@@ -310,22 +310,36 @@
 
 .profile-section-content .profile-glass-tile,
 .profile-section-content .profile-glass-tile.bg-surface {
-  background-color: rgba(255, 255, 255, 0.09) !important;
-  background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01) 62%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-  backdrop-filter: blur(28px) saturate(135%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(135%) !important;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 6px 24px rgba(0, 0, 0, 0.3) !important;
+  background-color: rgba(49, 58, 74, 0.82) !important;
+  background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.018) 62%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  backdrop-filter: blur(18px) saturate(125%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(125%) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 10px 28px rgba(0, 0, 0, 0.38) !important;
 }
 
 .profile-section-content .profile-glass-tile:hover {
-  background-color: rgba(255, 255, 255, 0.09) !important;
-  border-color: rgba(255, 255, 255, 0.2) !important;
+  background-color: rgba(55, 66, 84, 0.88) !important;
+  border-color: rgba(255, 255, 255, 0.24) !important;
+  transform: translateY(-2px);
 }
 
 .profile-section-content .profile-glass-tile.profile-glass-verified {
-  background-color: rgba(46, 160, 67, 0.12) !important;
-  border-color: rgba(63, 185, 80, 0.32) !important;
+  background-color: rgba(47, 70, 72, 0.88) !important;
+  background-image: linear-gradient(135deg, rgba(63, 185, 80, 0.09), rgba(255, 255, 255, 0.018) 62%) !important;
+  border-color: rgba(63, 185, 80, 0.38) !important;
+}
+
+.profile-section-content .profile-glass-tile.profile-glass-pending {
+  background-color: rgba(58, 61, 72, 0.86) !important;
+  background-image: linear-gradient(135deg, rgba(210, 153, 34, 0.06), rgba(255, 255, 255, 0.018) 62%) !important;
+  border-color: rgba(227, 179, 65, 0.24) !important;
+}
+
+.profile-section-content .profile-glass-tile.profile-glass-rejected {
+  background-color: rgba(66, 53, 66, 0.88) !important;
+  background-image: linear-gradient(135deg, rgba(248, 81, 73, 0.07), rgba(255, 255, 255, 0.018) 62%) !important;
+  border-color: rgba(248, 81, 73, 0.28) !important;
 }
 
 /* Internal surfaces inside cards */

@@ -73,8 +73,10 @@ export default function BadgesPage() {
               <div
                 key={badge.id}
                 className={cn(
-                  'profile-glass-tile flex flex-col rounded-2xl border border-white/[0.08] bg-white/[0.04] backdrop-blur-md p-5 transition-all shadow-lg hover:bg-white/[0.08] hover:border-white/[0.18]',
-                  approved && 'border-[#3fb950]/35 bg-[#3fb950]/10',
+                  'profile-glass-tile flex min-h-[238px] flex-col rounded-2xl border p-5 transition-all',
+                  approved && 'profile-glass-verified',
+                  mine?.status === 'PENDING' && 'profile-glass-pending',
+                  mine?.status === 'REJECTED' && 'profile-glass-rejected',
                 )}
               >
                 <div className="mb-4 flex items-start justify-between gap-3">
